@@ -19,7 +19,7 @@ class Chef
         provides :rhel_network_interface, os: 'linux', platform_family: %w(rhel fedora)
 
         def create_if_missing_interface
-          Chef::Log.info "rhel_network_interface create_if_missing #{new_resource.device}"
+          log "rhel_network_interface create_if_missing #{new_resource.device}"
 
           device_config_file = Chef::Resource::Template.new("/var/tmp/ifcfg-#{new_resource.device}", run_context)
           device_config_file.source new_resource.source
