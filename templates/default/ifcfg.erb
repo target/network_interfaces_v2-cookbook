@@ -1,7 +1,7 @@
 # This file maintained by Chef.  DO NOT EDIT!
 
 DEVICE="<%= @device %>"
-TYPE=<%= @bootproto %>
+TYPE="<%= @type %>"
 ONBOOT="<%= @onboot ? 'yes' : 'no' %>"
 BOOTPROTO="<%= @bootproto %>"
 <% if @bond_master -%>

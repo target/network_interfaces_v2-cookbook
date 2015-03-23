@@ -3,9 +3,25 @@ require 'spec_helper'
 describe 'fake::default' do
   describe 'rhel family' do
     cached(:chef_run) do
-      ChefSpec::SoloRunner.new do |node|
+      ChefSpec::SoloRunner.new(step_into: ['rhel_network_interface']) do |node|
         node.automatic['platform_family'] = 'rhel'
       end.converge(described_recipe)
+    end
+
+    let(:default_config_contents) do
+'# This file maintained by Chef.  DO NOT EDIT!
+
+DEVICE="eth11"
+TYPE="Ethernet"
+ONBOOT="yes"
+BOOTPROTO="dhcp"
+NM_CONTROLLED="off"
+'
+    end
+
+    it 'does not install any extra packages' do
+      expect(chef_run).not_to install_package 'vconfig'
+      expect(chef_run).not_to install_package 'iputils'
     end
 
     it 'creates interface eth10' do
@@ -14,6 +30,8 @@ describe 'fake::default' do
 
     it 'creates interface eth11' do
       expect(chef_run).to create_rhel_network_interface 'eth11'
+      expect(chef_run).to create_template '/etc/sysconfig/network-scripts/ifcfg-eth11'
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth11').with_content(default_config_contents)
     end
   end
 
