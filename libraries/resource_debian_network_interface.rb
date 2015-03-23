@@ -17,7 +17,7 @@ class Chef
       class Debian < Chef::Resource::NetworkInterface
 
         provides :debian_network_interface
-        provides :network_interface, os: 'linux', platform_family: %w(debian ubuntu)
+        provides :network_interface, os: 'linux', platform_family: %w(debian)
 
         def initialize(name, run_context = nil)
           super

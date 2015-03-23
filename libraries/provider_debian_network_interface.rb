@@ -17,7 +17,7 @@ class Chef
       #
       class Debian < Chef::Provider::NetworkInterface
 
-        provides :debian_network_interface, os: 'linux', platform_family: %w(debian ubuntu)
+        provides :debian_network_interface, os: 'linux', platform_family: %w(debian)
 
         def create_if_missing_interface
           log "debian_network_interface create_if_missing #{new_resource.device}"
