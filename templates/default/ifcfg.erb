@@ -1,1 +1,59 @@
-<%= node['hostname'] %>
+# This file maintained by Chef.  DO NOT EDIT!
+
+DEVICE="<%= @device %>"
+TYPE=<%= @bootproto %>
+ONBOOT="<%= @onboot ? 'yes' : 'no' %>"
+BOOTPROTO="<%= @bootproto %>"
+<% if @bond_master -%>
+MASTER="<%= @bond_master %>"
+SLAVE="yes"
+<% end %>
+<% if @address -%>
+IPADDR="<%= @address %>"
+<% end %>
+<% if @netmask -%>
+NETMASK="<%= @netmask %>"
+<% end %>
+<% if @network -%>
+NETWORK="<%= @network %>"
+<% end %>
+<% if @broadcast -%>
+BROADCAST="<%= @broadcast %>"
+<% end %>
+<% if @gateway -%>
+GATEWAY="<%= @gateway %>"
+<% end %>
+<% if @hw_address -%>
+HWADDR="<%= @hw_address %>"
+<% end %>
+<% if @mac_address -%>
+MACADDR="<%= @mac_address %>"
+<% end %>
+<% if @vlan -%>
+VLAN="yes"
+<% end %>
+<% if @bridge_device -%>
+BRIDGE="<%= @bridge_device %>"
+<% end %>
+<% unless @bridge_stp.nil? -%>
+STP="<%= @bridge_stp ? 'on' : 'off' %>"
+<% end %>
+<% if @bond_mode -%>
+BONDING_OPTS="<%= @bond_mode %>"
+<% end %>
+<% if @mtu -%>
+MTU="<%= @mtu %>"
+<% end %>
+NM_CONTROLLED="<%= @nm_controlled ? 'on' : 'off' %>"
+<% unless @ipv6init.nil? -%>
+IPV6INIT="<%= @ipv6init ? 'on' : 'off' %>"
+<% end %>
+<% unless @nozeroconf.nil? -%>
+NOZEROCONF="<%= @nozeroconf ? 'on' : 'off' %>"
+<% end %>
+<% unless @userctl.nil? -%>
+USERCTL="<%= @userctl ? 'on' : 'off' %>"
+<% end %>
+<% unless @peerdns.nil? -%>
+PEERDNS="<%= @peerdns ? 'on' : 'off' %>"
+<% end %>

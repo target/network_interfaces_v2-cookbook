@@ -13,21 +13,21 @@ class Chef
     #
     # Chef Provider for Network Interfaces
     #
-    class NetworkInterface < Chef::Provider
+    class NetworkInterface < Chef::Provider::LWRPBase
       # We MUST define this method in our custom provider
       def load_current_resource; end
 
       def action_create_if_missing
         converge_by("create interface #{new_resource.device}") do
           create_if_missing_interface
-          Chef::Log.info "#{@new_resource} created #{new_resource.device}"
+          log "#{@new_resource} created #{new_resource.device}"
         end
       end
 
       def action_create
         converge_by("create interface #{new_resource.device}") do
           create_interface
-          Chef::Log.info "#{@new_resource} created #{new_resource.device}"
+          log "#{@new_resource} created #{new_resource.device}"
         end
       end
 

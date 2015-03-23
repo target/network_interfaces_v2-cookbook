@@ -22,18 +22,60 @@ class Chef
           Chef::Log.info "rhel_network_interface create_if_missing #{new_resource.device}"
 
           device_config_file = Chef::Resource::Template.new("/var/tmp/ifcfg-#{new_resource.device}", run_context)
-          device_config_file.source 'ifcfg.erb'
-          device_config_file.cookbook 'network_interfaces_v2'
-          device_config_file.run_action(:create)
+          device_config_file.source new_resource.source
+          device_config_file.cookbook new_resource.cookbook
+          device_config_file.run_action :create
         end
 
         def create_interface
-          Chef::Log.info "rhel_network_interface create #{new_resource.device}"
+          log "rhel_network_interface create #{new_resource.device}"
 
-          device_config_file = Chef::Resource::Template.new("/var/tmp/ifcfg-#{new_resource.device}", run_context)
-          device_config_file.source 'ifcfg.erb'
-          device_config_file.cookbook 'network_interfaces_v2'
-          device_config_file.run_action(:create)
+          # if new_resource.bootproto == "dhcp"
+          #   type = "dhcp"
+          # elsif ! new_resource.target
+          #   type = "none"
+          # else
+          #   type = "static"
+          # end
+
+          # execute "if_up" do
+          #   command "ifdown #{new_resource.device} ; ifup #{new_resource.device}"
+          #   action :nothing
+          # end
+
+          node.default['network_interfaces_v2']['vlan'] = true if new_resource.vlan || new_resource.device =~ /(eth|bond|wlan)[0-9]+\.[0-9]+/
+          node.default['network_interfaces_v2']['bonding'] = true if new_resource.bond_master
+          node.default['network_interfaces_v2']['bridge'] = true if new_resource.bridge_device
+
+          run_context.include_recipe 'network_interfaces_v2::_rhel'
+
+          template "/etc/sysconfig/network-scripts/ifcfg-#{new_resource.device}" do
+            cookbook new_resource.cookbook
+            source new_resource.source
+            mode 0644
+            variables :device => new_resource.device,
+                      :type => new_resource.type,
+                      :onboot => new_resource.onboot,
+                      :bootproto => new_resource.bootproto,
+                      :address => new_resource.address,
+                      :network => new_resource.network,
+                      :netmask => new_resource.mask,
+                      :gateway => new_resource.gateway,
+                      :mac_address => new_resource.mac_address,
+                      :hw_address => new_resource.hw_address,
+                      :broadcast => new_resource.broadcast,
+                      :bridge_device => new_resource.bridge_device,
+                      :bridge_stp => new_resource.bridge_stp,
+                      :vlan => new_resource.vlan,
+                      :bond_mode => new_resource.bond_mode,
+                      :bond_master => new_resource.bond_master,
+                      :nm_controlled => new_resource.nm_controlled,
+                      :ipv6init => new_resource.ipv6init,
+                      :nozeroconf => new_resource.nozeroconf,
+                      :userctl => new_resource.userctl,
+                      :peerdns => new_resource.peerdns,
+                      :mtu => new_resource.mtu
+          end
         end
       end
     end

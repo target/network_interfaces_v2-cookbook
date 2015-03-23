@@ -6,6 +6,7 @@
 # Copyright:: 2015, Target Corporation
 #
 
+require 'chef/provider/lwrp_base'
 require_relative 'provider_network_interface'
 
 class Chef
@@ -23,7 +24,34 @@ class Chef
         end
 
         def create_interface
-          Chef::Log.info "debian_network_interface create #{new_resource.device}"
+          log "debian_network_interface create #{new_resource.device}"
+
+          node.default['network_interfaces_v2']['metrics'] = true unless new_resource.metric.nil?
+          node.default['network_interfaces_v2']['vlan'] = true if new_resource.vlan_dev || new_resource.device =~ /(eth|bond|wlan)[0-9]+\.[0-9]+/
+          node.default['network_interfaces_v2']['bonding'] = true if new_resource.bond_slaves
+          node.default['network_interfaces_v2']['bridge'] = true if new_resource.bridge_ports
+
+          run_context.include_recipe 'network_interfaces_v2::_debian'
+
+          template "/etc/network/interfaces.d/#{new_resource.device}" do
+            cookbook new_resource.cookbook
+            source new_resource.source
+            mode 0644
+            variables :device => new_resource.device,
+                      :type => new_resource.type,
+                      :auto => new_resource.onboot,
+                      :address => new_resource.address,
+                      :netmask => new_resource.mask,
+                      :gateway => new_resource.gateway,
+                      :broadcast => new_resource.broadcast,
+                      :bridge_ports => new_resource.bridge_ports,
+                      :bridge_stp => new_resource.bridge_stp,
+                      :vlan_dev => new_resource.vlan_dev,
+                      :bond_slaves => new_resource.bond_slaves,
+                      :bond_mode => new_resource.bond_mode,
+                      :mtu => new_resource.mtu,
+                      :metric => new_resource.metric
+          end
         end
       end
     end
