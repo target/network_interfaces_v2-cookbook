@@ -25,6 +25,7 @@ class Chef
           @provider = Chef::Provider::NetworkInterface::Debian
 
           @source = 'debian_interface.erb'
+          @pre_up = 'sleep 2'
         end
 
         def bridge_ports(arg = nil)
@@ -48,7 +49,11 @@ class Chef
           set_or_return(:type, arg, :kind_of => String)
         end
 
-        def pre_up(arg = nil)
+        def pre_up(arg = '')
+          # Handle 'unsetting' default value with nil or ''
+          @pre_up = nil if arg == ''
+          arg = nil if arg == ''
+
           set_or_return(:pre_up, arg, :kind_of => String)
         end
 

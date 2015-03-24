@@ -51,6 +51,7 @@ class Chef
                       :bond_mode => new_resource.bond_mode,
                       :mtu => new_resource.mtu,
                       :metric => new_resource.metric
+            notifies :run, 'execute[merge interface configs]', :delayed
           end
         end
       end

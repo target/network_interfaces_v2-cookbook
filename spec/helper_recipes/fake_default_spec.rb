@@ -36,7 +36,7 @@ NM_CONTROLLED="off"
   end
 
   describe 'debian family' do
-    cached(:chef_run) do
+    let(:chef_run) do
       ChefSpec::SoloRunner.new(step_into: ['debian_network_interface']) do |node|
         node.automatic['platform_family'] = 'debian'
       end.converge(described_recipe)
@@ -44,6 +44,22 @@ NM_CONTROLLED="off"
 
     it 'creates directory for interface config files' do
       expect(chef_run).to create_directory '/etc/network/interfaces.d'
+    end
+
+    it 'removes unmanaged files from interface config directory' do
+      allow(Dir).to receive(:glob).and_call_original
+      allow(Dir).to receive(:glob).with('/etc/network/interfaces.d/*').and_return(['/etc/network/interfaces.d/eth10', '/etc/network/interfaces.d/eth13'])
+      expect(chef_run).not_to delete_file '/etc/network/interfaces.d/eth10'
+      expect(chef_run).to delete_file '/etc/network/interfaces.d/eth13'
+    end
+
+    it 'does not merge interface configs by default' do
+      expect(chef_run).not_to run_execute 'merge interface configs'
+    end
+
+    it 'does merge interface configs when updating an interface config' do
+      resource = chef_run.template('/etc/network/interfaces.d/eth11')
+      expect(resource).to notify('execute[merge interface configs]').to(:run).delayed
     end
 
     it 'does not install any extra packages' do
@@ -56,6 +72,10 @@ NM_CONTROLLED="off"
     it 'does not load any modules' do
       expect(chef_run).not_to save_modules '8021q'
       expect(chef_run).not_to save_modules 'bonding'
+    end
+
+    it 'automatically manages the loopback device when other interfaces are defined' do
+      expect(chef_run).to create_debian_network_interface('manage lo').with(pre_up: nil, type: 'loopback')
     end
 
     it 'creates interface eth10' do

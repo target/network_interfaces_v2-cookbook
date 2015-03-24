@@ -7,6 +7,9 @@ platform_family=$(ohai platform_family | grep '"' | awk -F\" '{print $2}')
   if [[ "$platform_family" == 'debian' ]]; then
     [ -f /etc/network/interfaces.d/eth10 ]
     [ -f /etc/network/interfaces.d/eth11 ]
+    grep 'lo' /etc/network/interfaces
+    grep 'eth10' /etc/network/interfaces
+    grep 'eth11' /etc/network/interfaces
   fi
 
   # CentOS specific tests
