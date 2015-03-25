@@ -42,6 +42,10 @@ NM_CONTROLLED="off"
       resource = chef_run.template('/etc/sysconfig/network-scripts/ifcfg-eth2')
       expect(resource).to notify('execute[reload interface eth2]').to(:run).immediately
     end
+
+    it 'logs having created interface eth2' do
+      expect(chef_run).to write_log('rhel_network_interface[eth2] created eth2')
+    end
   end
 
   describe 'debian family' do
@@ -103,6 +107,10 @@ iface eth2 inet dhcp
     it 'it reloads eth2 interface after deploying config' do
       resource = chef_run.template('/etc/network/interfaces.d/eth2')
       expect(resource).to notify('execute[reload interface eth2]').to(:run).immediately
+    end
+
+    it 'logs having created interface eth2' do
+      expect(chef_run).to write_log('debian_network_interface[eth2] created eth2')
     end
   end
 end
