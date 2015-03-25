@@ -76,7 +76,7 @@ class Chef
         set_or_return(:mtu, arg, :kind_of => Integer)
       end
 
-      def mask(arg = nil)
+      def netmask(arg = nil)
         set_or_return(:mask, arg, :kind_of => String)
       end
 

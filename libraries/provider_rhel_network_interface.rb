@@ -35,7 +35,7 @@ class Chef
                       :bootproto => new_resource.bootproto,
                       :address => new_resource.address,
                       :network => new_resource.network,
-                      :netmask => new_resource.mask,
+                      :netmask => new_resource.netmask,
                       :gateway => new_resource.gateway,
                       :mac_address => new_resource.mac_address,
                       :hw_address => new_resource.hw_address,
