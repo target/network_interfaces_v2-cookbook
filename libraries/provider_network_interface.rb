@@ -17,22 +17,11 @@ class Chef
       # We MUST define this method in our custom provider
       def load_current_resource; end
 
-      def action_create_if_missing
-        converge_by("create interface #{new_resource.device}") do
-          create_if_missing_interface
-          log "#{@new_resource} created #{new_resource.device}"
-        end
-      end
-
       def action_create
         converge_by("create interface #{new_resource.device}") do
           create_interface
           log "#{@new_resource} created #{new_resource.device}"
         end
-      end
-
-      def create_if_missing_interface
-        raise Chef::Exceptions::UnsupportedAction, "#{self.to_s} does not support :create_if_missing_interface"
       end
 
       def create_interface

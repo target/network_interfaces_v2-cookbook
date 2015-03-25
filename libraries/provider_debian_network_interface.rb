@@ -19,13 +19,7 @@ class Chef
 
         provides :debian_network_interface, os: 'linux', platform_family: %w(debian)
 
-        def create_if_missing_interface
-          log "debian_network_interface create_if_missing #{new_resource.device}"
-        end
-
         def create_interface
-          log "debian_network_interface create #{new_resource.device}"
-
           node.default['network_interfaces_v2']['metrics'] = true unless new_resource.metric.nil?
           node.default['network_interfaces_v2']['vlan'] = true if new_resource.vlan_dev || new_resource.device =~ /(eth|bond|wlan)[0-9]+\.[0-9]+/
           node.default['network_interfaces_v2']['bonding'] = true if new_resource.bond_slaves

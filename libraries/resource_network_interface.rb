@@ -19,7 +19,7 @@ class Chef
         @resource_name = :network_interface
         @provider = Chef::Provider::NetworkInterface
         @action = :create
-        @allowed_actions = [:create_if_missing, :create]
+        @allowed_actions = [:create]
 
         # This is equivalent to setting :name_attribute => true
         @device = name
@@ -48,17 +48,9 @@ class Chef
         set_or_return(:type, arg, :kind_of => String)
       end
 
-      # def bridge(arg = nil)
-      #   set_or_return(:bridge, arg, :kind_of => [TrueClass, FalseClass, Array])
-      # end
-
       def bridge_stp(arg = nil)
         set_or_return(:bridge_stp, arg, :kind_of => [TrueClass, FalseClass])
       end
-
-      # def bond(arg = nil)
-      #   set_or_return(:bond, arg, :kind_of => [TrueClass, FalseClass, Array])
-      # end
 
       def bond_mode(arg = nil)
         set_or_return(:bond_mode, arg, :kind_of => String)
