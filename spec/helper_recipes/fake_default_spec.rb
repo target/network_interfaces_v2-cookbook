@@ -53,13 +53,8 @@ NM_CONTROLLED="off"
       expect(chef_run).to delete_file '/etc/network/interfaces.d/eth13'
     end
 
-    it 'does not merge interface configs by default' do
-      expect(chef_run).not_to run_execute 'merge interface configs'
-    end
-
-    it 'does merge interface configs when updating an interface config' do
-      resource = chef_run.template('/etc/network/interfaces.d/eth11')
-      expect(resource).to notify('execute[merge interface configs]').to(:run).delayed
+    it 'replaces main network config file to reference interface configs' do
+      expect(chef_run).to create_cookbook_file '/etc/network/interfaces'
     end
 
     it 'does not install any extra packages' do
@@ -72,10 +67,6 @@ NM_CONTROLLED="off"
     it 'does not load any modules' do
       expect(chef_run).not_to save_modules '8021q'
       expect(chef_run).not_to save_modules 'bonding'
-    end
-
-    it 'automatically manages the loopback device when other interfaces are defined' do
-      expect(chef_run).to create_debian_network_interface('manage lo').with(pre_up: nil, type: 'loopback')
     end
 
     it 'creates interface eth10' do

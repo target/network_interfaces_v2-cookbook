@@ -18,27 +18,7 @@ files_to_remove.each do |f|
   end
 end
 
-# Add local interface unless it's defined or told not to
-debian_network_interface 'manage lo' do
-  device 'lo'
-  type 'loopback'
-  pre_up nil
-  only_if { node['network_interfaces_v2']['debian']['manage_lo'] }
-
-  # Do not manage if another network resource is defined already with device of 'lo'
-  not_if do
-    run_context.resource_collection.all_resources.find do |r|
-      next unless [:debian_network_interface, :network_interface].include? r.declared_type
-      next if r.name == 'manage lo'
-      r.device == 'lo'
-    end
-  end
-end
-
-execute 'merge interface configs' do
-  command 'cat /etc/network/interfaces.d/* > /etc/network/interfaces'
-  action :nothing
-end
+cookbook_file '/etc/network/interfaces'
 
 package 'vlan' do
   only_if { node['network_interfaces_v2']['vlan'] }
