@@ -35,8 +35,8 @@ describe 'fake::bonding' do
     end
 
     it 'configures device for vlan' do
-      expect(chef_run).to render_file('/etc/network/interfaces.d/eth0').with_content('bond-slaves eth1 eth2')
-      expect(chef_run).to render_file('/etc/network/interfaces.d/eth0').with_content('bond-mode test mode')
+      expect(chef_run).to render_file('/etc/network/interfaces.d/eth2').with_content('bond-slaves eth0 eth1')
+      expect(chef_run).to render_file('/etc/network/interfaces.d/eth2').with_content('bond-mode test mode')
     end
   end
 end

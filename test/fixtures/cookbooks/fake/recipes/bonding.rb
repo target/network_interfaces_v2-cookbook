@@ -5,8 +5,8 @@ when 'rhel', 'fedora'
     bond_mode 'test opts'
   end
 when 'debian'
-  debian_network_interface 'eth0' do
-    bond_slaves ['eth1', 'eth2']
+  debian_network_interface 'eth2' do
+    bond_slaves ['eth0', 'eth1']
     bond_mode 'test mode'
   end
 end
