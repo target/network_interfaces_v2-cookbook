@@ -41,7 +41,7 @@ class Chef
         end
 
         def bond_slaves(arg = nil)
-          set_or_return(:bond_slaves, arg, :kind_of => String)
+          set_or_return(:bond_slaves, arg, :kind_of => Array)
         end
 
         def type(arg = nil)

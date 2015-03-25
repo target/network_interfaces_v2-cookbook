@@ -1,2 +1,5 @@
 LineLength:
   Max: 150
+
+WordArray:
+  Enabled: false
