@@ -30,19 +30,6 @@ class Chef
         def create_interface
           log "rhel_network_interface create #{new_resource.device}"
 
-          # if new_resource.bootproto == "dhcp"
-          #   type = "dhcp"
-          # elsif ! new_resource.target
-          #   type = "none"
-          # else
-          #   type = "static"
-          # end
-
-          # execute "if_up" do
-          #   command "ifdown #{new_resource.device} ; ifup #{new_resource.device}"
-          #   action :nothing
-          # end
-
           node.default['network_interfaces_v2']['vlan'] = true if new_resource.vlan || new_resource.device =~ /(eth|bond|wlan)[0-9]+\.[0-9]+/
           node.default['network_interfaces_v2']['bonding'] = true if new_resource.bond_master
           node.default['network_interfaces_v2']['bridge'] = true if new_resource.bridge_device
@@ -75,6 +62,15 @@ class Chef
                       :userctl => new_resource.userctl,
                       :peerdns => new_resource.peerdns,
                       :mtu => new_resource.mtu
+            notifies :run, "execute[reload interface #{new_resource.device}]", new_resource.reload_type if new_resource.reload
+          end
+
+          execute "reload interface #{new_resource.device}" do
+            command <<-EOF
+              ifdown #{new_resource.device}
+              ifup #{new_resource.device}
+            EOF
+            action :nothing
           end
         end
       end

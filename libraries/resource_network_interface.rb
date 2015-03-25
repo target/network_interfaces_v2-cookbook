@@ -28,6 +28,8 @@ class Chef
         @onboot = true
         @cookbook = 'network_interfaces_v2'
         @source = 'ifcfg.erb'
+        @reload = true
+        @reload_type = :immediately
       end
 
       def cookbook(arg = nil)
@@ -88,6 +90,14 @@ class Chef
 
       def broadcast(arg = nil)
         set_or_return(:broadcast, arg, :kind_of => String)
+      end
+
+      def reload(arg = nil)
+        set_or_return(:reload, arg, :kind_of => [TrueClass, FalseClass])
+      end
+
+      def reload_type(arg = nil)
+        set_or_return(:reload_type, arg, :kind_of => Symbol)
       end
     end
   end

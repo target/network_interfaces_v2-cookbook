@@ -11,7 +11,7 @@ describe 'fake::default' do
     let(:default_config_contents) do
 '# This file maintained by Chef.  DO NOT EDIT!
 
-DEVICE="eth11"
+DEVICE="eth2"
 TYPE="Ethernet"
 ONBOOT="yes"
 BOOTPROTO="dhcp"
@@ -24,14 +24,23 @@ NM_CONTROLLED="off"
       expect(chef_run).not_to install_package 'iputils'
     end
 
-    it 'creates interface eth10' do
-      expect(chef_run).to create_network_interface 'eth10'
+    it 'creates interface eth1' do
+      expect(chef_run).to create_network_interface 'eth1'
     end
 
-    it 'creates interface eth11' do
-      expect(chef_run).to create_rhel_network_interface 'eth11'
-      expect(chef_run).to create_template '/etc/sysconfig/network-scripts/ifcfg-eth11'
-      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth11').with_content(default_config_contents)
+    it 'creates interface eth2' do
+      expect(chef_run).to create_rhel_network_interface 'eth2'
+      expect(chef_run).to create_template '/etc/sysconfig/network-scripts/ifcfg-eth2'
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content(default_config_contents)
+    end
+
+    it 'does not reload interface by default' do
+      expect(chef_run).not_to run_execute('reload interface eth2')
+    end
+
+    it 'it reloads eth2 interface after deploying config' do
+      resource = chef_run.template('/etc/sysconfig/network-scripts/ifcfg-eth2')
+      expect(resource).to notify('execute[reload interface eth2]').to(:run).immediately
     end
   end
 
@@ -42,14 +51,22 @@ NM_CONTROLLED="off"
       end.converge(described_recipe)
     end
 
+    let(:default_config_contents) do
+'# This file maintained by Chef.  DO NOT EDIT!
+
+auto eth2
+iface eth2 inet dhcp
+'
+    end
+
     it 'creates directory for interface config files' do
       expect(chef_run).to create_directory '/etc/network/interfaces.d'
     end
 
     it 'removes unmanaged files from interface config directory' do
       allow(Dir).to receive(:glob).and_call_original
-      allow(Dir).to receive(:glob).with('/etc/network/interfaces.d/*').and_return(['/etc/network/interfaces.d/eth10', '/etc/network/interfaces.d/eth13'])
-      expect(chef_run).not_to delete_file '/etc/network/interfaces.d/eth10'
+      allow(Dir).to receive(:glob).with('/etc/network/interfaces.d/*').and_return(['/etc/network/interfaces.d/eth1', '/etc/network/interfaces.d/eth13'])
+      expect(chef_run).not_to delete_file '/etc/network/interfaces.d/eth1'
       expect(chef_run).to delete_file '/etc/network/interfaces.d/eth13'
     end
 
@@ -69,13 +86,23 @@ NM_CONTROLLED="off"
       expect(chef_run).not_to save_modules 'bonding'
     end
 
-    it 'creates interface eth10' do
-      expect(chef_run).to create_network_interface 'eth10'
+    it 'creates interface eth1' do
+      expect(chef_run).to create_network_interface 'eth1'
     end
 
-    it 'creates interface eth11' do
-      expect(chef_run).to create_debian_network_interface 'eth11'
-      expect(chef_run).to create_template '/etc/network/interfaces.d/eth11'
+    it 'creates interface eth2' do
+      expect(chef_run).to create_debian_network_interface 'eth2'
+      expect(chef_run).to create_template '/etc/network/interfaces.d/eth2'
+      expect(chef_run).to render_file('/etc/network/interfaces.d/eth2').with_content(default_config_contents)
+    end
+
+    it 'does not reload interface by default' do
+      expect(chef_run).not_to run_execute('reload interface eth2')
+    end
+
+    it 'it reloads eth2 interface after deploying config' do
+      resource = chef_run.template('/etc/network/interfaces.d/eth2')
+      expect(resource).to notify('execute[reload interface eth2]').to(:run).immediately
     end
   end
 end

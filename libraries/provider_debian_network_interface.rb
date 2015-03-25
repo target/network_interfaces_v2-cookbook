@@ -51,6 +51,15 @@ class Chef
                       :bond_mode => new_resource.bond_mode,
                       :mtu => new_resource.mtu,
                       :metric => new_resource.metric
+            notifies :run, "execute[reload interface #{new_resource.device}]", new_resource.reload_type if new_resource.reload
+          end
+
+          execute "reload interface #{new_resource.device}" do
+            command <<-EOF
+              ifdown #{new_resource.device} -i /etc/network/interfaces.d/#{new_resource.device}
+              ifup #{new_resource.device} -i /etc/network/interfaces.d/#{new_resource.device}
+            EOF
+            action :nothing
           end
         end
       end
