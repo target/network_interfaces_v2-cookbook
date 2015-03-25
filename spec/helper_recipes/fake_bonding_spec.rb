@@ -12,7 +12,7 @@ describe 'fake::bonding' do
       expect(chef_run).to install_package 'iputils'
     end
 
-    it 'configures device for vlan' do
+    it 'configures device for bonding' do
       expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('MASTER="eth0"')
       expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('SLAVE="yes"')
       expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('BONDING_OPTS="test opts"')
@@ -34,7 +34,7 @@ describe 'fake::bonding' do
       expect(chef_run).to save_modules 'bonding'
     end
 
-    it 'configures device for vlan' do
+    it 'configures device for bonding' do
       expect(chef_run).to render_file('/etc/network/interfaces.d/eth2').with_content('bond-slaves eth0 eth1')
       expect(chef_run).to render_file('/etc/network/interfaces.d/eth2').with_content('bond-mode test mode')
     end
