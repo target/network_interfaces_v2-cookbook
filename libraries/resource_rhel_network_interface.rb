@@ -69,11 +69,11 @@ class Chef
         end
 
         def mac_address(arg = nil)
-          set_or_return(:mac_address, arg, :kind_of => String)
+          set_or_return(:mac_address, arg, :kind_of => String, :regex => /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/)
         end
 
         def hw_address(arg = nil)
-          set_or_return(:hw_address, arg, :kind_of => String)
+          set_or_return(:hw_address, arg, :kind_of => String, :regex => /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/)
         end
       end
     end
