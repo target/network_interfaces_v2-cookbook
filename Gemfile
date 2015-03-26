@@ -1,12 +1,18 @@
 source 'https://rubygems.org'
 
-gem 'berkshelf'
-gem 'test-kitchen'
-gem 'kitchen-vagrant'
+group :development do
+  gem 'berkshelf'
+  gem 'test-kitchen'
+  gem 'kitchen-vagrant'
 
-gem 'rake'
-gem 'chefspec', '~> 4.2.0'
-gem 'foodcritic'
-gem 'rubocop'
+  gem 'rake'
+  gem 'chefspec', '~> 4.2.0'
+  gem 'foodcritic'
+  gem 'rubocop'
 
-gem 'pry'
+  gem 'guard'
+  # gem 'guard-spork'
+  gem 'guard-rspec'
+  gem 'spork'
+  gem 'pry'
+end
