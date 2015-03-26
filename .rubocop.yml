@@ -3,3 +3,9 @@ LineLength:
 
 WordArray:
   Enabled: false
+
+FileName:
+  Enabled: false
+
+RegexpLiteral:
+  Enabled: false

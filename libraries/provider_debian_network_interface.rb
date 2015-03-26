@@ -44,7 +44,14 @@ class Chef
                       :bond_slaves => new_resource.bond_slaves,
                       :bond_mode => new_resource.bond_mode,
                       :mtu => new_resource.mtu,
-                      :metric => new_resource.metric
+                      :metric => new_resource.metric,
+                      :pre_up => new_resource.pre_up,
+                      :up => new_resource.up,
+                      :post_up => new_resource.post_up,
+                      :pre_down => new_resource.pre_down,
+                      :down => new_resource.down,
+                      :post_down => new_resource.post_down,
+                      :custom => new_resource.custom
             notifies :run, "execute[reload interface #{new_resource.device}]", new_resource.reload_type if new_resource.reload
           end
 

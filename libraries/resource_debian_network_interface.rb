@@ -49,10 +49,10 @@ class Chef
           set_or_return(:type, arg, :kind_of => String)
         end
 
-        def pre_up(arg = '')
+        def pre_up(arg = 'NOVAL')
           # Handle 'unsetting' default value with nil or ''
-          @pre_up = nil if arg == ''
-          arg = nil if arg == ''
+          @pre_up = nil if arg.nil? || arg == ''
+          arg = nil if arg == 'NOVAL'
 
           set_or_return(:pre_up, arg, :kind_of => String)
         end
