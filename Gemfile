@@ -11,7 +11,6 @@ group :development do
   gem 'rubocop'
 
   gem 'guard'
-  # gem 'guard-spork'
   gem 'guard-rspec'
   gem 'spork'
   gem 'pry'
