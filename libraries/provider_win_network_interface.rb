@@ -68,16 +68,25 @@ class Chef
           phys_rename unless current_resource.device == phys_adapter_name
 
           # If the NIC needs to be VLAN tagged we need to team it and then tag the teamed adapter that was created
-          powershell_script "setup vlan #{new_resource.device}" do
+          powershell_script "create vlan device #{new_resource.device}" do
             guard_interpreter :powershell_script
             code <<-EOH
               $newTeam = New-NetlbfoTeam -Name "#{new_resource.device}" -TeamMembers "#{new_resource.device}-NIC" -Confirm:$False
               Set-NetLbfoTeamNIC -Name $newTeam.Name -VlanID #{new_resource.vlan}
               Get-NetAdapter -Name "#{new_resource.device} - Vlan #{new_resource.vlan}" | Rename-NetAdapter -NewName "#{new_resource.device}"
             EOH
-            # notifies :run, "powershell_script[ip_nic_#{new_resource.device}]", :immediately
             not_if { new_resource.vlan.nil? }
             not_if "(Get-NetlbfoTeam -Name '#{new_resource.device}')"
+          end
+
+          powershell_script "set vlan on #{new_resource.device}" do
+            guard_interpreter :powershell_script
+            code <<-EOH
+              $newTeam = Get-NetlbfoTeam -Name '#{new_resource.device}'
+              Set-NetLbfoTeamNIC -Name $newTeam.Name -VlanID #{new_resource.vlan}
+            EOH
+            not_if { new_resource.vlan.nil? }
+            not_if "(Get-NetlbfoTeam -Name '#{new_resource.device}' -VlanID #{new_resource.vlan})"
           end
 
           enable_dhcp if new_resource.bootproto == 'dhcp' && current_resource.bootproto != 'dhcp'
