@@ -16,12 +16,6 @@ if node['os'] == 'windows'
     netmask '255.255.255.0'
   end
 
-  win_network_interface 'add dns to eth1' do
-    device 'eth1'
-    index 14
-    dns ['balh', 'asdf']
-  end
-
   win_network_interface 'eth2' do
     hw_address '00-25-B5-5B-00-27'
   end
