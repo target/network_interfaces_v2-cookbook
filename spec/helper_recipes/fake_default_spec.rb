@@ -3,9 +3,7 @@ require 'spec_helper'
 describe 'fake::default' do
   describe 'rhel family' do
     cached(:chef_run) do
-      ChefSpec::SoloRunner.new(step_into: ['rhel_network_interface']) do |node|
-        node.automatic['platform_family'] = 'rhel'
-      end.converge(described_recipe)
+      ChefSpec::SoloRunner.new(platform: 'redhat', version: '6.5', step_into: ['rhel_network_interface']).converge(described_recipe)
     end
 
     let(:default_config_contents) do
@@ -50,9 +48,7 @@ NM_CONTROLLED="off"
 
   describe 'debian family' do
     let(:chef_run) do
-      ChefSpec::SoloRunner.new(step_into: ['debian_network_interface']) do |node|
-        node.automatic['platform_family'] = 'debian'
-      end.converge(described_recipe)
+      ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.10', step_into: ['debian_network_interface']).converge(described_recipe)
     end
 
     let(:default_config_contents) do
