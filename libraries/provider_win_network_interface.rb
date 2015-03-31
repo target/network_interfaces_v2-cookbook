@@ -19,22 +19,22 @@ class Chef
 
         provides :win_network_interface, os: 'windows'
 
+        #
+        # Install/Load dependency libraries
+        #
         def load_deps
           run_context.include_recipe 'network_interfaces_v2::_win'
 
-          if RUBY_PLATFORM =~ /mswin|mingw32|windows/
-            require 'ruby-wmi'
-            require_relative 'ruby_wmi_ext'
-          end
+          # Only load libraries on Windows
+          require 'ruby-wmi' if RUBY_PLATFORM =~ /mswin|mingw32|windows/
+          require_relative 'ruby_wmi_ext' if RUBY_PLATFORM =~ /mswin|mingw32|windows/
         end
 
+        #
+        # Load current state of defined resource
+        #
         def load_current_resource
           load_deps
-
-          # Will load if windows and fail silently on other platform
-          # begin
-          #   require_relative 'ruby_wmi_ext'
-          # rescue LoadError; end
 
           @current_resource = Chef::Resource::NetworkInterface::Win.new(@new_resource.name)
           @current_resource.name(@new_resource.name)
@@ -58,6 +58,9 @@ class Chef
           @current_resource
         end
 
+        #
+        # Create action to create/update the resource
+        #
         def action_create
           load_deps
 
@@ -135,6 +138,10 @@ class Chef
           ::WMI::Win32_NetworkAdapterConfiguration.find(:all, conditions: { interface_index: adapter.InterfaceIndex }).first
         end
 
+        #
+        # converge_by wrapper
+        #   Adds logging and updating the updated_by_last_action
+        #
         def converge_it(msg, &block)
           converge_by(msg) do
             Chef::Log.info msg
@@ -143,36 +150,54 @@ class Chef
           end
         end
 
+        #
+        # Enabled DHCP
+        #
         def enable_dhcp
           converge_it('Enabling DHCP') do
             nic.EnableDhcp
           end
         end
 
+        #
+        # Configure static address
+        #
         def config_static
           converge_it("Setting IP to #{new_resource.address}/#{new_resource.netmask}") do
             nic.EnableStatic([new_resource.address], [new_resource.netmask])
           end
         end
 
+        #
+        # Configure gateway
+        #
         def config_gateway
           converge_it("Setting gateway to #{new_resource.gateway}") do
             nic.SetGateways(new_resource.gateway)
           end
         end
 
+        #
+        # Configure DNS
+        #
         def config_dns
           converge_it("Setting DNS to: #{new_resource.dns.inspect}") do
             nic.SetDNSServerSearchOrder(new_resource.dns)
           end
         end
 
+        #
+        # Configure dynamic DNS registration
+        #
         def config_ddns
           converge_it("#{new_resource.ddns ? 'Enabling' : 'Disabling'} dynamic DNS registration") do
             nic.SetDynamicDNSRegistration(new_resource.ddns)
           end
         end
 
+        #
+        # Configure DNS suffix search order
+        #
         def config_dns_search
           converge_it("Setting DNS search: #{new_resource.dns_search.inspect}") do
             nic.SetDNSSuffixSearchOrder(new_resource.dns_search)
@@ -187,6 +212,9 @@ class Chef
           new_resource.vlan.nil? ? new_resource.device : "#{new_resource.device}-NIC"
         end
 
+        #
+        # Rename the physical interface
+        #
         def phys_rename
           converge_it("Renaming #{phys_adapter.NetConnectionID} to #{phys_adapter_name}") do
             phys_adapter.NetConnectionID = phys_adapter_name
