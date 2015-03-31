@@ -1,7 +1,3 @@
-# if RUBY_PLATFORM =~ /mswin|mingw32|windows/
-#
-# end
-
 # Do not monkeypatch until RubyWMI has been loaded
 if defined?(RubyWMI)
   module RubyWMI
