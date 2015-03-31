@@ -16,6 +16,12 @@ platforms:
       network:
         - ["private_network", {type: "dhcp", mac: "0025B55B0023", auto_config: false}]
         - ["private_network", {type: "dhcp", mac: "0025B55B0021", auto_config: false}]
+  - name: win-2012r2
+    driver:
+      box: opentable/win-2012r2-standard-amd64-nocm
+      network:
+        - ["private_network", {type: "dhcp", mac: "0025B55B0027", auto_config: false}]
+        - ["private_network", {type: "dhcp", mac: "0025B55B0025", auto_config: false}]
 
 suites:
   - name: default
