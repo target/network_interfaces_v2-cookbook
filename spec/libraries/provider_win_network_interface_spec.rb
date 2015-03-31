@@ -19,6 +19,14 @@ end
 
 # rubocop:disable Documentation
 describe Chef::Provider::NetworkInterface::Win do
+  let(:chef_run) do
+    ChefSpec::SoloRunner.new(
+      platform: 'windows',
+      version: '2012R2',
+      step_into: 'win_network_interface'
+      ).converge('fake::vlan')
+  end
+
   # Create a provider instance
   let(:provider) { Chef::Provider::NetworkInterface::Win.new(new_resource, run_context) }
 
@@ -42,8 +50,19 @@ describe Chef::Provider::NetworkInterface::Win do
     r
   end
 
-  let(:adapter) { double('WMI::Win32_NetworkAdapter', InterfaceIndex: 10, NetConnectionID: 'eth0') }
-  let(:adapter_config) { double('Win32_NetworkAdapterConfiguration') }
+  let(:adapter) do
+    double('WMI::Win32_NetworkAdapter', InterfaceIndex: 10, NetConnectionID: 'eth0', net_connection_id: 'eth0')
+  end
+  let(:adapter_config) do
+    double('Win32_NetworkAdapterConfiguration', ip_address: ['10.10.10.10', 'asdf:asdf:asdf:asdf'],
+                                                ip_subnet: ['255.255.255.0', '64'],
+                                                default_ip_gateway: ['10.10.10.1'],
+                                                dns_server_search_order: [],
+                                                full_dns_registration_enabled: false,
+                                                dns_domain_suffix_search_order: [],
+                                                dhcp_enabled: false
+    )
+  end
 
   # Tie some things together
   before do
@@ -192,6 +211,42 @@ describe Chef::Provider::NetworkInterface::Win do
       current_resource.dns_search ['sub1.test.com', 'sub2.test.com']
       expect(adapter_config).not_to receive(:SetDNSSuffixSearchOrder)
       provider.action_create
+    end
+
+    it 'configures initial VLAN tagging' do
+      allow(adapter_config).to receive(:EnableDhcp)
+      stub_command("(Get-NetlbfoTeam -Name 'eth2')").and_return(false)
+      stub_command("(Get-NetlbfoTeam -Name 'eth2' -VlanID 12)").and_return(true)
+
+      expect(adapter).to receive(:NetConnectionID=).with('eth2-NIC')
+      expect(adapter).to receive(:Put_)
+
+      expect(chef_run).to run_powershell_script 'create vlan device eth2'
+      expect(chef_run).not_to run_powershell_script 'set vlan on eth2'
+    end
+
+    it 'configures VLAN' do
+      allow(adapter_config).to receive(:EnableDhcp)
+      stub_command("(Get-NetlbfoTeam -Name 'eth2')").and_return(true)
+      stub_command("(Get-NetlbfoTeam -Name 'eth2' -VlanID 12)").and_return(false)
+
+      expect(adapter).to receive(:NetConnectionID=).with('eth2-NIC')
+      expect(adapter).to receive(:Put_)
+
+      expect(chef_run).not_to run_powershell_script 'create vlan device eth2'
+      expect(chef_run).to run_powershell_script 'set vlan on eth2'
+    end
+
+    it 'does nothing if VLAN tagging is properly configured' do
+      allow(adapter_config).to receive(:EnableDhcp)
+      stub_command("(Get-NetlbfoTeam -Name 'eth2')").and_return(true)
+      stub_command("(Get-NetlbfoTeam -Name 'eth2' -VlanID 12)").and_return(true)
+
+      expect(adapter).to receive(:NetConnectionID=).with('eth2-NIC')
+      expect(adapter).to receive(:Put_)
+
+      expect(chef_run).not_to run_powershell_script 'create vlan device eth2'
+      expect(chef_run).not_to run_powershell_script 'set vlan on eth2'
     end
   end
 end
