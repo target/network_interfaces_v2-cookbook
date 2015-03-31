@@ -62,7 +62,7 @@ class Chef
           load_deps
 
           # Rename
-          phys_rename unless current_resource.device == new_resource.device
+          phys_rename unless current_resource.device == phys_adapter_name
 
           # If the NIC needs to be VLAN tagged we need to team it and then tag the teamed adapter that was created
           powershell_script "setup vlan #{new_resource.device}" do
@@ -78,11 +78,13 @@ class Chef
           end
 
           enable_dhcp if new_resource.bootproto == 'dhcp' && current_resource.bootproto != 'dhcp'
-          config_static if new_resource.bootproto == 'static' && !new_resource.address.nil? && (!current_resource.address == new_resource.address || !current_resource.netmask == new_resource.netmask)
-          config_gateway unless new_resource.gateway.nil? || current_resource.gateway == new_resource.gateway
-          config_dns unless new_resource.dns.nil? || current_resource.dns.sort == new_resource.dns.sort
+          if new_resource.bootproto == 'static'
+            config_static unless new_resource.address.nil? || current_resource.address == new_resource.address || current_resource.netmask == new_resource.netmask
+            config_gateway unless new_resource.gateway.nil? || current_resource.gateway == new_resource.gateway
+          end
+          config_dns unless new_resource.dns.nil? || current_resource.dns == new_resource.dns
           config_ddns unless new_resource.ddns.nil? || current_resource.ddns == new_resource.ddns
-          config_dns_search unless new_resource.dns_search.nil? || current_resource.dns_search.sort == new_resource.dns_search.sort
+          config_dns_search unless new_resource.dns_search.nil? || current_resource.dns_search == new_resource.dns_search
         end
 
         private
@@ -168,6 +170,12 @@ class Chef
         def config_ddns
           converge_it("#{new_resource.ddns ? 'Enabling' : 'Disabling'} dynamic DNS registration") do
             nic.SetDynamicDNSRegistration(new_resource.ddns)
+          end
+        end
+
+        def config_dns_search
+          converge_it("Setting DNS search: #{new_resource.dns_search.inspect}") do
+            nic.SetDNSSuffixSearchOrder(new_resource.dns_search)
           end
         end
 

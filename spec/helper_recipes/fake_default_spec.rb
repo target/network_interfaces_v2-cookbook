@@ -109,4 +109,18 @@ iface eth2 inet dhcp
       expect(chef_run).to write_log('debian_network_interface[eth2] created eth2')
     end
   end
+
+  describe 'windows family' do
+    let(:chef_run) do
+      ChefSpec::SoloRunner.new(platform: 'windows', version: '2012R2').converge(described_recipe)
+    end
+
+    it 'creates interface eth1' do
+      expect(chef_run).to create_win_network_interface 'eth1'
+    end
+
+    it 'creates interface eth2' do
+      expect(chef_run).to create_win_network_interface 'eth2'
+    end
+  end
 end
