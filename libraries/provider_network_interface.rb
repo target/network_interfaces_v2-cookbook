@@ -20,7 +20,6 @@ class Chef
       def action_create
         converge_by("create interface #{new_resource.device}") do
           create_interface
-          log "#{@new_resource} created #{new_resource.device}"
         end
       end
 
