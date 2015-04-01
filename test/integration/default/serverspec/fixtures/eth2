@@ -1,0 +1,5 @@
+# This file maintained by Chef.  DO NOT EDIT!
+
+auto eth2
+iface eth2 inet dhcp
+  pre-up sleep 2

@@ -1,0 +1,8 @@
+# This file maintained by Chef.  DO NOT EDIT!
+
+auto eth1
+iface eth1 inet static
+  address 10.12.10.12
+  netmask 255.255.255.0
+  gateway 10.0.2.2
+  pre-up sleep 2

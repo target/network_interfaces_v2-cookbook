@@ -1,0 +1,7 @@
+# This file maintained by Chef.  DO NOT EDIT!
+
+DEVICE="eth2"
+TYPE="Ethernet"
+ONBOOT="yes"
+BOOTPROTO="dhcp"
+NM_CONTROLLED="off"
