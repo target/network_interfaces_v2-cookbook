@@ -182,7 +182,7 @@ class Chef
         #
         def config_gateway
           converge_it("Setting gateway to #{new_resource.gateway}") do
-            nic.SetGateways(new_resource.gateway)
+            nic.SetGateways([new_resource.gateway])
           end
         end
 

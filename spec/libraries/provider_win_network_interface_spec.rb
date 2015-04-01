@@ -148,7 +148,7 @@ describe Chef::Provider::NetworkInterface::Win do
     it 'configures the gateway' do
       new_resource.bootproto 'static'
       new_resource.gateway '10.10.10.1'
-      expect(adapter_config).to receive(:SetGateways).with('10.10.10.1')
+      expect(adapter_config).to receive(:SetGateways).with(['10.10.10.1'])
       provider.action_create
     end
 
