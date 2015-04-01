@@ -21,6 +21,10 @@ if windows?
     it 'should exist' do
       expect(win_interface 'eth1').not_to be_nil
     end
+
+    it 'should have ipv4 address "10.12.10.13"' do
+      expect(win_interface_config('eth1')['ipaddress'].first).to eq '10.12.10.13'
+    end
   end
 
   describe 'Interface "eth2"' do
