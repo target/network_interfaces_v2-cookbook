@@ -16,8 +16,12 @@ end
 
 if windows?
   describe 'test' do
-    it 'test test' do
-      expect(port(3389)).to be_listening
+    it 'renames an adapter to eth1' do
+      expect(win_interface 'eth1').not_to be_nil
+    end
+
+    it 'renames an adapter to eth2' do
+      expect(win_interface 'eth2').not_to be_nil
     end
   end
 end
