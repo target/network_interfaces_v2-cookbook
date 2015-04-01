@@ -126,7 +126,7 @@ describe Chef::Provider::NetworkInterface::Win do
       provider.action_create
     end
 
-    it 'configures static IP on the interface if IP netmask' do
+    it 'configures static IP on the interface if netmask is wrong' do
       current_resource.address '10.10.10.12'
       current_resource.netmask '255.255.255.0'
       new_resource.bootproto 'static'
