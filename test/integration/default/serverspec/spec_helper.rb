@@ -21,13 +21,13 @@ def rhel?
 end
 
 def install_wmi
-  puts 'Installing WMI gem?'
+  puts 'Installing wmi-lite gem'
   `#{Gem.bindir}/bundle install --gemfile #{File.join(File.dirname(__FILE__), 'Gemfile')}`
   Gem.clear_paths
 end
 
 def load_wmi
-  puts 'Loading WMI gem?'
+  puts 'Loading wmi-lite gem'
   begin
     gem 'wmi-lite'
   rescue LoadError
