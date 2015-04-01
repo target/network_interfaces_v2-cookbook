@@ -2,25 +2,29 @@ require 'spec_helper'
 
 unless windows?
   describe 'creates network configuration files' do
-    it 'eth0 is up' do
-      expect(interface('eth0')).to exist
+    describe interface('eth0') do
+      it { should exist }
     end
-    it 'eth1 is up' do
-      expect(interface('eth1')).to exist
+    describe interface('eth1') do
+      it { should exist }
+      it { should have_ipv4_address '10.12.10.11' } if rhel?
+      it { should have_ipv4_address '10.12.10.12' } if debian?
     end
-    it 'eth2 is up' do
-      expect(interface('eth2')).to exist
+    describe interface('eth2') do
+      it { should exist }
     end
   end
 end
 
 if windows?
-  describe 'test' do
-    it 'renames an adapter to eth1' do
+  describe 'Interface "eth1"' do
+    it 'should exist' do
       expect(win_interface 'eth1').not_to be_nil
     end
+  end
 
-    it 'renames an adapter to eth2' do
+  describe 'Interface "eth2"' do
+    it 'should exist' do
       expect(win_interface 'eth2').not_to be_nil
     end
   end
