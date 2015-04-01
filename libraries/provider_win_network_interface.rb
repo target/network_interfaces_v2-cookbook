@@ -91,7 +91,7 @@ class Chef
 
           enable_dhcp if new_resource.bootproto == 'dhcp' && current_resource.bootproto != 'dhcp'
           if new_resource.bootproto == 'static'
-            config_static unless new_resource.address.nil? || current_resource.address == new_resource.address || current_resource.netmask == new_resource.netmask
+            config_static unless new_resource.address.nil? || (current_resource.address == new_resource.address && current_resource.netmask == new_resource.netmask)
             config_gateway unless new_resource.gateway.nil? || current_resource.gateway == new_resource.gateway
           end
           config_dns unless new_resource.dns.nil? || current_resource.dns == new_resource.dns

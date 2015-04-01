@@ -116,6 +116,26 @@ describe Chef::Provider::NetworkInterface::Win do
       provider.action_create
     end
 
+    it 'configures static IP on the interface if IP is wrong' do
+      current_resource.address '10.10.10.11'
+      current_resource.netmask '255.255.254.0'
+      new_resource.bootproto 'static'
+      new_resource.address '10.10.10.12'
+      new_resource.netmask '255.255.254.0'
+      expect(adapter_config).to receive(:EnableStatic).with(['10.10.10.12'], ['255.255.254.0'])
+      provider.action_create
+    end
+
+    it 'configures static IP on the interface if IP netmask' do
+      current_resource.address '10.10.10.12'
+      current_resource.netmask '255.255.255.0'
+      new_resource.bootproto 'static'
+      new_resource.address '10.10.10.12'
+      new_resource.netmask '255.255.254.0'
+      expect(adapter_config).to receive(:EnableStatic).with(['10.10.10.12'], ['255.255.254.0'])
+      provider.action_create
+    end
+
     it 'does not configure static IP if already configured' do
       new_resource.bootproto 'static'
       new_resource.address '10.10.10.12'
