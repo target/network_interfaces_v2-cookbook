@@ -4,7 +4,7 @@ package 'vconfig' do
 end
 
 package 'iputils' do
-  only_if { node['network_interfaces_v2']['bonding'] }
+  only_if { bond_defined? }
 end
 
 package 'bridge-utils' do

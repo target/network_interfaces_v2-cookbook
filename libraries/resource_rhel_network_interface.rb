@@ -52,10 +52,6 @@ class Chef
           set_or_return(:bridge_device, arg, :kind_of => String)
         end
 
-        def bond_master(arg = nil)
-          set_or_return(:bond_master, arg, :kind_of => String)
-        end
-
         def network(arg = nil)
           set_or_return(:network, arg, :kind_of => String)
         end

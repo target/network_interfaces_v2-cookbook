@@ -27,4 +27,9 @@ suites:
   - name: default
     run_list:
       - recipe[fake::default]
-    attributes:
+
+  - name: bonding
+    run_list:
+      - recipe[fake::bonding]
+    excludes:
+      - win-2012r2

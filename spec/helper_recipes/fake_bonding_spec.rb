@@ -12,18 +12,21 @@ describe 'fake::bonding' do
       expect(chef_run).to install_package 'iputils'
     end
 
-    it 'configures device for bonding' do
-      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('MASTER="eth0"')
+    it 'configures slave devices for bonding' do
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth1').with_content('MASTER="bond0"')
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth1').with_content('SLAVE="yes"')
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('MASTER="bond0"')
       expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('SLAVE="yes"')
-      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('BONDING_OPTS="test opts"')
+    end
+
+    it 'configures bond device' do
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-bond0').with_content('BONDING_OPTS="mode=1 miimon=100"')
     end
   end
 
   describe 'debian family' do
     let(:chef_run) do
-      ChefSpec::SoloRunner.new(step_into: ['debian_network_interface']) do |node|
-        node.automatic['platform_family'] = 'debian'
-      end.converge(described_recipe)
+      ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.10', step_into: ['debian_network_interface']).converge(described_recipe)
     end
 
     it 'installs packages required for vlan config on interface' do
@@ -34,9 +37,14 @@ describe 'fake::bonding' do
       expect(chef_run).to save_modules 'bonding'
     end
 
+    it 'configures slave devices for bonding' do
+      expect(chef_run).to render_file('/etc/network/interfaces.d/eth1').with_content('  bond-master bond0')
+      expect(chef_run).to render_file('/etc/network/interfaces.d/eth2').with_content('  bond-master bond0')
+    end
+
     it 'configures device for bonding' do
-      expect(chef_run).to render_file('/etc/network/interfaces.d/eth2').with_content('bond-slaves eth0 eth1')
-      expect(chef_run).to render_file('/etc/network/interfaces.d/eth2').with_content('bond-mode test mode')
+      expect(chef_run).to render_file('/etc/network/interfaces.d/bond0').with_content('  bond-slaves eth1 eth2')
+      expect(chef_run).to render_file('/etc/network/interfaces.d/bond0').with_content('  bond-mode 0')
     end
   end
 end

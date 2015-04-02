@@ -3,9 +3,7 @@ require 'spec_helper'
 describe 'fake::metrics' do
   describe 'debian family' do
     let(:chef_run) do
-      ChefSpec::SoloRunner.new(step_into: ['debian_network_interface']) do |node|
-        node.automatic['platform_family'] = 'debian'
-      end.converge(described_recipe)
+      ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.10', step_into: ['debian_network_interface']).converge(described_recipe)
     end
 
     it 'installs packages required for vlan config on interface' do

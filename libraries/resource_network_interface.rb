@@ -52,6 +52,10 @@ class Chef
         set_or_return(:bridge_stp, arg, :kind_of => [TrueClass, FalseClass])
       end
 
+      def bond_master(arg = nil)
+        set_or_return(:bond_master, arg, :kind_of => String)
+      end
+
       def bond_mode(arg = nil)
         set_or_return(:bond_mode, arg, :kind_of => String)
       end

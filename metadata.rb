@@ -6,4 +6,4 @@ description      'Installs/Configures network_interfaces_v2'
 long_description 'Installs/Configures network_interfaces_v2'
 version          '0.1.0'
 
-depends 'modules', '~> 0.1.2'
+depends 'modules', '~> 0.2.0'

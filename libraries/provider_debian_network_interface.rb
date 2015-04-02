@@ -20,10 +20,9 @@ class Chef
         provides :debian_network_interface, os: 'linux', platform_family: %w(debian)
 
         def create_interface
-          node.default['network_interfaces_v2']['metrics'] = true unless new_resource.metric.nil?
-          node.default['network_interfaces_v2']['vlan'] = true if new_resource.vlan_dev || new_resource.device =~ /(eth|bond|wlan)[0-9]+\.[0-9]+/
-          node.default['network_interfaces_v2']['bonding'] = true if new_resource.bond_slaves
-          node.default['network_interfaces_v2']['bridge'] = true if new_resource.bridge_ports
+          node.set['network_interfaces_v2']['metrics'] = true unless new_resource.metric.nil?
+          node.set['network_interfaces_v2']['vlan'] = true if !new_resource.vlan_dev.nil? || new_resource.device =~ /(eth|bond|wlan)[0-9]+\.[0-9]+/
+          node.set['network_interfaces_v2']['bridge'] = true unless new_resource.bridge_ports.nil?
 
           run_context.include_recipe 'network_interfaces_v2::_debian'
 
@@ -41,6 +40,7 @@ class Chef
                       :bridge_ports => new_resource.bridge_ports,
                       :bridge_stp => new_resource.bridge_stp,
                       :vlan_dev => new_resource.vlan_dev,
+                      :bond_master => new_resource.bond_master,
                       :bond_slaves => new_resource.bond_slaves,
                       :bond_mode => new_resource.bond_mode,
                       :mtu => new_resource.mtu,

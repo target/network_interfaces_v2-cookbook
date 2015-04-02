@@ -1,3 +1,5 @@
+include_recipe 'modules::default'
+
 directory '/etc/network/interfaces.d'
 
 # Get the contents of the managed_directory on disk
@@ -28,10 +30,10 @@ modules '8021q' do
 end
 
 package 'ifenslave-2.6' do
-  only_if { node['network_interfaces_v2']['bonding'] }
+  only_if { bond_defined? }
 end
 modules 'bonding' do
-  only_if { node['network_interfaces_v2']['bonding'] }
+  only_if { bond_defined? }
 end
 
 package 'ifmetric' do
