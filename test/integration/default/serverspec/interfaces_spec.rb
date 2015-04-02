@@ -1,33 +1,42 @@
 require 'spec_helper'
 
 unless windows?
-  describe 'creates network configuration files' do
-    describe interface('eth0') do
-      it { should exist }
+  describe 'Interface "eth0"' do
+    it 'should exist' do
+      expect(interface 'eth0').to exist
     end
 
-    describe interface('eth2') do
-      it { should exist }
+    it 'should have DHCP enabled' do
+      expect(command('ps -ef | grep dhclient | grep -v grep').stdout).to contain(/[-\.]eth0./)
+    end
+  end
+
+  describe 'Interface "eth1"' do
+    it 'should exist' do
+      expect(interface 'eth1').to exist
     end
 
-    # Check eth0 and eth2 are DHCP
-    describe command('ps -ef | grep dhclient | grep -v grep') do
-      its(:stdout) { should contain '-eth0.' } if rhel?
-      its(:stdout) { should contain '.eth0.' } if debian?
-
-      its(:stdout) { should contain '-eth2.' } if rhel?
-      its(:stdout) { should contain '.eth2.' } if debian?
+    it 'should have DHCP disabled' do
+      expect(command('ps -ef | grep dhclient | grep -v grep').stdout).not_to contain(/[-\.]eth1./)
     end
 
-    describe interface('eth1') do
-      it { should exist }
-      it { should have_ipv4_address '10.12.10.11' } if rhel?
-      it { should have_ipv4_address '10.12.10.12' } if debian?
+    it 'should have an address' do
+      expect(interface('eth1').has_ipv4_address?('10.12.10.11')).to eq true if rhel?
+      expect(interface('eth1').has_ipv4_address?('10.12.10.12')).to eq true if debian?
     end
 
-    # Check netmask
-    describe command('ip addr show dev eth1') do
-      its(:stdout) { should contain '/24 brd ' }
+    it 'should have netmask "255.255.255.0"' do
+      expect(command('ip addr show dev eth1').stdout).to contain '/24 brd '
+    end
+  end
+
+  describe 'Interface "eth2"' do
+    it 'should exist' do
+      expect(interface 'eth2').to exist
+    end
+
+    it 'should have DHCP enabled' do
+      expect(command('ps -ef | grep dhclient | grep -v grep').stdout).to contain(/[-\.]eth2./)
     end
   end
 end
