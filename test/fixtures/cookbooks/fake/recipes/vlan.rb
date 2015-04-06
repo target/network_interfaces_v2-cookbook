@@ -22,7 +22,7 @@ when 'debian'
     bootproto 'static'
     address '12.12.12.13'
     netmask '255.255.255.0'
-    vlan_dev 'eth2'
+    vlan 'eth2'
   end
 when 'windows'
   win_network_interface 'eth2' do

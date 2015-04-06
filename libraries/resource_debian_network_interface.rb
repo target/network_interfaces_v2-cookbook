@@ -36,8 +36,8 @@ class Chef
           set_or_return(:metric, arg, :kind_of => Integer)
         end
 
-        def vlan_dev(arg = nil)
-          set_or_return(:vlan_dev, arg, :kind_of => String)
+        def vlan(arg = nil)
+          set_or_return(:vlan, arg, :kind_of => String)
         end
 
         def bond_slaves(arg = nil)

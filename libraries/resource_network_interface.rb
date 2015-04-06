@@ -95,6 +95,14 @@ class Chef
       def reload_type(arg = nil)
         set_or_return(:reload_type, arg, :kind_of => Symbol)
       end
+
+      def hw_address(arg = nil)
+        set_or_return(:hw_address, arg, :kind_of => String, :regex => /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/)
+      end
+
+      def vlan(arg = nil)
+        set_or_return(:vlan, arg, :kind_of => [TrueClass, FalseClass, String, Integer])
+      end
     end
   end
 end

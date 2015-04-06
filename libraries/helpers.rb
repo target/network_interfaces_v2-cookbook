@@ -61,7 +61,7 @@ module NetworkInterfacesV2
     # Check if any vlan interfaces defined for debain
     #
     def debian_vlan_defined?
-      !debian_interfaces.reject { |r| r.vlan_dev.nil? }.empty?
+      !debian_interfaces.reject { |r| r.vlan.nil? }.empty?
     end
 
     #

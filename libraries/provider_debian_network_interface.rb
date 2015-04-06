@@ -38,7 +38,7 @@ class Chef
                       :broadcast => new_resource.broadcast,
                       :bridge_ports => new_resource.bridge_ports,
                       :bridge_stp => new_resource.bridge_stp,
-                      :vlan_dev => new_resource.vlan_dev,
+                      :vlan_dev => new_resource.vlan,
                       :bond_master => new_resource.bond_master,
                       :bond_slaves => new_resource.bond_slaves,
                       :bond_mode => new_resource.bond_mode,
