@@ -65,29 +65,48 @@ class Chef
           load_deps
 
           # Rename
-          phys_rename unless current_resource.device == phys_adapter_name
+          phys_rename unless phys_adapter.net_connection_id == phys_adapter_name
 
-          # If the NIC needs to be VLAN tagged we need to team it and then tag the teamed adapter that was created
+          # Create new VLAN adapter if missing
           powershell_script "create vlan device #{new_resource.device}" do
-            guard_interpreter :powershell_script
-            code <<-EOH
-              $newTeam = New-NetlbfoTeam -Name "#{new_resource.device}" -TeamMembers "#{new_resource.device}-NIC" -Confirm:$False
-              Set-NetLbfoTeamNIC -Name $newTeam.Name -VlanID #{new_resource.vlan}
-              Get-NetAdapter -Name "#{new_resource.device} - Vlan #{new_resource.vlan}" | Rename-NetAdapter -NewName "#{new_resource.device}"
-            EOH
+            code "New-NetlbfoTeam -Name '#{new_resource.device}' -TeamMembers '#{new_resource.device}-NIC' -Confirm:$False"
             not_if { new_resource.vlan.nil? }
-            not_if "(Get-NetlbfoTeam -Name '#{new_resource.device}')"
-          end
+            not_if do
+              `powershell Get-NetlbfoTeam -Name '#{new_resource.device}'`
+              $?.success?
+            end
+            not_if do
+              `powershell Get-NetlbfoTeamNic -Name '#{new_resource.device} - VLAN #{new_resource.vlan}'`
+              $?.success?
+            end
+          end.run_action(:run)
 
+          # Make sure proper VLAN is added to VLAN adapter
           powershell_script "set vlan on #{new_resource.device}" do
-            guard_interpreter :powershell_script
-            code <<-EOH
-              $newTeam = Get-NetlbfoTeam -Name '#{new_resource.device}'
-              Set-NetLbfoTeamNIC -Name $newTeam.Name -VlanID #{new_resource.vlan}
-            EOH
+            code "Set-NetLbfoTeamNIC -Name '#{new_resource.device}' -VlanID #{new_resource.vlan}"
             not_if { new_resource.vlan.nil? }
-            not_if "(Get-NetlbfoTeam -Name '#{new_resource.device}' -VlanID #{new_resource.vlan})"
-          end
+            not_if do
+              stdout = `powershell (Get-NetlbfoTeamNic -Name '#{new_resource.device}').VlanID -eq #{new_resource.vlan}`.chomp
+              !$?.success? || stdout == 'True'
+            end
+            not_if do
+              `powershell Get-NetlbfoTeamNic -Name '#{new_resource.device} - VLAN #{new_resource.vlan}'`
+              $?.success?
+            end
+          end.run_action(:run)
+
+          powershell_script "rename vlan adapter back to #{new_resource.device}" do
+            code "Get-NetAdapter -Name '#{new_resource.device} - Vlan #{new_resource.vlan}' | Rename-NetAdapter -NewName '#{new_resource.device}'"
+            not_if { new_resource.vlan.nil? }
+            not_if do
+              stdout = `powershell (Get-NetlbfoTeamNic -Name '#{new_resource.device}').VlanID -eq #{new_resource.vlan}`.chomp
+              !$?.success? || stdout == 'True'
+            end
+            only_if do
+              `powershell Get-NetlbfoTeamNic -Name '#{new_resource.device} - VLAN #{new_resource.vlan}'`
+              $?.success?
+            end
+          end.run_action(:run)
 
           enable_dhcp if new_resource.bootproto == 'dhcp' && current_resource.bootproto != 'dhcp'
           if new_resource.bootproto == 'static'
@@ -102,7 +121,7 @@ class Chef
         private
 
         #
-        # An WMI instance of the Network Adapter found by MAC
+        # A WMI instance of the Network Adapter found by MAC
         #
         # @return [RubyWMI::Win32_NetworkAdapter]
         #

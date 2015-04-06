@@ -21,7 +21,6 @@ class Chef
 
         def create_interface
           node.set['network_interfaces_v2']['metrics'] = true unless new_resource.metric.nil?
-          node.set['network_interfaces_v2']['vlan'] = true if !new_resource.vlan_dev.nil? || new_resource.device =~ /(eth|bond|wlan)[0-9]+\.[0-9]+/
           node.set['network_interfaces_v2']['bridge'] = true unless new_resource.bridge_ports.nil?
 
           run_context.include_recipe 'network_interfaces_v2::_debian'

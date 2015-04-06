@@ -33,3 +33,7 @@ suites:
       - recipe[fake::bonding]
     excludes:
       - win-2012r2
+
+  - name: vlan
+    run_list:
+      - recipe[fake::vlan]

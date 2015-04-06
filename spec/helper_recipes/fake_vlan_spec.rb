@@ -31,7 +31,7 @@ describe 'fake::vlan' do
     end
 
     it 'configures device for vlan' do
-      expect(chef_run).to render_file('/etc/network/interfaces.d/eth2').with_content('vlan_raw_device eth0')
+      expect(chef_run).to render_file('/etc/network/interfaces.d/eth2.12').with_content('vlan_raw_device eth2')
     end
   end
 end

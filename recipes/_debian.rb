@@ -23,10 +23,10 @@ end
 cookbook_file '/etc/network/interfaces'
 
 package 'vlan' do
-  only_if { node['network_interfaces_v2']['vlan'] }
+  only_if { vlan_defined? }
 end
 modules '8021q' do
-  only_if { node['network_interfaces_v2']['vlan'] }
+  only_if { vlan_defined? }
 end
 
 package 'ifenslave-2.6' do

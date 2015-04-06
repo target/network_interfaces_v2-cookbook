@@ -17,7 +17,7 @@ iface <%= @device %> inet <%= @type %>
   gateway <%= @gateway %>
 <% end %>
 <% if @vlan_dev -%>
-  vlan_raw_device <%= @vlan_dev %>
+  vlan-raw-device <%= @vlan_dev %>
 <% end %>
 <% if @bridge_ports -%>
   bridge_ports<% @bridge_ports.each do |port| %> <%= port %><% end %>
