@@ -16,7 +16,6 @@ class Chef
       # Chef Provider for Windows Network Interfaces
       #
       class Win < Chef::Provider::NetworkInterface
-
         provides :win_network_interface, os: 'windows'
 
         #
@@ -67,46 +66,12 @@ class Chef
           # Rename
           phys_rename unless phys_adapter.net_connection_id == phys_adapter_name
 
-          # Create new VLAN adapter if missing
-          powershell_script "create vlan device #{new_resource.device}" do
-            code "New-NetlbfoTeam -Name '#{new_resource.device}' -TeamMembers '#{new_resource.device}-NIC' -Confirm:$False"
-            not_if { new_resource.vlan.nil? }
-            not_if do
-              `powershell Get-NetlbfoTeam -Name '#{new_resource.device}'`
-              $?.success?
-            end
-            not_if do
-              `powershell Get-NetlbfoTeamNic -Name '#{new_resource.device} - VLAN #{new_resource.vlan}'`
-              $?.success?
-            end
-          end.run_action(:run)
-
-          # Make sure proper VLAN is added to VLAN adapter
-          powershell_script "set vlan on #{new_resource.device}" do
-            code "Set-NetLbfoTeamNIC -Name '#{new_resource.device}' -VlanID #{new_resource.vlan}"
-            not_if { new_resource.vlan.nil? }
-            not_if do
-              stdout = `powershell (Get-NetlbfoTeamNic -Name '#{new_resource.device}').VlanID -eq #{new_resource.vlan}`.chomp
-              !$?.success? || stdout == 'True'
-            end
-            not_if do
-              `powershell Get-NetlbfoTeamNic -Name '#{new_resource.device} - VLAN #{new_resource.vlan}'`
-              $?.success?
-            end
-          end.run_action(:run)
-
-          powershell_script "rename vlan adapter back to #{new_resource.device}" do
-            code "Get-NetAdapter -Name '#{new_resource.device} - Vlan #{new_resource.vlan}' | Rename-NetAdapter -NewName '#{new_resource.device}'"
-            not_if { new_resource.vlan.nil? }
-            not_if do
-              stdout = `powershell (Get-NetlbfoTeamNic -Name '#{new_resource.device}').VlanID -eq #{new_resource.vlan}`.chomp
-              !$?.success? || stdout == 'True'
-            end
-            only_if do
-              `powershell Get-NetlbfoTeamNic -Name '#{new_resource.device} - VLAN #{new_resource.vlan}'`
-              $?.success?
-            end
-          end.run_action(:run)
+          # Set VLAN if any
+          unless new_resource.vlan.nil?
+            create_vlan_dev unless initial_vlan_dev_exist? || msft_vlan_dev_exist?
+            set_vlan unless vlanid_set? || msft_vlan_dev_exist?
+            rename_vlan_dev if msft_vlan_dev_exist? && !vlanid_set?
+          end
 
           enable_dhcp if new_resource.bootproto == 'dhcp' && current_resource.bootproto != 'dhcp'
           if new_resource.bootproto == 'static'
@@ -175,6 +140,68 @@ class Chef
             Chef::Log.info msg
             yield
             new_resource.updated_by_last_action true
+          end
+        end
+
+        #
+        # Check if initial VLAN device exists
+        #
+        def initial_vlan_dev_exist?
+          shell_out = Mixlib::ShellOut.new("powershell.exe -Command \"Get-NetlbfoTeam -Name '#{new_resource.device}'\"")
+          shell_out.run_command
+          !shell_out.error?
+        end
+
+        #
+        # Check if VLAN device exists with MSFT naming
+        #
+        def msft_vlan_dev_exist?
+          shell_out = Mixlib::ShellOut.new("powershell.exe -Command \"Get-NetlbfoTeamNic -Name '#{new_resource.device} - VLAN #{new_resource.vlan}'\"")
+          shell_out.run_command
+          !shell_out.error?
+        end
+
+        #
+        # Check if VLANID is set on VLAN device
+        #
+        def vlanid_set?
+          shell_out = Mixlib::ShellOut.new("powershell.exe -Command \"(Get-NetlbfoTeamNic -Name '#{new_resource.device}').VlanID -eq #{new_resource.vlan}\"")
+          shell_out.run_command
+
+          return false if shell_out.error?
+          shell_out.stdout.chomp == new_resource.vlan
+        end
+
+        #
+        # Create new VLAN device
+        #
+        def create_vlan_dev
+          converge_it("Create VLAN adapter #{new_resource.device}") do
+            shell_out = Mixlib::ShellOut.new("powershell.exe -Command \"New-NetlbfoTeam -Name '#{new_resource.device}' -TeamMembers '#{new_resource.device}-NIC' -Confirm:$False\"")
+            shell_out.run_command
+            shell_out.error!
+          end
+        end
+
+        #
+        # Set VLAN ID on VLAN device
+        #
+        def set_vlan
+          converge_it("Set VLAN #{new_resource.vlan} on adapter #{new_resource.device}") do
+            shell_out = Mixlib::ShellOut.new("powershell.exe -Command \"Set-NetLbfoTeamNIC -Name '#{new_resource.device}' -VlanID #{new_resource.vlan}\"")
+            shell_out.run_command
+            shell_out.error!
+          end
+        end
+
+        #
+        # Rename VLAN device to name we want from MSFT naming convention
+        #
+        def rename_vlan_dev
+          converge_it("Renaming VLAN dev '#{new_resource.device} - Vlan #{new_resource.vlan}' back to '#{new_resource.device}'") do
+            shell_out = Mixlib::ShellOut.new("powershell.exe -Command \"Get-NetAdapter -Name '#{new_resource.device} - Vlan #{new_resource.vlan}' | Rename-NetAdapter -NewName '#{new_resource.device}'\"")
+            shell_out.run_command
+            shell_out.error!
           end
         end
 
