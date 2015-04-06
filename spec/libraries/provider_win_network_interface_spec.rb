@@ -19,14 +19,6 @@ end
 
 # rubocop:disable Documentation
 describe Chef::Provider::NetworkInterface::Win do
-  let(:chef_run) do
-    ChefSpec::SoloRunner.new(
-      platform: 'windows',
-      version: '2012R2',
-      step_into: 'win_network_interface'
-      ).converge('fake::vlan')
-  end
-
   # Create a provider instance
   let(:provider) { Chef::Provider::NetworkInterface::Win.new(new_resource, run_context) }
 
@@ -51,7 +43,7 @@ describe Chef::Provider::NetworkInterface::Win do
   end
 
   let(:adapter) do
-    double('WMI::Win32_NetworkAdapter', InterfaceIndex: 10, NetConnectionID: 'eth0', net_connection_id: 'eth0')
+    double('WMI::Win32_NetworkAdapter', InterfaceIndex: 10, NetConnectionID: 'eth1', net_connection_id: 'eth1')
   end
   let(:adapter_config) do
     double('Win32_NetworkAdapterConfiguration', ip_address: ['10.10.10.10', 'asdf:asdf:asdf:asdf'],
@@ -76,16 +68,10 @@ describe Chef::Provider::NetworkInterface::Win do
 
   describe '#action_create' do
     it 'renames the physical interface' do
+      allow(adapter).to receive(:NetConnectionID).and_return('eth0')
+      allow(adapter).to receive(:net_connection_id).and_return('eth0')
       current_resource.device 'eth0'
       expect(adapter).to receive(:NetConnectionID=).with('eth1')
-      expect(adapter).to receive(:Put_)
-      provider.action_create
-    end
-
-    it 'appends -NIC to physical adapter name whe configuring VLANs' do
-      current_resource.device 'eth1'
-      new_resource.vlan 12
-      expect(adapter).to receive(:NetConnectionID=).with('eth1-NIC')
       expect(adapter).to receive(:Put_)
       provider.action_create
     end
@@ -233,40 +219,74 @@ describe Chef::Provider::NetworkInterface::Win do
       provider.action_create
     end
 
-    it 'configures initial VLAN tagging' do
-      allow(adapter_config).to receive(:EnableDhcp)
-      stub_command("(Get-NetlbfoTeam -Name 'eth2')").and_return(false)
-      stub_command("(Get-NetlbfoTeam -Name 'eth2' -VlanID 12)").and_return(true)
+    describe 'managing vlans' do
+      before do
+        current_resource.device 'eth1-NIC'
+        allow(adapter).to receive(:net_connection_id).and_return('eth1-NIC')
+        new_resource.vlan 12
 
-      expect(adapter).to receive(:NetConnectionID=).with('eth2-NIC')
-      expect(adapter).to receive(:Put_)
+        allow(provider).to receive(:vlan_dev_exist?).and_return(false)
+        allow(provider).to receive(:msft_vlan_dev_exist?).and_return(false)
+        allow(provider).to receive(:vlanid_set?).and_return(false)
 
-      expect(chef_run).to run_powershell_script 'create vlan device eth2'
-      expect(chef_run).not_to run_powershell_script 'set vlan on eth2'
-    end
+        allow(provider).to receive(:create_vlan_dev)
+        allow(provider).to receive(:set_vlan)
+        allow(provider).to receive(:rename_vlan_dev)
+      end
 
-    it 'configures VLAN' do
-      allow(adapter_config).to receive(:EnableDhcp)
-      stub_command("(Get-NetlbfoTeam -Name 'eth2')").and_return(true)
-      stub_command("(Get-NetlbfoTeam -Name 'eth2' -VlanID 12)").and_return(false)
+      it 'appends -NIC to physical adapter name whe configuring VLANs' do
+        current_resource.device 'eth1'
+        allow(adapter).to receive(:net_connection_id).and_return('eth1')
 
-      expect(adapter).to receive(:NetConnectionID=).with('eth2-NIC')
-      expect(adapter).to receive(:Put_)
+        expect(adapter).to receive(:NetConnectionID=).with('eth1-NIC')
+        expect(adapter).to receive(:Put_)
+        provider.action_create
+      end
 
-      expect(chef_run).not_to run_powershell_script 'create vlan device eth2'
-      expect(chef_run).to run_powershell_script 'set vlan on eth2'
-    end
+      it 'creates a VLAN device' do
+        expect(provider).to receive(:create_vlan_dev)
+        provider.action_create
+      end
 
-    it 'does nothing if VLAN tagging is properly configured' do
-      allow(adapter_config).to receive(:EnableDhcp)
-      stub_command("(Get-NetlbfoTeam -Name 'eth2')").and_return(true)
-      stub_command("(Get-NetlbfoTeam -Name 'eth2' -VlanID 12)").and_return(true)
+      it 'does not create a VLAN device that already exists' do
+        allow(provider).to receive(:vlan_dev_exist?).and_return(true)
+        expect(provider).not_to receive(:create_vlan_dev)
+        provider.action_create
+      end
 
-      expect(adapter).to receive(:NetConnectionID=).with('eth2-NIC')
-      expect(adapter).to receive(:Put_)
+      it 'does not create a VLAN device that already exists with MSFT naming' do
+        allow(provider).to receive(:msft_vlan_dev_exist?).and_return(true)
+        expect(provider).not_to receive(:create_vlan_dev)
+        provider.action_create
+      end
 
-      expect(chef_run).not_to run_powershell_script 'create vlan device eth2'
-      expect(chef_run).not_to run_powershell_script 'set vlan on eth2'
+      it 'sets VLAN ID on the device if not set' do
+        expect(provider).to receive(:set_vlan)
+        provider.action_create
+      end
+
+      it 'does not set VLAN ID on a device that has it set and has been renamed' do
+        allow(provider).to receive(:vlanid_set?).and_return(true)
+        expect(provider).not_to receive(:set_vlan)
+        provider.action_create
+      end
+
+      it 'does not set VLAN ID on a device that has it set with a MSFT naming convention' do
+        allow(provider).to receive(:msft_vlan_dev_exist?).and_return(true)
+        expect(provider).not_to receive(:set_vlan)
+        provider.action_create
+      end
+
+      it 'renames the VLAN device to what we want' do
+        allow(provider).to receive(:msft_vlan_dev_exist?).and_return(true)
+        expect(provider).to receive(:rename_vlan_dev)
+        provider.action_create
+      end
+
+      it 'does not rename a properly named VLAN device' do
+        expect(provider).not_to receive(:rename_vlan_dev)
+        provider.action_create
+      end
     end
   end
 end

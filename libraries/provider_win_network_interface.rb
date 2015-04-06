@@ -68,9 +68,9 @@ class Chef
 
           # Set VLAN if any
           unless new_resource.vlan.nil?
-            create_vlan_dev unless initial_vlan_dev_exist? || msft_vlan_dev_exist?
+            create_vlan_dev unless vlan_dev_exist? || msft_vlan_dev_exist?
             set_vlan unless vlanid_set? || msft_vlan_dev_exist?
-            rename_vlan_dev if msft_vlan_dev_exist? && !vlanid_set?
+            rename_vlan_dev if msft_vlan_dev_exist?
           end
 
           enable_dhcp if new_resource.bootproto == 'dhcp' && current_resource.bootproto != 'dhcp'
@@ -146,7 +146,7 @@ class Chef
         #
         # Check if initial VLAN device exists
         #
-        def initial_vlan_dev_exist?
+        def vlan_dev_exist?
           shell_out = Mixlib::ShellOut.new("powershell.exe -Command \"Get-NetlbfoTeam -Name '#{new_resource.device}'\"")
           shell_out.run_command
           !shell_out.error?

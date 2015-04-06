@@ -13,7 +13,7 @@ describe 'fake::vlan' do
     end
 
     it 'configures device for vlan' do
-      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('VLAN="yes"')
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2.12').with_content('VLAN="yes"')
     end
   end
 
@@ -31,7 +31,7 @@ describe 'fake::vlan' do
     end
 
     it 'configures device for vlan' do
-      expect(chef_run).to render_file('/etc/network/interfaces.d/eth2.12').with_content('vlan_raw_device eth2')
+      expect(chef_run).to render_file('/etc/network/interfaces.d/eth2.12').with_content('vlan-raw-device eth2')
     end
   end
 end
