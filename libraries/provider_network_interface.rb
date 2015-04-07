@@ -30,12 +30,6 @@ class Chef
       def load_current_resource; end
 
       def action_create
-        converge_by("create interface #{new_resource.device}") do
-          create_interface
-        end
-      end
-
-      def create_interface
         raise Chef::Exceptions::UnsupportedAction, "#{self.to_s} does not support :create"
       end
     end

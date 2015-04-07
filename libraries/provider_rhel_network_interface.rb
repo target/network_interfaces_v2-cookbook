@@ -29,7 +29,7 @@ class Chef
       class Rhel < Chef::Provider::NetworkInterface
         provides :rhel_network_interface, os: 'linux', platform_family: %w(rhel fedora) if Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
 
-        def create_interface
+        def action_create
           run_context.include_recipe 'network_interfaces_v2::_rhel'
 
           template "/etc/sysconfig/network-scripts/ifcfg-#{new_resource.device}" do

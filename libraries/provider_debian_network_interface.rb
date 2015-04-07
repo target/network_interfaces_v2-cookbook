@@ -30,7 +30,7 @@ class Chef
       class Debian < Chef::Provider::NetworkInterface
         provides :debian_network_interface, os: 'linux', platform_family: %w(debian) if Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
 
-        def create_interface
+        def action_create
           run_context.include_recipe 'network_interfaces_v2::_debian'
 
           template "/etc/network/interfaces.d/#{new_resource.device}" do
