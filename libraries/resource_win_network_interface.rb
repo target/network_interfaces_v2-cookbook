@@ -15,7 +15,6 @@ class Chef
       # Chef Resource for a win_network_interface
       #
       class Win < Chef::Resource::NetworkInterface
-
         provides :win_network_interface
         provides :network_interface, os: 'windows'
 
@@ -47,7 +46,7 @@ class Chef
         end
 
         def dns_search(arg = nil)
-          set_or_return(:domain, arg, :kind_of => Array)
+          set_or_return(:dns_search, arg, :kind_of => Array)
         end
       end
     end
