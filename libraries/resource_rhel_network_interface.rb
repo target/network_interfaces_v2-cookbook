@@ -27,9 +27,9 @@ class Chef
       # Chef Resource for a rhel_network_interface
       #
       class Rhel < Chef::Resource::NetworkInterface
-
         provides :rhel_network_interface
-        provides :network_interface, os: 'linux', platform_family: %w(rhel fedora)
+        provides :network_interface, os: 'linux', platform_family: %w(rhel fedora) if Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
+        provides :network_interface, on_platforms: [:redhat, :centos] unless Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
 
         def initialize(name, run_context = nil)
           super

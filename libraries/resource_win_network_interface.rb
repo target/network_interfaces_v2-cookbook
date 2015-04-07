@@ -28,7 +28,8 @@ class Chef
       #
       class Win < Chef::Resource::NetworkInterface
         provides :win_network_interface
-        provides :network_interface, os: 'windows'
+        provides :network_interface, os: 'windows' if Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
+        provides :network_interface, on_platforms: :windows unless Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
 
         def initialize(name, run_context = nil)
           super

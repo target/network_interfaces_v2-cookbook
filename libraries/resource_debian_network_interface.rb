@@ -27,9 +27,9 @@ class Chef
       # Chef Resource for a debian_network_interface
       #
       class Debian < Chef::Resource::NetworkInterface
-
         provides :debian_network_interface
-        provides :network_interface, os: 'linux', platform_family: %w(debian)
+        provides :network_interface, os: 'linux', platform_family: %w(debian) if Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
+        provides :network_interface, on_platforms: [:debian, :ubuntu] unless Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
 
         def initialize(name, run_context = nil)
           super
