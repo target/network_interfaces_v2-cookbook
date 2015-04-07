@@ -8,5 +8,5 @@ package 'iputils' do
 end
 
 package 'bridge-utils' do
-  only_if { node['network_interfaces_v2']['bridge'] }
+  only_if { bridge_defined? }
 end

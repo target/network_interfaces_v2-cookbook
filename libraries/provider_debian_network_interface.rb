@@ -20,9 +20,6 @@ class Chef
         provides :debian_network_interface, os: 'linux', platform_family: %w(debian)
 
         def create_interface
-          node.set['network_interfaces_v2']['metrics'] = true unless new_resource.metric.nil?
-          node.set['network_interfaces_v2']['bridge'] = true unless new_resource.bridge_ports.nil?
-
           run_context.include_recipe 'network_interfaces_v2::_debian'
 
           template "/etc/network/interfaces.d/#{new_resource.device}" do

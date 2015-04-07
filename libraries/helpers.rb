@@ -20,6 +20,21 @@ module NetworkInterfacesV2
       return win_vlan_defined? if node['os'] == 'windows'
     end
 
+    #
+    # Check resource collection for any interfaces setup for bridge
+    #
+    def bridge_defined?
+      return debian_bridge_defined? if node['platform_family'] == 'debian'
+      return rhel_bridge_defined? if %w(rhel fedora).include? node['platform_family']
+    end
+
+    #
+    # Check resource collection for any interfaces setup with metric
+    #
+    def metric_defined?
+      return debian_metric_defined? if node['platform_family'] == 'debian'
+    end
+
     private
 
     #
@@ -76,6 +91,27 @@ module NetworkInterfacesV2
     #
     def win_vlan_defined?
       !win_interfaces.reject { |r| r.vlan.nil? }.empty?
+    end
+
+    #
+    # Check if any bridge interfaces defined for debain
+    #
+    def debian_bridge_defined?
+      !debian_interfaces.reject { |r| r.bridge_ports.nil? }.empty?
+    end
+
+    #
+    # Check if any bridge interfaces defined for rhel
+    #
+    def rhel_bridge_defined?
+      !rhel_interfaces.reject { |r| r.bridge_device.nil? }.empty?
+    end
+
+    #
+    # Check if any interfaces have metric defined for debain
+    #
+    def debian_metric_defined?
+      !debian_interfaces.reject { |r| r.metric.nil? }.empty?
     end
   end
 end

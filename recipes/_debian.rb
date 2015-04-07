@@ -37,9 +37,9 @@ modules 'bonding' do
 end
 
 package 'ifmetric' do
-  only_if { node['network_interfaces_v2']['metrics'] }
+  only_if { metric_defined? }
 end
 
 package 'bridge-utils' do
-  only_if { node['network_interfaces_v2']['bridge'] }
+  only_if { bridge_defined? }
 end

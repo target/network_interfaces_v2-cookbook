@@ -19,8 +19,6 @@ class Chef
         provides :rhel_network_interface, os: 'linux', platform_family: %w(rhel fedora)
 
         def create_interface
-          node.default['network_interfaces_v2']['bridge'] = true if new_resource.bridge_device
-
           run_context.include_recipe 'network_interfaces_v2::_rhel'
 
           template "/etc/sysconfig/network-scripts/ifcfg-#{new_resource.device}" do
