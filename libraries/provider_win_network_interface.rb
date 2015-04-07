@@ -181,7 +181,7 @@ class Chef
           shell_out.run_command
 
           return false if shell_out.error?
-          shell_out.stdout.chomp == new_resource.vlan
+          shell_out.stdout.chomp == 'True'
         end
 
         #
