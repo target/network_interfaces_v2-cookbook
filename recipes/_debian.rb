@@ -27,8 +27,9 @@ directory_contents = Dir.glob('/etc/network/interfaces.d/*')
 
 # Walk the resource collection to find managed device files
 managed_files = run_context.resource_collection.all_resources.map do |r|
-  "/etc/network/interfaces.d/#{r.device}" if [:debian_network_interface, :network_interface].include? r.declared_type if Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
-  "/etc/network/interfaces.d/#{r.device}" if [:debian_network_interface, :network_interface].include? r.resource_name unless Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
+  f = "/etc/network/interfaces.d/#{r.device}" if [:debian_network_interface, :network_interface].include? r.declared_type if Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
+  f = "/etc/network/interfaces.d/#{r.device}" if [:debian_network_interface, :network_interface].include? r.resource_name unless Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
+  f
 end.compact
 
 # Remove any contents that appear to be unmanaged
