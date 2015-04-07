@@ -43,7 +43,7 @@ describe Chef::Provider::NetworkInterface::Win do
   end
 
   let(:adapter) do
-    double('WMI::Win32_NetworkAdapter', InterfaceIndex: 10, NetConnectionID: 'eth1', net_connection_id: 'eth1')
+    double('WMI::Win32_NetworkAdapter', InterfaceIndex: 10, NetConnectionID: 'eth1', net_connection_id: 'eth1', enable: nil, disable: nil)
   end
   let(:adapter_config) do
     double('Win32_NetworkAdapterConfiguration', ip_address: ['10.10.10.10', 'asdf:asdf:asdf:asdf'],
@@ -59,6 +59,7 @@ describe Chef::Provider::NetworkInterface::Win do
   # Tie some things together
   before do
     allow(provider).to receive(:load_current_resource).and_return(current_resource)
+    allow(provider).to receive(:sleep).and_return(nil)
     provider.new_resource = new_resource
     provider.current_resource = current_resource
     allow(run_context).to receive(:include_recipe).and_return(nil)
@@ -216,6 +217,32 @@ describe Chef::Provider::NetworkInterface::Win do
       new_resource.dns_domain 'my_dns_domain.com'
       current_resource.dns_domain 'my_dns_domain.com'
       expect(adapter_config).not_to receive(:SetDNSDomain)
+      provider.action_create
+    end
+
+    it 'reloads interface if changes made' do
+      allow(adapter_config).to receive(:SetDNSDomain)
+      new_resource.dns_domain 'my_dns_domain.com'
+      expect(adapter).to receive(:disable)
+      expect(adapter).to receive(:enable)
+      provider.action_create
+    end
+
+    it 'does not reload interface if no changes made' do
+      allow(adapter_config).to receive(:SetDNSDomain)
+      new_resource.dns_domain 'my_dns_domain.com'
+      current_resource.dns_domain 'my_dns_domain.com'
+      expect(adapter).not_to receive(:disable)
+      expect(adapter).not_to receive(:enable)
+      provider.action_create
+    end
+
+    it 'does not reloads interface if defined by user' do
+      allow(adapter_config).to receive(:SetDNSDomain)
+      new_resource.dns_domain 'my_dns_domain.com'
+      new_resource.reload false # Defined by user not to reload
+      expect(adapter).not_to receive(:disable)
+      expect(adapter).not_to receive(:enable)
       provider.action_create
     end
 

@@ -93,6 +93,8 @@ class Chef
           config_dns unless new_resource.dns.nil? || current_resource.dns == new_resource.dns
           config_dns_domain unless new_resource.dns_domain.nil? || current_resource.dns_domain == new_resource.dns_domain
           config_ddns unless new_resource.ddns.nil? || current_resource.ddns == new_resource.ddns
+
+          reload if new_resource.updated_by_last_action? && new_resource.reload
         end
 
         private
@@ -286,6 +288,17 @@ class Chef
           converge_it("Renaming #{phys_adapter.NetConnectionID} to #{phys_adapter_name}") do
             phys_adapter.NetConnectionID = phys_adapter_name
             phys_adapter.Put_
+          end
+        end
+
+        #
+        # Disable and Enable the interface
+        #
+        def reload
+          converge_it("Reloading #{new_resource.device}") do
+            adapter.disable
+            sleep 5
+            adapter.enable
           end
         end
       end
