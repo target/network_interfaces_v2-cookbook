@@ -47,7 +47,7 @@ class Chef
         end
 
         def vlan(arg = nil)
-          set_or_return(:vlan, arg, :kind_of => Integer)
+          set_or_return(:vlan, arg, :kind_of => [Integer, String])
         end
 
         def dns(arg = nil)
