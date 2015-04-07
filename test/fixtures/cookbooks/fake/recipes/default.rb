@@ -20,5 +20,8 @@ debian_network_interface 'eth2' if %w(debian).include? node['platform_family']
 if node['os'] == 'windows'
   win_network_interface 'eth2' do
     hw_address '00-25-B5-5B-00-27'
+    dns ['14.13.13.13', '14.13.13.12']
+    ddns false
+    dns_domain 'test.it.com'
   end
 end

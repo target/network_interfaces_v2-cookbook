@@ -139,7 +139,7 @@ Inherits all attributes from `network_interface` provider as well as:
 * hw_address - Can be used to define what device to manage
 * index - Can be used to define what device to manage
 * dns - Array of DNS servers
-* dns_search - Array of DNS suffix search order
+* dns_domain - DNS domain
 * ddns - true/false dynamic dns registration
 
 #### Example

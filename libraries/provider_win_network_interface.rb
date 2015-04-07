@@ -56,8 +56,8 @@ class Chef
           @current_resource.netmask(nic.ip_subnet.first) unless nic.ip_subnet.nil?
           @current_resource.gateway(nic.default_ip_gateway.first) unless nic.default_ip_gateway.nil?
           @current_resource.dns(nic.dns_server_search_order)
+          @current_resource.dns_domain(nic.dns_domain)
           @current_resource.ddns(nic.full_dns_registration_enabled)
-          @current_resource.dns_search(nic.dns_domain_suffix_search_order)
 
           case nic.dhcp_enabled
           when true
@@ -91,8 +91,8 @@ class Chef
             config_gateway unless new_resource.gateway.nil? || current_resource.gateway == new_resource.gateway
           end
           config_dns unless new_resource.dns.nil? || current_resource.dns == new_resource.dns
+          config_dns_domain unless new_resource.dns_domain.nil? || current_resource.dns_domain == new_resource.dns_domain
           config_ddns unless new_resource.ddns.nil? || current_resource.ddns == new_resource.ddns
-          config_dns_search unless new_resource.dns_search.nil? || current_resource.dns_search == new_resource.dns_search
         end
 
         private
@@ -254,20 +254,20 @@ class Chef
         end
 
         #
+        # Configure DNS Domain
+        #
+        def config_dns_domain
+          converge_it("Setting DNS Domain to: #{new_resource.dns_domain}") do
+            nic.SetDNSDomain(new_resource.dns_domain)
+          end
+        end
+
+        #
         # Configure dynamic DNS registration
         #
         def config_ddns
           converge_it("#{new_resource.ddns ? 'Enabling' : 'Disabling'} dynamic DNS registration") do
             nic.SetDynamicDNSRegistration(new_resource.ddns)
-          end
-        end
-
-        #
-        # Configure DNS suffix search order
-        #
-        def config_dns_search
-          converge_it("Setting DNS search: #{new_resource.dns_search.inspect}") do
-            nic.SetDNSSuffixSearchOrder(new_resource.dns_search)
           end
         end
 

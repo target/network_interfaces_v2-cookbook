@@ -174,15 +174,15 @@ describe Chef::Provider::NetworkInterface::Win do
     end
 
     it 'configures DNS' do
-      current_resource.dns ['dns2', 'dns1']
-      new_resource.dns ['dns1', 'dns2']
-      expect(adapter_config).to receive(:SetDNSServerSearchOrder).with(['dns1', 'dns2'])
+      current_resource.dns ['10.10.10.10', '10.10.10.11']
+      new_resource.dns ['10.10.10.11', '10.10.10.10']
+      expect(adapter_config).to receive(:SetDNSServerSearchOrder).with(['10.10.10.11', '10.10.10.10'])
       provider.action_create
     end
 
     it 'does nothing if DNS already configured' do
-      current_resource.dns ['dns1', 'dns2']
-      new_resource.dns ['dns1', 'dns2']
+      current_resource.dns ['10.10.10.10', '10.10.10.11']
+      new_resource.dns ['10.10.10.10', '10.10.10.11']
       expect(adapter_config).not_to receive(:SetDNSServerSearchOrder)
       provider.action_create
     end
@@ -206,16 +206,16 @@ describe Chef::Provider::NetworkInterface::Win do
       provider.action_create
     end
 
-    it 'configures DNS suffix search order' do
-      new_resource.dns_search ['sub1.test.com', 'sub2.test.com']
-      expect(adapter_config).to receive(:SetDNSSuffixSearchOrder).with(['sub1.test.com', 'sub2.test.com'])
+    it 'configures DNS domain' do
+      new_resource.dns_domain 'my_dns_domain.com'
+      expect(adapter_config).to receive(:SetDNSDomain).with('my_dns_domain.com')
       provider.action_create
     end
 
-    it 'does nothing if DNS search order is correct' do
-      new_resource.dns_search ['sub1.test.com', 'sub2.test.com']
-      current_resource.dns_search ['sub1.test.com', 'sub2.test.com']
-      expect(adapter_config).not_to receive(:SetDNSSuffixSearchOrder)
+    it 'does nothing if DNS domain is set' do
+      new_resource.dns_domain 'my_dns_domain.com'
+      current_resource.dns_domain 'my_dns_domain.com'
+      expect(adapter_config).not_to receive(:SetDNSDomain)
       provider.action_create
     end
 

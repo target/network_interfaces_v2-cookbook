@@ -72,5 +72,13 @@ if windows?
     it 'should have DHCP enalbed' do
       expect(win_interface_config('eth2')['dhcpenabled']).to eq true
     end
+
+    it 'should have DNS servers assigned' do
+      expect(win_interface_config('eth2')['dnsserversearchorder']).to eq ['14.13.13.13', '14.13.13.12']
+    end
+
+    it 'should have DNS domain set' do
+      expect(win_interface_config('eth2')['dnsdomain']).to eq 'test.it.com'
+    end
   end
 end

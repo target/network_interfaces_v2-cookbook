@@ -53,12 +53,12 @@ class Chef
           set_or_return(:dns, arg, :kind_of => Array)
         end
 
-        def ddns(arg = nil)
-          set_or_return(:ddns, arg, :kind_of => [TrueClass, FalseClass])
+        def dns_domain(arg = nil)
+          set_or_return(:dns_domain, arg, :kind_of => String)
         end
 
-        def dns_search(arg = nil)
-          set_or_return(:dns_search, arg, :kind_of => Array)
+        def ddns(arg = nil)
+          set_or_return(:ddns, arg, :kind_of => [TrueClass, FalseClass])
         end
       end
     end
