@@ -2,8 +2,8 @@ source 'https://rubygems.org'
 
 group :development do
   gem 'berkshelf'
-  gem 'test-kitchen', git: 'git@github.com:test-kitchen/test-kitchen.git', ref: '0ad6317785275f74c8635fa46b30667429ab5b07'
-  gem 'kitchen-vagrant', git: 'git@github.com:test-kitchen/kitchen-vagrant.git'
+  gem 'test-kitchen', '1.4.0.rc.1'
+  gem 'kitchen-vagrant', '0.17.0.rc.1'
   gem 'winrm-transport'
 
   gem 'rake'
