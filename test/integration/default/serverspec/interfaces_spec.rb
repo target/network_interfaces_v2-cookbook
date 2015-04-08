@@ -51,12 +51,17 @@ if windows?
       expect(win_interface_config('eth1')['dhcpenabled']).to eq false
     end
 
+    # Get index in array of our found IP ... so we can match proper subnet later
+    addr_indx = win_interface_config('eth1')['ipaddress'].index('10.12.10.13')
+
     it 'should have address "10.12.10.13"' do
-      expect(win_interface_config('eth1')['ipaddress'].first).to eq '10.12.10.13'
+      expect(win_interface_config('eth1')['ipaddress']).to include '10.12.10.13'
     end
 
     it 'should have netmask "255.255.255.0"' do
-      expect(win_interface_config('eth1')['ipsubnet'].first).to eq '255.255.255.0'
+      subnet_ip = nil
+      subnet_ip = win_interface_config('eth1')['ipsubnet'][addr_indx] unless addr_indx.nil?
+      expect(subnet_ip).to eq '255.255.255.0'
     end
 
     it 'should have gateway "10.12.10.1"' do

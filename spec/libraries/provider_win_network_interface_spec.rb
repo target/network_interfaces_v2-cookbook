@@ -46,25 +46,51 @@ describe Chef::Provider::NetworkInterface::Win do
     double('WMI::Win32_NetworkAdapter', InterfaceIndex: 10, NetConnectionID: 'eth1', net_connection_id: 'eth1', enable: nil, disable: nil)
   end
   let(:adapter_config) do
-    double('Win32_NetworkAdapterConfiguration', ip_address: ['10.10.10.10', 'asdf:asdf:asdf:asdf'],
-                                                ip_subnet: ['255.255.255.0', '64'],
+    double('Win32_NetworkAdapterConfiguration', ip_address: ['12.13.14.15', '10.10.10.10', 'asdf:asdf:asdf:asdf'],
+                                                ip_subnet: ['255.255.254.0', '255.255.255.0', '64'],
                                                 default_ip_gateway: ['10.10.10.1'],
                                                 dns_server_search_order: [],
                                                 full_dns_registration_enabled: false,
                                                 dns_domain_suffix_search_order: [],
-                                                dhcp_enabled: false
+                                                dhcp_enabled: false,
+                                                dns_domain: ''
     )
   end
 
   # Tie some things together
   before do
-    allow(provider).to receive(:load_current_resource).and_return(current_resource)
     allow(provider).to receive(:sleep).and_return(nil)
     provider.new_resource = new_resource
     provider.current_resource = current_resource
     allow(run_context).to receive(:include_recipe).and_return(nil)
     allow(WMI::Win32_NetworkAdapterConfiguration).to receive(:find).and_return([adapter_config])
     allow(WMI::Win32_NetworkAdapter).to receive(:find).and_return([adapter])
+  end
+
+  describe '#load_current_resource' do
+    it 'grabs the correct address' do
+      new_resource.address '10.10.10.10'
+      provider.load_current_resource
+      expect(provider.current_resource.address).to eq '10.10.10.10'
+    end
+
+    it 'sets address to nil if not already set' do
+      new_resource.address '10.10.10.11'
+      provider.load_current_resource
+      expect(provider.current_resource.address).to eq nil
+    end
+
+    it 'grabs the correct netmask' do
+      new_resource.address '10.10.10.10'
+      provider.load_current_resource
+      expect(provider.current_resource.netmask).to eq '255.255.255.0'
+    end
+
+    it 'sets netmask to nil if not already set' do
+      new_resource.address '10.10.10.11'
+      provider.load_current_resource
+      expect(provider.current_resource.netmask).to eq nil
+    end
   end
 
   describe '#action_create' do
@@ -99,7 +125,7 @@ describe Chef::Provider::NetworkInterface::Win do
       new_resource.bootproto 'static'
       new_resource.address '10.10.10.12'
       new_resource.netmask '255.255.254.0'
-      expect(adapter_config).to receive(:EnableStatic).with(['10.10.10.12'], ['255.255.254.0'])
+      expect(adapter_config).to receive(:EnableStatic).with(['10.10.10.12', '12.13.14.15', '10.10.10.10'], ['255.255.254.0', '255.255.254.0', '255.255.255.0'])
       provider.action_create
     end
 
@@ -109,7 +135,7 @@ describe Chef::Provider::NetworkInterface::Win do
       new_resource.bootproto 'static'
       new_resource.address '10.10.10.12'
       new_resource.netmask '255.255.254.0'
-      expect(adapter_config).to receive(:EnableStatic).with(['10.10.10.12'], ['255.255.254.0'])
+      expect(adapter_config).to receive(:EnableStatic).with(['10.10.10.12', '12.13.14.15', '10.10.10.10'], ['255.255.254.0', '255.255.254.0', '255.255.255.0'])
       provider.action_create
     end
 
@@ -119,7 +145,7 @@ describe Chef::Provider::NetworkInterface::Win do
       new_resource.bootproto 'static'
       new_resource.address '10.10.10.12'
       new_resource.netmask '255.255.254.0'
-      expect(adapter_config).to receive(:EnableStatic).with(['10.10.10.12'], ['255.255.254.0'])
+      expect(adapter_config).to receive(:EnableStatic).with(['10.10.10.12', '12.13.14.15', '10.10.10.10'], ['255.255.254.0', '255.255.254.0', '255.255.255.0'])
       provider.action_create
     end
 

@@ -52,8 +52,9 @@ class Chef
           @current_resource.hw_address(@new_resource.hw_address)
 
           @current_resource.device(adapter.net_connection_id)
-          @current_resource.address(nic.ip_address.first) unless nic.ip_address.nil?
-          @current_resource.netmask(nic.ip_subnet.first) unless nic.ip_subnet.nil?
+          addr_indx = nic.ip_address.index(new_resource.address) unless nic.ip_address.nil?
+          @current_resource.address(nic.ip_address[addr_indx]) unless nic.ip_address.nil? || addr_indx.nil?
+          @current_resource.netmask(nic.ip_subnet[addr_indx]) unless nic.ip_subnet.nil? || nic.ip_address.nil? || addr_indx.nil?
           @current_resource.gateway(nic.default_ip_gateway.first) unless nic.default_ip_gateway.nil?
           @current_resource.dns(nic.dns_server_search_order)
           @current_resource.dns_domain(nic.dns_domain)
@@ -233,7 +234,9 @@ class Chef
         #
         def config_static
           converge_it("Setting IP to #{new_resource.address}/#{new_resource.netmask}") do
-            nic.EnableStatic([new_resource.address], [new_resource.netmask])
+            ips = [new_resource.address, nic.ip_address].flatten.compact.select { |ip| ip =~ /\./}
+            subnets = [new_resource.netmask, nic.ip_subnet].flatten.compact.select { |ip| ip =~ /\./}
+            nic.EnableStatic(ips, subnets)
           end
         end
 
