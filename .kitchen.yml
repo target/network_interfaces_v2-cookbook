@@ -20,6 +20,7 @@ platforms:
     driver:
       box: opentable/win-2012r2-standard-amd64-nocm
       network:
+        - ["forwarded_port", {guest: 3389, host: 3389}]
         - ["private_network", {type: "dhcp", mac: "0025B55B0027", auto_config: false}]
         - ["private_network", {type: "dhcp", mac: "0025B55B0025", auto_config: false}]
 
