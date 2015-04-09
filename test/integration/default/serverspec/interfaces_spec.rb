@@ -74,7 +74,7 @@ if windows?
       expect(win_interface 'eth2').not_to be_nil
     end
 
-    it 'should have DHCP enalbed' do
+    it 'should have DHCP enabled' do
       expect(win_interface_config('eth2')['dhcpenabled']).to eq true
     end
 
