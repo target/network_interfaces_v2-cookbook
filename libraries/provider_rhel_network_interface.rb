@@ -59,6 +59,7 @@ class Chef
                       :peerdns => new_resource.peerdns,
                       :mtu => new_resource.mtu
             notifies :run, "execute[reload interface #{new_resource.device}]", new_resource.reload_type if new_resource.reload
+            notifies :run, "execute[post up command for #{new_resource.device}]", :immediately unless new_resource.post_up.nil?
           end
 
           execute "reload interface #{new_resource.device}" do
@@ -66,6 +67,11 @@ class Chef
               ifdown #{new_resource.device}
               ifup #{new_resource.device}
             EOF
+            action :nothing
+          end
+
+          execute "post up command for #{new_resource.device}" do
+            command new_resource.post_up
             action :nothing
           end
         end

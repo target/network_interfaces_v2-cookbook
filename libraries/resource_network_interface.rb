@@ -115,6 +115,10 @@ class Chef
       def vlan(arg = nil)
         set_or_return(:vlan, arg, :kind_of => [TrueClass, FalseClass, String, Integer])
       end
+
+      def post_up(arg = nil)
+        set_or_return(:post_up, arg, :kind_of => String)
+      end
     end
   end
 end

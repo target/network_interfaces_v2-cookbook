@@ -57,6 +57,8 @@ describe Chef::Provider::NetworkInterface::Win do
     )
   end
 
+  let(:shellout) { double('Mixlib::ShellOut', run_command: nil, error!: nil) }
+
   # Tie some things together
   before do
     allow(provider).to receive(:sleep).and_return(nil)
@@ -269,6 +271,30 @@ describe Chef::Provider::NetworkInterface::Win do
       new_resource.reload false # Defined by user not to reload
       expect(adapter).not_to receive(:disable)
       expect(adapter).not_to receive(:enable)
+      provider.action_create
+    end
+
+    it 'runs post script if changes made' do
+      allow(adapter_config).to receive(:SetDNSDomain)
+      new_resource.dns_domain 'my_dns_domain.com'
+      new_resource.post_up 'test command'
+      expect(provider) .to receive(:post_up).with('test command').and_call_original
+      expect(Mixlib::ShellOut).to receive(:new).with("powershell.exe -Command 'test command'").and_return(shellout)
+      provider.action_create
+    end
+
+    it 'does not run post script if no changes made' do
+      allow(adapter_config).to receive(:SetDNSDomain)
+      new_resource.dns_domain 'my_dns_domain.com'
+      current_resource.dns_domain 'my_dns_domain.com'
+      expect(provider).not_to receive(:post_up)
+      provider.action_create
+    end
+
+    it 'does run post script if not defined by user' do
+      allow(adapter_config).to receive(:SetDNSDomain)
+      new_resource.dns_domain 'my_dns_domain.com'
+      expect(provider).not_to receive(:post_up)
       provider.action_create
     end
 

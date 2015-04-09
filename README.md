@@ -43,6 +43,7 @@ network_interface
  * debian - VLAN device interface
  * RHEL - true/false if device defined is a VLAN interface
  * Win - Integer VlanID to tag to defined device
+* post_up - Post up command to run after modifying the interface
 * reload (default: true) - Wether or not to reload the device on config changes
 * reload_type (default: :immediately) - When to reload device on config changes
 * cookbook (default: 'network_interfaces_v2') - Cookbook to look for template files in

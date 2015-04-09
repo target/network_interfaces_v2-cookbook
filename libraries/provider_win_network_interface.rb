@@ -96,6 +96,7 @@ class Chef
           config_ddns unless new_resource.ddns.nil? || current_resource.ddns == new_resource.ddns
 
           reload if new_resource.updated_by_last_action? && new_resource.reload
+          post_up(new_resource.post_up) unless new_resource.post_up.nil? || !new_resource.updated_by_last_action?
         end
 
         private
@@ -303,6 +304,12 @@ class Chef
             sleep 5
             adapter.enable
           end
+        end
+
+        def post_up(cmd)
+          shell_out = Mixlib::ShellOut.new("powershell.exe -Command '#{cmd}'")
+          shell_out.run_command
+          shell_out.error!
         end
       end
     end

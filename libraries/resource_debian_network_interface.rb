@@ -73,10 +73,6 @@ class Chef
           set_or_return(:up, arg, :kind_of => String)
         end
 
-        def post_up(arg = nil)
-          set_or_return(:post_up, arg, :kind_of => String)
-        end
-
         def pre_down(arg = nil)
           set_or_return(:pre_down, arg, :kind_of => String)
         end

@@ -5,6 +5,9 @@ require_relative 'support/matchers'
 
 RSpec.configure do |config|
   config.log_level = :error
+
+  config.color = true
+  config.formatter = :documentation
 end
 
 # Add libraries to our LOAD_PATH
