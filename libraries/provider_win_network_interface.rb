@@ -231,12 +231,24 @@ class Chef
         end
 
         #
+        # Release DHCP addresses
+        #
+        def release_dhcp_addresses
+          converge_it("Released DHCP addresses on #{new_resource.device}") do
+            nic.ReleaseDHCPLease
+          end
+        end
+
+        #
         # Configure static address
         #
         def config_static
-          converge_it("Setting IP to #{new_resource.address}/#{new_resource.netmask}") do
-            ips = [new_resource.address, nic.ip_address].flatten.compact.select { |ip| ip =~ /\./}
-            subnets = [new_resource.netmask, nic.ip_subnet].flatten.compact.select { |ip| ip =~ /\./}
+          ips = [new_resource.address, nic.ip_address].flatten.compact.select { |ip| ip =~ /\./ }
+          subnets = [new_resource.netmask, nic.ip_subnet].flatten.compact.select { |ip| ip =~ /\./ }
+
+          release_dhcp_addresses if current_resource.bootproto == 'dhcp'
+
+          converge_it("Set IP to #{new_resource.address}/#{new_resource.netmask}") do
             nic.EnableStatic(ips, subnets)
           end
         end

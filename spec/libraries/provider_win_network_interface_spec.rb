@@ -127,13 +127,39 @@ describe Chef::Provider::NetworkInterface::Win do
       new_resource.bootproto 'static'
       new_resource.address '10.10.10.12'
       new_resource.netmask '255.255.254.0'
+      allow(adapter_config).to receive(:ReleaseDHCPLease)
+
       expect(adapter_config).to receive(:EnableStatic).with(['10.10.10.12', '12.13.14.15', '10.10.10.10'], ['255.255.254.0', '255.255.254.0', '255.255.255.0'])
+      provider.action_create
+    end
+
+    it 'releases DHCP address before setting IP' do
+      new_resource.bootproto 'static'
+      new_resource.address '10.10.10.12'
+      new_resource.netmask '255.255.254.0'
+
+      expect(adapter_config).to receive(:ReleaseDHCPLease)
+      expect(adapter_config).to receive(:EnableStatic)
+      provider.action_create
+    end
+
+    it 'does not release DHCP address before setting IP if DHCP is already disabled' do
+      new_resource.bootproto 'static'
+      new_resource.address '10.10.10.12'
+      new_resource.netmask '255.255.254.0'
+      current_resource.bootproto 'static'
+
+      expect(adapter_config).not_to receive(:EnableDhcp)
+      expect(adapter_config).not_to receive(:ReleaseDHCPLease)
+      expect(adapter_config).to receive(:EnableStatic)
       provider.action_create
     end
 
     it 'configures static IP on the interface if IP is wrong' do
       current_resource.address '10.10.10.11'
       current_resource.netmask '255.255.254.0'
+      current_resource.bootproto 'static'
+
       new_resource.bootproto 'static'
       new_resource.address '10.10.10.12'
       new_resource.netmask '255.255.254.0'
@@ -144,6 +170,8 @@ describe Chef::Provider::NetworkInterface::Win do
     it 'configures static IP on the interface if netmask is wrong' do
       current_resource.address '10.10.10.12'
       current_resource.netmask '255.255.255.0'
+      current_resource.bootproto 'static'
+
       new_resource.bootproto 'static'
       new_resource.address '10.10.10.12'
       new_resource.netmask '255.255.254.0'
@@ -155,9 +183,11 @@ describe Chef::Provider::NetworkInterface::Win do
       new_resource.bootproto 'static'
       new_resource.address '10.10.10.12'
       new_resource.netmask '255.255.254.0'
+
       current_resource.bootproto 'static'
       current_resource.address '10.10.10.12'
       current_resource.netmask '255.255.254.0'
+
       expect(adapter_config).not_to receive(:EnableStatic)
       provider.action_create
     end
@@ -171,11 +201,13 @@ describe Chef::Provider::NetworkInterface::Win do
     end
 
     it 'does not configure DHCP when static IP is defined' do
+      allow(adapter_config).to receive(:ReleaseDHCPLease)
       allow(adapter_config).to receive(:EnableStatic)
 
       new_resource.bootproto 'static'
       new_resource.address '10.10.10.12'
       new_resource.netmask '255.255.254.0'
+
       expect(adapter_config).not_to receive(:EnableDhcp)
       provider.action_create
     end
