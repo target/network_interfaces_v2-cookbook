@@ -30,7 +30,7 @@ class Chef
       def load_current_resource; end
 
       def action_create
-        raise Chef::Exceptions::UnsupportedAction, "#{self.to_s} does not support :create"
+        fail Chef::Exceptions::UnsupportedAction, "#{self} does not support :create"
       end
     end
   end

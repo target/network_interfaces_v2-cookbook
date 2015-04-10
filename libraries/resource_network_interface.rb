@@ -26,7 +26,7 @@ class Chef
     # Chef Resource for a network_interface
     #
     class  NetworkInterface < Chef::Resource
-      def initialize(name, run_context = nil)
+      def initialize(name, run_context = nil) # rubocop:disable MethodLength
         super
         @resource_name = :network_interface
         @provider = Chef::Provider::NetworkInterface
@@ -45,79 +45,79 @@ class Chef
       end
 
       def cookbook(arg = nil)
-        set_or_return(:cookbook, arg, :kind_of => String)
+        set_or_return(:cookbook, arg, kind_of: String)
       end
 
       def source(arg = nil)
-        set_or_return(:source, arg, :kind_of => String)
+        set_or_return(:source, arg, kind_of: String)
       end
 
       def device(arg = nil)
-        set_or_return(:device, arg, :kind_of => String)
+        set_or_return(:device, arg, kind_of: String)
       end
 
       def type(arg = nil)
-        set_or_return(:type, arg, :kind_of => String)
+        set_or_return(:type, arg, kind_of: String)
       end
 
       def bridge_stp(arg = nil)
-        set_or_return(:bridge_stp, arg, :kind_of => [TrueClass, FalseClass])
+        set_or_return(:bridge_stp, arg, kind_of: [TrueClass, FalseClass])
       end
 
       def bond_master(arg = nil)
-        set_or_return(:bond_master, arg, :kind_of => String)
+        set_or_return(:bond_master, arg, kind_of: String)
       end
 
       def bond_mode(arg = nil)
-        set_or_return(:bond_mode, arg, :kind_of => String)
+        set_or_return(:bond_mode, arg, kind_of: String)
       end
 
       def onboot(arg = nil)
-        set_or_return(:onboot, arg, :kind_of => [TrueClass, FalseClass])
+        set_or_return(:onboot, arg, kind_of: [TrueClass, FalseClass])
       end
 
       def bootproto(arg = nil)
-        set_or_return(:bootproto, arg, :kind_of => String)
+        set_or_return(:bootproto, arg, kind_of: String)
       end
 
       def address(arg = nil)
-        set_or_return(:address, arg, :kind_of => String)
+        set_or_return(:address, arg, kind_of: String)
       end
 
       def gateway(arg = nil)
-        set_or_return(:gateway, arg, :kind_of => String)
+        set_or_return(:gateway, arg, kind_of: String)
       end
 
       def mtu(arg = nil)
-        set_or_return(:mtu, arg, :kind_of => Integer)
+        set_or_return(:mtu, arg, kind_of: Integer)
       end
 
       def netmask(arg = nil)
-        set_or_return(:mask, arg, :kind_of => String)
+        set_or_return(:mask, arg, kind_of: String)
       end
 
       def broadcast(arg = nil)
-        set_or_return(:broadcast, arg, :kind_of => String)
+        set_or_return(:broadcast, arg, kind_of: String)
       end
 
       def reload(arg = nil)
-        set_or_return(:reload, arg, :kind_of => [TrueClass, FalseClass])
+        set_or_return(:reload, arg, kind_of: [TrueClass, FalseClass])
       end
 
       def reload_type(arg = nil)
-        set_or_return(:reload_type, arg, :kind_of => Symbol)
+        set_or_return(:reload_type, arg, kind_of: Symbol)
       end
 
       def hw_address(arg = nil)
-        set_or_return(:hw_address, arg, :kind_of => String, :regex => /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/)
+        set_or_return(:hw_address, arg, kind_of: String, regex: /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/)
       end
 
       def vlan(arg = nil)
-        set_or_return(:vlan, arg, :kind_of => [TrueClass, FalseClass, String, Integer])
+        set_or_return(:vlan, arg, kind_of: [TrueClass, FalseClass, String, Integer])
       end
 
       def post_up(arg = nil)
-        set_or_return(:post_up, arg, :kind_of => String)
+        set_or_return(:post_up, arg, kind_of: String)
       end
     end
   end

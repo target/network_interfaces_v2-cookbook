@@ -41,24 +41,24 @@ class Chef
         end
 
         def bridge_ports(arg = nil)
-          set_or_return(:bridge_ports, arg, :kind_of => Array)
+          set_or_return(:bridge_ports, arg, kind_of: Array)
         end
 
         def metric(arg = nil)
-          set_or_return(:metric, arg, :kind_of => Integer)
+          set_or_return(:metric, arg, kind_of: Integer)
         end
 
         def vlan(arg = nil)
-          set_or_return(:vlan, arg, :kind_of => String)
+          set_or_return(:vlan, arg, kind_of: String)
         end
 
         def bond_slaves(arg = nil)
-          set_or_return(:bond_slaves, arg, :kind_of => Array)
+          set_or_return(:bond_slaves, arg, kind_of: Array)
         end
 
         def type(arg = nil)
-          set_or_return(:type, @bootproto, :kind_of => String) if @type.nil?
-          set_or_return(:type, arg, :kind_of => String)
+          set_or_return(:type, @bootproto, kind_of: String) if @type.nil?
+          set_or_return(:type, arg, kind_of: String)
         end
 
         def pre_up(arg = 'NOVAL')
@@ -66,27 +66,27 @@ class Chef
           @pre_up = nil if arg.nil? || arg == ''
           arg = nil if arg == 'NOVAL'
 
-          set_or_return(:pre_up, arg, :kind_of => String)
+          set_or_return(:pre_up, arg, kind_of: String)
         end
 
         def up(arg = nil)
-          set_or_return(:up, arg, :kind_of => String)
+          set_or_return(:up, arg, kind_of: String)
         end
 
         def pre_down(arg = nil)
-          set_or_return(:pre_down, arg, :kind_of => String)
+          set_or_return(:pre_down, arg, kind_of: String)
         end
 
         def down(arg = nil)
-          set_or_return(:down, arg, :kind_of => String)
+          set_or_return(:down, arg, kind_of: String)
         end
 
         def post_down(arg = nil)
-          set_or_return(:post_down, arg, :kind_of => String)
+          set_or_return(:post_down, arg, kind_of: String)
         end
 
         def custom(arg = nil)
-          set_or_return(:custom, arg, :kind_of => Hash)
+          set_or_return(:custom, arg, kind_of: Hash)
         end
       end
     end

@@ -39,27 +39,27 @@ class Chef
 
         def hw_address(arg = nil)
           arg = arg.gsub('-', ':').upcase unless arg.nil?
-          set_or_return(:hw_address, arg, :kind_of => String, :regex => /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/)
+          set_or_return(:hw_address, arg, kind_of: String, regex: /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/)
         end
 
         def index(arg = nil)
-          set_or_return(:index, arg, :kind_of => Integer)
+          set_or_return(:index, arg, kind_of: Integer)
         end
 
         def vlan(arg = nil)
-          set_or_return(:vlan, arg, :kind_of => [Integer, String])
+          set_or_return(:vlan, arg, kind_of: [Integer, String])
         end
 
         def dns(arg = nil)
-          set_or_return(:dns, arg, :kind_of => Array)
+          set_or_return(:dns, arg, kind_of: Array)
         end
 
         def dns_domain(arg = nil)
-          set_or_return(:dns_domain, arg, :kind_of => String)
+          set_or_return(:dns_domain, arg, kind_of: String)
         end
 
         def ddns(arg = nil)
-          set_or_return(:ddns, arg, :kind_of => [TrueClass, FalseClass])
+          set_or_return(:ddns, arg, kind_of: [TrueClass, FalseClass])
         end
       end
     end

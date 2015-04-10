@@ -13,8 +13,8 @@ require "#{File.join(File.dirname(__FILE__), '..', '..', 'libraries')}/provider_
 
 # Load some fake libraries to represent ruby-wmi
 module WMI
-  class Win32_NetworkAdapter; end
-  class Win32_NetworkAdapterConfiguration; end
+  class Win32_NetworkAdapter; end # rubocop:disable all
+  class Win32_NetworkAdapterConfiguration; end # rubocop:disable all
 end
 
 # rubocop:disable Documentation
@@ -53,8 +53,7 @@ describe Chef::Provider::NetworkInterface::Win do
                                                 full_dns_registration_enabled: false,
                                                 dns_domain_suffix_search_order: [],
                                                 dhcp_enabled: false,
-                                                dns_domain: ''
-    )
+                                                dns_domain: '')
   end
 
   let(:shellout) { double('Mixlib::ShellOut', run_command: nil, error!: nil) }
@@ -129,7 +128,8 @@ describe Chef::Provider::NetworkInterface::Win do
       new_resource.netmask '255.255.254.0'
       allow(adapter_config).to receive(:ReleaseDHCPLease)
 
-      expect(adapter_config).to receive(:EnableStatic).with(['10.10.10.12', '12.13.14.15', '10.10.10.10'], ['255.255.254.0', '255.255.254.0', '255.255.255.0'])
+      expect(adapter_config).to receive(:EnableStatic)
+        .with(['10.10.10.12', '12.13.14.15', '10.10.10.10'], ['255.255.254.0', '255.255.254.0', '255.255.255.0'])
       provider.action_create
     end
 
@@ -163,7 +163,8 @@ describe Chef::Provider::NetworkInterface::Win do
       new_resource.bootproto 'static'
       new_resource.address '10.10.10.12'
       new_resource.netmask '255.255.254.0'
-      expect(adapter_config).to receive(:EnableStatic).with(['10.10.10.12', '12.13.14.15', '10.10.10.10'], ['255.255.254.0', '255.255.254.0', '255.255.255.0'])
+      expect(adapter_config).to receive(:EnableStatic)
+        .with(['10.10.10.12', '12.13.14.15', '10.10.10.10'], ['255.255.254.0', '255.255.254.0', '255.255.255.0'])
       provider.action_create
     end
 
@@ -175,7 +176,8 @@ describe Chef::Provider::NetworkInterface::Win do
       new_resource.bootproto 'static'
       new_resource.address '10.10.10.12'
       new_resource.netmask '255.255.254.0'
-      expect(adapter_config).to receive(:EnableStatic).with(['10.10.10.12', '12.13.14.15', '10.10.10.10'], ['255.255.254.0', '255.255.254.0', '255.255.255.0'])
+      expect(adapter_config).to receive(:EnableStatic)
+        .with(['10.10.10.12', '12.13.14.15', '10.10.10.10'], ['255.255.254.0', '255.255.254.0', '255.255.255.0'])
       provider.action_create
     end
 

@@ -38,4 +38,4 @@ set :backend, :exec unless windows?
 # Windows
 require 'wmi-lite' if windows?
 set :backend, :cmd if windows?
-set :os, :family => 'windows' if windows?
+set :os, family: 'windows' if windows?

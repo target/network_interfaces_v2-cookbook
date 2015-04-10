@@ -27,7 +27,7 @@ class Chef
       #
       # Chef Provider for Windows Network Interfaces
       #
-      class Win < Chef::Provider::NetworkInterface
+      class Win < Chef::Provider::NetworkInterface # rubocop:disable ClassLength
         provides :win_network_interface, os: 'windows' if Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
 
         #
@@ -44,7 +44,7 @@ class Chef
         #
         # Load current state of defined resource
         #
-        def load_current_resource
+        def load_current_resource # rubocop:disable MethodLength
           load_deps
 
           @current_resource = Chef::Resource::NetworkInterface::Win.new(@new_resource.name)
@@ -73,7 +73,7 @@ class Chef
         #
         # Create action to create/update the resource
         #
-        def action_create
+        def action_create # rubocop:disable MethodLength
           load_deps
 
           # Rename

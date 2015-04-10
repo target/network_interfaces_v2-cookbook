@@ -7,7 +7,7 @@ describe 'fake::default' do
     end
 
     let(:default_eth0_config_contents) do
-'# This file maintained by Chef.  DO NOT EDIT!
+      '# This file maintained by Chef.  DO NOT EDIT!
 
 DEVICE="eth0"
 TYPE="Ethernet"
@@ -18,7 +18,7 @@ NM_CONTROLLED="off"
     end
 
     let(:default_eth2_config_contents) do
-'# This file maintained by Chef.  DO NOT EDIT!
+      '# This file maintained by Chef.  DO NOT EDIT!
 
 DEVICE="eth2"
 TYPE="Ethernet"
@@ -119,7 +119,7 @@ NM_CONTROLLED="off"
     end
 
     let(:default_config_contents) do
-'# This file maintained by Chef.  DO NOT EDIT!
+      '# This file maintained by Chef.  DO NOT EDIT!
 
 auto eth2
 iface eth2 inet dhcp
@@ -132,7 +132,8 @@ iface eth2 inet dhcp
 
     it 'removes unmanaged files from interface config directory' do
       allow(Dir).to receive(:glob).and_call_original
-      allow(Dir).to receive(:glob).with('/etc/network/interfaces.d/*').and_return(['/etc/network/interfaces.d/eth1', '/etc/network/interfaces.d/eth13'])
+      allow(Dir).to receive(:glob).with('/etc/network/interfaces.d/*')
+        .and_return(['/etc/network/interfaces.d/eth1', '/etc/network/interfaces.d/eth13'])
       expect(chef_run).not_to delete_file '/etc/network/interfaces.d/eth1'
       expect(chef_run).to delete_file '/etc/network/interfaces.d/eth13'
     end
