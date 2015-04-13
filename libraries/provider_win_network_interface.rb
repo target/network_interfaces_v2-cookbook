@@ -44,7 +44,7 @@ class Chef
         #
         # Load current state of defined resource
         #
-        def load_current_resource # rubocop:disable MethodLength
+        def load_current_resource # rubocop:disable MethodLength, AbcSize
           load_deps
 
           @current_resource = Chef::Resource::NetworkInterface::Win.new(@new_resource.name)
@@ -52,13 +52,13 @@ class Chef
           @current_resource.hw_address(@new_resource.hw_address)
 
           @current_resource.device(adapter.net_connection_id)
-          addr_indx = nic.ip_address.index(new_resource.address) unless nic.ip_address.nil?
-          @current_resource.address(nic.ip_address[addr_indx]) unless nic.ip_address.nil? || addr_indx.nil?
-          @current_resource.netmask(nic.ip_subnet[addr_indx]) unless nic.ip_subnet.nil? || nic.ip_address.nil? || addr_indx.nil?
           @current_resource.gateway(nic.default_ip_gateway.first) unless nic.default_ip_gateway.nil?
           @current_resource.dns(nic.dns_server_search_order)
           @current_resource.dns_domain(nic.dns_domain)
           @current_resource.ddns(nic.full_dns_registration_enabled)
+
+          @current_resource.addresses = nic.ip_address
+          @current_resource.netmasks = nic.ip_subnet
 
           case nic.dhcp_enabled
           when true
@@ -88,7 +88,7 @@ class Chef
 
           enable_dhcp if new_resource.bootproto == 'dhcp' && current_resource.bootproto != 'dhcp'
           if new_resource.bootproto == 'static'
-            config_static unless new_resource.address.nil? || (current_resource.address == new_resource.address && current_resource.netmask == new_resource.netmask)
+            config_static unless new_resource.address.nil? || ip_subnet_exist?
             config_gateway unless new_resource.gateway.nil? || current_resource.gateway == new_resource.gateway
           end
           config_dns unless new_resource.dns.nil? || current_resource.dns == new_resource.dns
@@ -151,7 +151,7 @@ class Chef
         # converge_by wrapper
         #   Adds logging and updating the updated_by_last_action
         #
-        def converge_it(msg, &block)
+        def converge_it(msg, &_block)
           converge_by(msg) do
             Chef::Log.info msg
             yield
@@ -189,6 +189,29 @@ class Chef
         end
 
         #
+        # Check if IP/subnet is already configured
+        #
+        def ip_subnet_exist?
+          ip_exist? && subnet_exist?
+        end
+
+        #
+        # Chef if IP address is already configured
+        #
+        def ip_exist?
+          return false if current_resource.addresses.nil?
+          current_resource.addresses.include?(new_resource.address)
+        end
+
+        #
+        # Chef if subnet address is already configured
+        #
+        def subnet_exist? # rubocop:disable AbcSize
+          return false if current_resource.netmasks.nil? || current_resource.addresses.nil?
+          current_resource.netmasks[current_resource.addresses.index(new_resource.address)] == new_resource.netmask
+        end
+
+        #
         # Create new VLAN device
         #
         def create_vlan_dev
@@ -213,9 +236,10 @@ class Chef
         #
         # Rename VLAN device to name we want from MSFT naming convention
         #
-        def rename_vlan_dev
+        def rename_vlan_dev # rubocop:disable AbcSize
           converge_it("Renaming VLAN dev '#{new_resource.device} - Vlan #{new_resource.vlan}' back to '#{new_resource.device}'") do
-            shell_out = Mixlib::ShellOut.new("powershell.exe -Command \"Get-NetAdapter -Name '#{new_resource.device} - Vlan #{new_resource.vlan}' | Rename-NetAdapter -NewName '#{new_resource.device}'\"")
+            shell_out = Mixlib::ShellOut
+                        .new("powershell.exe -Command \"Get-NetAdapter -Name '#{new_resource.device} - Vlan #{new_resource.vlan}' | Rename-NetAdapter -NewName '#{new_resource.device}'\"")
             shell_out.run_command
             shell_out.error!
           end

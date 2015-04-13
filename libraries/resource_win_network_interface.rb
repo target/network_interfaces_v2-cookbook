@@ -31,6 +31,8 @@ class Chef
         provides :network_interface, os: 'windows' if Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
         provides :network_interface, on_platforms: :windows unless Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
 
+        attr_accessor :addresses, :netmasks
+
         def initialize(name, run_context = nil)
           super
           @resource_name = :win_network_interface
