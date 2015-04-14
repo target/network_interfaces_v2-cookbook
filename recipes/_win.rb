@@ -18,6 +18,6 @@
 # limitations under the License.
 #
 
-chef_gem 'ruby-wmi' do
+chef_gem 'ruby-wmi' do # ~FC009 Ignore warning on new Chef 12 compile_time attribute
   compile_time true if respond_to?(:compile_time)
 end
