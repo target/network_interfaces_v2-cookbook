@@ -73,33 +73,62 @@ class Chef
         #
         # Create action to create/update the resource
         #
-        def action_create # rubocop:disable MethodLength
+        def action_create
           load_deps
 
-          # Rename
-          phys_rename unless phys_adapter.net_connection_id == phys_adapter_name
-
-          # Set VLAN if any
-          unless new_resource.vlan.nil?
-            create_vlan_dev unless vlan_dev_exist? || msft_vlan_dev_exist?
-            set_vlan unless vlanid_set? || msft_vlan_dev_exist?
-            rename_vlan_dev if msft_vlan_dev_exist?
-          end
-
-          enable_dhcp if new_resource.bootproto == 'dhcp' && current_resource.bootproto != 'dhcp'
-          if new_resource.bootproto == 'static'
-            config_static unless new_resource.address.nil? || ip_subnet_exist?
-            config_gateway unless new_resource.gateway.nil? || current_resource.gateway == new_resource.gateway
-          end
-          config_dns unless new_resource.dns.nil? || current_resource.dns == new_resource.dns
-          config_dns_domain unless new_resource.dns_domain.nil? || current_resource.dns_domain == new_resource.dns_domain
-          config_ddns unless new_resource.ddns.nil? || current_resource.ddns == new_resource.ddns
-
-          reload if new_resource.updated_by_last_action? && new_resource.reload
-          post_up(new_resource.post_up) unless new_resource.post_up.nil? || !new_resource.updated_by_last_action?
+          manage_phys_name
+          manage_vlan
+          manage_address
+          manage_dns
+          post_updates
         end
 
         private
+
+        #
+        # Rename physical interface if needed
+        #
+        def manage_phys_name
+          phys_rename unless phys_adapter.net_connection_id == phys_adapter_name
+        end
+
+        #
+        # Manage VLAN as needed
+        #
+        def manage_vlan # rubocop:disable CyclomaticComplexity
+          return if new_resource.vlan.nil?
+          create_vlan_dev unless vlan_dev_exist? || msft_vlan_dev_exist?
+          set_vlan unless vlanid_set? || msft_vlan_dev_exist?
+          rename_vlan_dev if msft_vlan_dev_exist?
+        end
+
+        #
+        # Manage IP addresses as needed
+        #
+        def manage_address # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
+          enable_dhcp if new_resource.bootproto == 'dhcp' && current_resource.bootproto != 'dhcp'
+          return unless new_resource.bootproto == 'static'
+
+          config_static unless new_resource.address.nil? || ip_subnet_exist?
+          config_gateway unless new_resource.gateway.nil? || current_resource.gateway == new_resource.gateway
+        end
+
+        #
+        # Manage DNS as needed
+        #
+        def manage_dns # rubocop:disable AbcSize, CyclomaticComplexity
+          config_dns unless new_resource.dns.nil? || current_resource.dns == new_resource.dns
+          config_dns_domain unless new_resource.dns_domain.nil? || current_resource.dns_domain == new_resource.dns_domain
+          config_ddns unless new_resource.ddns.nil? || current_resource.ddns == new_resource.ddns
+        end
+
+        #
+        # Manage additional updates after interface has been reconfigured
+        #
+        def post_updates
+          reload if new_resource.updated_by_last_action? && new_resource.reload
+          post_up(new_resource.post_up) unless new_resource.post_up.nil? || !new_resource.updated_by_last_action?
+        end
 
         #
         # A WMI instance of the Network Adapter found by MAC
@@ -264,16 +293,37 @@ class Chef
         end
 
         #
+        # IPs to set on interface
+        #  Takes existing IPs and adds the wanted IP to the front
+        #  Also removes IPv6 addresses
+        #
+        def wanted_ips
+          ips = [new_resource.address, nic.ip_address].flatten.compact
+
+          # Return only IPv4 IPs
+          ips.select { |ip| ip =~ /\./ }
+        end
+
+        #
+        # Netmasks to set on interface
+        #  Takes existing netmasks and adds the wanted netmask to the front
+        #  Also removes IPv6 addresses
+        #
+        def wanted_netmasks
+          netmasks = [new_resource.netmask, nic.ip_subnet].flatten.compact
+
+          # Return only IPv4 netmasks
+          netmasks.select { |ip| ip =~ /\./ }
+        end
+
+        #
         # Configure static address
         #
         def config_static
-          ips = [new_resource.address, nic.ip_address].flatten.compact.select { |ip| ip =~ /\./ }
-          subnets = [new_resource.netmask, nic.ip_subnet].flatten.compact.select { |ip| ip =~ /\./ }
-
           release_dhcp_addresses if current_resource.bootproto == 'dhcp'
 
           converge_it("Set IP to #{new_resource.address}/#{new_resource.netmask}") do
-            nic.EnableStatic(ips, subnets)
+            nic.EnableStatic(wanted_ips, wanted_netmasks)
           end
         end
 
