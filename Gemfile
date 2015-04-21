@@ -17,4 +17,5 @@ group :development do
   gem 'pry'
 
   gem 'ruby-wmi'
+  gem 'ohai', '~> 7.4.1'
 end
