@@ -36,7 +36,7 @@ NM_CONTROLLED="off"
 
     context 'for interface eth0 definition' do
       it 'creates the interface' do
-        expect(chef_run).to create_network_interface 'eth0'
+        expect(chef_run).to create_rhel_network_interface 'eth0'
         expect(chef_run).to create_template '/etc/sysconfig/network-scripts/ifcfg-eth0'
         expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth0').with_content(default_eth0_config_contents)
       end
@@ -62,7 +62,7 @@ NM_CONTROLLED="off"
 
     context 'for interface eth1 definition' do
       it 'creates the interface' do
-        expect(chef_run).to create_network_interface 'eth1'
+        expect(chef_run).to create_rhel_network_interface 'eth1'
       end
 
       it 'does not reload interface by default' do
@@ -155,7 +155,7 @@ iface eth2 inet dhcp
     end
 
     it 'creates interface eth1' do
-      expect(chef_run).to create_network_interface 'eth1'
+      expect(chef_run).to create_debian_network_interface 'eth1'
     end
 
     it 'creates interface eth2' do
