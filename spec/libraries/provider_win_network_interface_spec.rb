@@ -53,7 +53,8 @@ describe Chef::Provider::NetworkInterface::Win do
                                                 full_dns_registration_enabled: false,
                                                 dns_domain_suffix_search_order: [],
                                                 dhcp_enabled: false,
-                                                dns_domain: '')
+                                                dns_domain: '',
+                                                tcpip_netbios_options: 0)
   end
 
   let(:shellout) { double('Mixlib::ShellOut', run_command: nil, error!: nil) }
