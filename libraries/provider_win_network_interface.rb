@@ -60,7 +60,7 @@ class Chef
           @current_resource.addresses = nic.ip_address
           @current_resource.netmasks = nic.ip_subnet
 
-          case nic.TcpipNetbiosOptions
+          case nic.tcpip_netbios_options
           when 0
             @current_resource.netbios 'dhcp'
           when 1
