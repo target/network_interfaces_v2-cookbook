@@ -303,7 +303,7 @@ class Chef
         #
         # Configure NetBIOS
         #
-        def config_netbios
+        def config_netbios # rubocop:disable MethodLength
           case new_resource.netbios
           when true
             converge_it('Enabling NetBIOS') do
