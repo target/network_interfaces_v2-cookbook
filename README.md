@@ -142,6 +142,7 @@ Inherits all attributes from `network_interface` provider as well as:
 * dns - Array of DNS servers
 * dns_domain - DNS domain
 * ddns - true/false dynamic dns registration
+* netbios - Enable/Disable netbios on the interface.  Valid values: true, false, 'dhcp'
 
 #### Example
 
