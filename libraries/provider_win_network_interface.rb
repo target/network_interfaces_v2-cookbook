@@ -60,6 +60,15 @@ class Chef
           @current_resource.addresses = nic.ip_address
           @current_resource.netmasks = nic.ip_subnet
 
+          case nic.TcpipNetbiosOptions
+          when 0
+            @current_resource.netbios 'dhcp'
+          when 1
+            @current_resource.netbios true
+          when 2
+            @current_resource.netbios false
+          end
+
           case nic.dhcp_enabled
           when true
             @current_resource.bootproto('dhcp')
@@ -80,6 +89,7 @@ class Chef
           manage_vlan
           manage_address
           manage_dns
+          manage_netbios
           post_updates
         end
 
@@ -120,6 +130,13 @@ class Chef
           config_dns unless new_resource.dns.nil? || current_resource.dns == new_resource.dns
           config_dns_domain unless new_resource.dns_domain.nil? || current_resource.dns_domain == new_resource.dns_domain
           config_ddns unless new_resource.ddns.nil? || current_resource.ddns == new_resource.ddns
+        end
+
+        #
+        # Manage NetBIOS as needed
+        #
+        def manage_netbios
+          config_netbios unless current_resource.netbios == new_resource.netbios
         end
 
         #
@@ -280,6 +297,26 @@ class Chef
         def enable_dhcp
           converge_it('Enabling DHCP') do
             nic.EnableDhcp
+          end
+        end
+
+        #
+        # Configure NetBIOS
+        #
+        def config_netbios
+          case new_resource.netbios
+          when true
+            converge_it('Enabling NetBIOS') do
+              nic.SetTcpipNetbios(1)
+            end
+          when false
+            converge_it('Disabling NetBIOS') do
+              nic.SetTcpipNetbios(2)
+            end
+          when 'dhcp'
+            converge_it('Enabling NetBIOS via DHCP') do
+              nic.SetTcpipNetbios(0)
+            end
           end
         end
 

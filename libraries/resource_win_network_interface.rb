@@ -37,6 +37,8 @@ class Chef
           super
           @resource_name = :win_network_interface
           @provider = Chef::Provider::NetworkInterface::Win
+
+          @netbios = 'dhcp'
         end
 
         def hw_address(arg = nil)
@@ -62,6 +64,10 @@ class Chef
 
         def ddns(arg = nil)
           set_or_return(:ddns, arg, kind_of: [TrueClass, FalseClass])
+        end
+
+        def netbios(arg = nil)
+          set_or_return(:ddns, arg, kind_of: [TrueClass, FalseClass, String], equal_to: [true, false, 'dhcp'])
         end
       end
     end

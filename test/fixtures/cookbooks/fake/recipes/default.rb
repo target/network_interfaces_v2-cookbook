@@ -11,6 +11,7 @@ network_interface 'eth1' do
   gateway node['network']['default_gateway'] unless node['os'] == 'windows'
   hw_address '00-25-B5-5B-00-25' if node['os'] == 'windows'
   gateway '10.12.10.1' if node['os'] == 'windows'
+  netbios false if node['os'] == 'windows'
   post_up 'sleep 1'
 end
 
@@ -24,5 +25,6 @@ if node['os'] == 'windows'
     dns ['14.13.13.13', '14.13.13.12']
     ddns false
     dns_domain 'test.it.com'
+    netbios true
   end
 end
