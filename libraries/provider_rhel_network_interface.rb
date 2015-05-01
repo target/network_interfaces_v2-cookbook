@@ -30,7 +30,7 @@ class Chef
         provides :rhel_network_interface, os: 'linux', platform_family: %w(rhel fedora) if Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
 
         action :create do # rubocop:disable MethodLength, AbcSize
-          package 'vconfig' do
+          package 'vconfig' do # ~FC005 Not sure why this triggered ...
             not_if { new_resource.vlan.nil? }
             only_if { node['platform_version'].to_i < 7 }
           end
