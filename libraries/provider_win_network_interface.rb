@@ -82,7 +82,7 @@ class Chef
         #
         # Create action to create/update the resource
         #
-        def action_create
+        action :create do
           load_deps
 
           manage_phys_name

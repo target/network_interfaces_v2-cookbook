@@ -30,9 +30,43 @@ class Chef
       class Debian < Chef::Provider::NetworkInterface
         provides :debian_network_interface, os: 'linux', platform_family: %w(debian) if Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
 
-        def action_create # rubocop:disable MethodLength, AbcSize
-          run_context.include_recipe 'network_interfaces_v2::_debian'
+        action :create do # rubocop:disable MethodLength, AbcSize
+          # Include coookbook for managing debian modules
+          run_context.include_recipe 'modules::default'
 
+          # Manage common network files
+          directory '/etc/network/interfaces.d'
+          cookbook_file '/etc/network/interfaces' do
+            cookbook 'network_interfaces_v2'
+          end
+
+          # Get vlan module setup if needed
+          package 'vlan' do
+            not_if { new_resource.vlan.nil? }
+          end
+          modules '8021q' do
+            not_if { new_resource.vlan.nil? }
+          end
+
+          # Get bonding module setup if needed
+          package 'ifenslave-2.6' do
+            not_if { new_resource.bond_master.nil? }
+          end
+          modules 'bonding' do
+            not_if { new_resource.bond_master.nil? }
+          end
+
+          # Install package for metric if needed
+          package 'ifmetric' do
+            not_if { new_resource.metric.nil? }
+          end
+
+          # Install package for bridging if needed
+          package 'bridge-utils' do
+            not_if { new_resource.bridge_ports.nil? }
+          end
+
+          # Dump config for the interface
           template "/etc/network/interfaces.d/#{new_resource.device}" do
             cookbook new_resource.cookbook
             source new_resource.source

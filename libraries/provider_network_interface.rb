@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-require 'chef/provider'
+require 'chef/provider/lwrp_base'
 
 class Chef
   class Provider
@@ -26,10 +26,9 @@ class Chef
     # Chef Provider for Network Interfaces
     #
     class NetworkInterface < Chef::Provider::LWRPBase
-      # We MUST define this method in our custom provider
-      def load_current_resource; end
+      use_inline_resources if defined?(use_inline_resources)
 
-      def action_create
+      action :create do
         fail Chef::Exceptions::UnsupportedAction, "#{self} does not support :create"
       end
     end

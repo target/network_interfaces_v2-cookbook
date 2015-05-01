@@ -29,8 +29,19 @@ class Chef
       class Rhel < Chef::Provider::NetworkInterface
         provides :rhel_network_interface, os: 'linux', platform_family: %w(rhel fedora) if Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
 
-        def action_create # rubocop:disable MethodLength, AbcSize
-          run_context.include_recipe 'network_interfaces_v2::_rhel'
+        action :create do # rubocop:disable MethodLength, AbcSize
+          package 'vconfig' do # ~FC005 Not sure why this triggered ...
+            not_if { new_resource.vlan.nil? }
+            only_if { node['platform_version'].to_i < 7 }
+          end
+
+          package 'iputils' do
+            not_if { new_resource.bond_master.nil? }
+          end
+
+          package 'bridge-utils' do
+            not_if { new_resource.bridge_device.nil? }
+          end
 
           template "/etc/sysconfig/network-scripts/ifcfg-#{new_resource.device}" do
             cookbook new_resource.cookbook
