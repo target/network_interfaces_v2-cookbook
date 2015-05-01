@@ -2,6 +2,7 @@
 
 * Fix providers not triggering notifications
 * No longer manage removal of 'extra' network config files in debian
+* Add ability to enable/disable NetBIOS on windows interfaces
 
 # 1.1.0
 
