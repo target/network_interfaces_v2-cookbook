@@ -1,3 +1,8 @@
+# 2.0.0
+
+* Fix providers not triggering notifications
+* No longer manage removal of 'extra' network config files in debian
+
 # 1.1.0
 
 * Add running post scripts on interface config to all platforms
