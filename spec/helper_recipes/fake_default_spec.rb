@@ -130,14 +130,6 @@ iface eth2 inet dhcp
       expect(chef_run).to create_directory '/etc/network/interfaces.d'
     end
 
-    it 'removes unmanaged files from interface config directory' do
-      allow(Dir).to receive(:glob).and_call_original
-      allow(Dir).to receive(:glob).with('/etc/network/interfaces.d/*')
-        .and_return(['/etc/network/interfaces.d/eth1', '/etc/network/interfaces.d/eth13'])
-      expect(chef_run).not_to delete_file '/etc/network/interfaces.d/eth1'
-      expect(chef_run).to delete_file '/etc/network/interfaces.d/eth13'
-    end
-
     it 'replaces main network config file to reference interface configs' do
       expect(chef_run).to create_cookbook_file '/etc/network/interfaces'
     end
