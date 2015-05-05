@@ -17,8 +17,6 @@ Recipes
 -------
 
 * default - Does nothing
-* _debian - Contains dependencies for providers.  DO NOT INCLUDE
-* _rhel - Contains dependencies for providers.  DO NOT INCLUDE
 * _win - Contains dependencies for providers.  DO NOT INCLUDE
 
 Providers
