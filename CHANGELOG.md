@@ -1,3 +1,7 @@
+# 2.0.1
+
+* Fix handling DNS for windows VLAN devices
+
 # 2.0.0
 
 * Fix providers not triggering notifications
