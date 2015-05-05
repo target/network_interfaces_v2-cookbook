@@ -30,6 +30,7 @@ when 'windows'
     bootproto 'static'
     address '12.12.12.14'
     netmask '255.255.255.0'
+    dns ['4.2.2.4', '4.2.2.8']
     vlan 12
   end
 end

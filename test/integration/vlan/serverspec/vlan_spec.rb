@@ -52,5 +52,9 @@ if windows?
     it 'should have netmask "255.255.255.0"' do
       expect(win_interface_config('eth2')['ipsubnet'].first).to eq '255.255.255.0'
     end
+
+    it 'should have DNS servers assigned' do
+      expect(win_interface_config('eth2')['dnsserversearchorder']).to eq ['4.2.2.4', '4.2.2.8']
+    end
   end
 end
