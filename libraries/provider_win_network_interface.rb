@@ -110,6 +110,7 @@ class Chef
           create_vlan_dev unless vlan_dev_exist? || msft_vlan_dev_exist?
           set_vlan unless vlanid_set? || msft_vlan_dev_exist?
           rename_vlan_dev if msft_vlan_dev_exist?
+          load_current_resource # Reload current resource with values from new vlan int
         end
 
         #
