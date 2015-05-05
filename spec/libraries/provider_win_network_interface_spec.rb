@@ -321,6 +321,35 @@ describe Chef::Provider::NetworkInterface::Win do
     end
 
     describe 'managing vlans' do
+      let(:adapter) do
+        double('WMI::Win32_NetworkAdapter', InterfaceIndex: 10, NetConnectionID: 'eth1-NIC', net_connection_id: 'eth1-NIC', enable: nil, disable: nil)
+      end
+      let(:vlan_adapter) do
+        double('WMI::Win32_NetworkAdapter (VLAN)', InterfaceIndex: 12, NetConnectionID: 'eth1', net_connection_id: 'eth1', enable: nil, disable: nil)
+      end
+      let(:adapter_config) do
+        double('Win32_NetworkAdapterConfiguration', ip_address: ['12.13.14.15', '10.10.10.10', 'asdf:asdf:asdf:asdf'],
+                                                    ip_subnet: ['255.255.254.0', '255.255.255.0', '64'],
+                                                    default_ip_gateway: ['10.10.10.1'],
+                                                    dns_server_search_order: ['my_dns_domain.com'],
+                                                    full_dns_registration_enabled: false,
+                                                    dns_domain_suffix_search_order: [],
+                                                    dhcp_enabled: true,
+                                                    dns_domain: '',
+                                                    tcpip_netbios_options: 0)
+      end
+      let(:vlan_adapter_config) do
+        double('Win32_NetworkAdapterConfiguration (VLAN)', ip_address: ['12.13.14.15', '10.10.10.10', 'asdf:asdf:asdf:asdf'],
+                                                           ip_subnet: ['255.255.254.0', '255.255.255.0', '64'],
+                                                           default_ip_gateway: ['10.10.10.1'],
+                                                           dns_server_search_order: [],
+                                                           full_dns_registration_enabled: false,
+                                                           dns_domain_suffix_search_order: [],
+                                                           dhcp_enabled: true,
+                                                           dns_domain: '',
+                                                           tcpip_netbios_options: 0)
+      end
+
       before do
         current_resource.device 'eth1-NIC'
         allow(adapter).to receive(:net_connection_id).and_return('eth1-NIC')
@@ -333,6 +362,9 @@ describe Chef::Provider::NetworkInterface::Win do
         allow(provider).to receive(:create_vlan_dev)
         allow(provider).to receive(:set_vlan)
         allow(provider).to receive(:rename_vlan_dev)
+
+        allow(WMI::Win32_NetworkAdapterConfiguration).to receive(:find).with(:all, conditions: { interface_index: 12 }).and_return([vlan_adapter_config])
+        allow(WMI::Win32_NetworkAdapter).to receive(:find).and_return([adapter], [adapter], [vlan_adapter])
       end
 
       it 'appends -NIC to physical adapter name whe configuring VLANs' do
@@ -386,6 +418,12 @@ describe Chef::Provider::NetworkInterface::Win do
 
       it 'does not rename a properly named VLAN device' do
         expect(provider).not_to receive(:rename_vlan_dev)
+        provider.action_create
+      end
+
+      it 'configures DNS on the VLAN device' do
+        new_resource.dns_domain 'my_dns_domain.com'
+        expect(vlan_adapter_config).to receive(:SetDNSDomain).with('my_dns_domain.com')
         provider.action_create
       end
     end
