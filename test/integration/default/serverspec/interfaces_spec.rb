@@ -68,7 +68,7 @@ if windows?
       expect(win_interface_config('eth1')['defaultipgateway'].first).to eq '10.12.10.1'
     end
 
-    it 'should have NetBIOS enabled' do
+    it 'should have NetBIOS disabled' do
       expect(win_interface_config('eth1')['tcpipnetbiosoptions']).to eq 2
     end
   end
@@ -90,7 +90,7 @@ if windows?
       expect(win_interface_config('eth2')['dnsdomain']).to eq 'test.it.com'
     end
 
-    it 'should have NetBIOS disabled' do
+    it 'should have NetBIOS enabled' do
       expect(win_interface_config('eth2')['tcpipnetbiosoptions']).to eq 1
     end
   end
