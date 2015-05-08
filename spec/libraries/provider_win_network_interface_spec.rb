@@ -6,16 +6,8 @@ require 'chef/resource'
 require 'chef/event_dispatch/base'
 require 'chef/event_dispatch/dispatcher'
 
-require "#{File.join(File.dirname(__FILE__), '..', '..', 'libraries')}/resource_network_interface.rb"
-require "#{File.join(File.dirname(__FILE__), '..', '..', 'libraries')}/provider_network_interface.rb"
 require "#{File.join(File.dirname(__FILE__), '..', '..', 'libraries')}/resource_win_network_interface.rb"
 require "#{File.join(File.dirname(__FILE__), '..', '..', 'libraries')}/provider_win_network_interface.rb"
-
-# Load some fake libraries to represent ruby-wmi
-module WMI
-  class Win32_NetworkAdapter; end # rubocop:disable all
-  class Win32_NetworkAdapterConfiguration; end # rubocop:disable all
-end
 
 # rubocop:disable Documentation
 describe Chef::Provider::NetworkInterface::Win do
@@ -43,30 +35,30 @@ describe Chef::Provider::NetworkInterface::Win do
   end
 
   let(:adapter) do
-    double('WMI::Win32_NetworkAdapter', InterfaceIndex: 10, NetConnectionID: 'eth1', net_connection_id: 'eth1', enable: nil, disable: nil)
+    double('WMI::Win32_NetworkAdapter', InterfaceIndex: 10, NetConnectionID: 'eth1', enable: nil, disable: nil)
   end
   let(:adapter_config) do
-    double('Win32_NetworkAdapterConfiguration', ip_address: ['12.13.14.15', '10.10.10.10', 'asdf:asdf:asdf:asdf'],
-                                                ip_subnet: ['255.255.254.0', '255.255.255.0', '64'],
-                                                default_ip_gateway: ['10.10.10.1'],
-                                                dns_server_search_order: [],
-                                                full_dns_registration_enabled: false,
-                                                dns_domain_suffix_search_order: [],
-                                                dhcp_enabled: false,
-                                                dns_domain: '',
-                                                tcpip_netbios_options: 0)
+    double('Win32_NetworkAdapterConfiguration', IPAddress: ['12.13.14.15', '10.10.10.10', 'asdf:asdf:asdf:asdf'],
+                                                IPSubnet: ['255.255.254.0', '255.255.255.0', '64'],
+                                                DefaultIPGateway: ['10.10.10.1'],
+                                                DNSServerSearchOrder: [],
+                                                FullDNSRegistrationEnabled: false,
+                                                DNSDomainSuffixSearchOrder: [],
+                                                DHCPEnabled: false,
+                                                DNSDomain: '',
+                                                TCPIPNetbiosOptions: 0)
   end
 
   let(:shellout) { double('Mixlib::ShellOut', run_command: nil, error!: nil) }
 
   # Tie some things together
   before do
-    allow(provider).to receive(:sleep).and_return(nil)
+    allow(provider).to receive(:sleep).and_return(nil) # Speed up testing
     provider.new_resource = new_resource
     provider.current_resource = current_resource
-    allow(run_context).to receive(:include_recipe).and_return(nil)
-    allow(WMI::Win32_NetworkAdapterConfiguration).to receive(:find).and_return([adapter_config])
-    allow(WMI::Win32_NetworkAdapter).to receive(:find).and_return([adapter])
+
+    allow(provider).to receive(:execute_wmi_query).with(/Win32_NetworkAdapter /).and_return([adapter])
+    allow(provider).to receive(:execute_wmi_query).with(/Win32_NetworkAdapterConfiguration /).and_return([adapter_config])
   end
 
   describe '#load_current_resource' do
@@ -84,7 +76,6 @@ describe Chef::Provider::NetworkInterface::Win do
   describe '#action_create' do
     it 'renames the physical interface' do
       allow(adapter).to receive(:NetConnectionID).and_return('eth0')
-      allow(adapter).to receive(:net_connection_id).and_return('eth0')
       current_resource.device 'eth0'
       expect(adapter).to receive(:NetConnectionID=).with('eth1')
       expect(adapter).to receive(:Put_)
@@ -322,37 +313,36 @@ describe Chef::Provider::NetworkInterface::Win do
 
     describe 'managing vlans' do
       let(:adapter) do
-        double('WMI::Win32_NetworkAdapter', InterfaceIndex: 10, NetConnectionID: 'eth1-NIC', net_connection_id: 'eth1-NIC', enable: nil, disable: nil)
+        double('WMI::Win32_NetworkAdapter', InterfaceIndex: 10, NetConnectionID: 'eth1-NIC', enable: nil, disable: nil)
       end
       let(:vlan_adapter) do
-        double('WMI::Win32_NetworkAdapter (VLAN)', InterfaceIndex: 12, NetConnectionID: 'eth1', net_connection_id: 'eth1', enable: nil, disable: nil)
+        double('WMI::Win32_NetworkAdapter (VLAN)', InterfaceIndex: 12, NetConnectionID: 'eth1', enable: nil, disable: nil)
       end
       let(:adapter_config) do
-        double('Win32_NetworkAdapterConfiguration', ip_address: ['12.13.14.15', '10.10.10.10', 'asdf:asdf:asdf:asdf'],
-                                                    ip_subnet: ['255.255.254.0', '255.255.255.0', '64'],
-                                                    default_ip_gateway: ['10.10.10.1'],
-                                                    dns_server_search_order: ['my_dns_domain.com'],
-                                                    full_dns_registration_enabled: false,
-                                                    dns_domain_suffix_search_order: [],
-                                                    dhcp_enabled: true,
-                                                    dns_domain: '',
-                                                    tcpip_netbios_options: 0)
+        double('Win32_NetworkAdapterConfiguration', IPAddress: ['12.13.14.15', '10.10.10.10', 'asdf:asdf:asdf:asdf'],
+                                                    IPSubnet: ['255.255.254.0', '255.255.255.0', '64'],
+                                                    DefaultIPGateway: ['10.10.10.1'],
+                                                    DNSServerSearchOrder: ['my_dns_domain.com'],
+                                                    FullDNSRegistrationEnabled: false,
+                                                    DNSDomainSuffixSearchOrder: [],
+                                                    DHCPEnabled: true,
+                                                    DNSDomain: '',
+                                                    TCPIPNetbiosOptions: 0)
       end
       let(:vlan_adapter_config) do
-        double('Win32_NetworkAdapterConfiguration (VLAN)', ip_address: ['12.13.14.15', '10.10.10.10', 'asdf:asdf:asdf:asdf'],
-                                                           ip_subnet: ['255.255.254.0', '255.255.255.0', '64'],
-                                                           default_ip_gateway: ['10.10.10.1'],
-                                                           dns_server_search_order: [],
-                                                           full_dns_registration_enabled: false,
-                                                           dns_domain_suffix_search_order: [],
-                                                           dhcp_enabled: true,
-                                                           dns_domain: '',
-                                                           tcpip_netbios_options: 0)
+        double('Win32_NetworkAdapterConfiguration (VLAN)', IPAddress: ['12.13.14.15', '10.10.10.10', 'asdf:asdf:asdf:asdf'],
+                                                           IPSubnet: ['255.255.254.0', '255.255.255.0', '64'],
+                                                           DefaultIPGateway: ['10.10.10.1'],
+                                                           DNSServerSearchOrder: [],
+                                                           FullDNSRegistrationEnabled: false,
+                                                           DNSDomainSuffixSearchOrder: [],
+                                                           DHCPEnabled: true,
+                                                           DNSDomain: '',
+                                                           TCPIPNetbiosOptions: 0)
       end
 
       before do
         current_resource.device 'eth1-NIC'
-        allow(adapter).to receive(:net_connection_id).and_return('eth1-NIC')
         new_resource.vlan 12
 
         allow(provider).to receive(:vlan_dev_exist?).and_return(false)
@@ -363,13 +353,13 @@ describe Chef::Provider::NetworkInterface::Win do
         allow(provider).to receive(:set_vlan)
         allow(provider).to receive(:rename_vlan_dev)
 
-        allow(WMI::Win32_NetworkAdapterConfiguration).to receive(:find).with(:all, conditions: { interface_index: 12 }).and_return([vlan_adapter_config])
-        allow(WMI::Win32_NetworkAdapter).to receive(:find).and_return([adapter], [adapter], [vlan_adapter])
+        allow(provider).to receive(:execute_wmi_query).with(/Win32_NetworkAdapter /).and_return([adapter], [adapter], [vlan_adapter])
+        allow(provider).to receive(:execute_wmi_query).with("select * from Win32_NetworkAdapterConfiguration where InterfaceIndex='12'").and_return([vlan_adapter_config])
       end
 
       it 'appends -NIC to physical adapter name whe configuring VLANs' do
         current_resource.device 'eth1'
-        allow(adapter).to receive(:net_connection_id).and_return('eth1')
+        allow(adapter).to receive(:NetConnectionID).and_return('eth1')
 
         expect(adapter).to receive(:NetConnectionID=).with('eth1-NIC')
         expect(adapter).to receive(:Put_)

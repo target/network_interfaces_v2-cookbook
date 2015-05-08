@@ -13,11 +13,15 @@ Supported Platforms
 Usage
 =====
 
-Recipes
--------
+Add `depends 'network_interfaces_v2'` to your cookbook metadata.rb file.  This
+will give you access to the providers documents below.
 
-* default - Does nothing
-* _win - Contains dependencies for providers.  DO NOT INCLUDE
+Recipes
+=======
+
+default
+-------
+Does nothing and does not need to be included.
 
 network_interface
 =================
