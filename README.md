@@ -19,14 +19,12 @@ Recipes
 * default - Does nothing
 * _win - Contains dependencies for providers.  DO NOT INCLUDE
 
-Providers
-=========
-
 network_interface
------------------
+=================
+Provider for managing network interfaces.
 
-#### Attributes
-
+Attributes
+----------
 * device (**REQUIRED**) - Device name
 * onboot (default: true) - Wether or not to online device on boot
 * bootproto (default: 'dhcp') - Device protocol
@@ -47,59 +45,8 @@ network_interface
 * cookbook (default: 'network_interfaces_v2') - Cookbook to look for template files in
 * source (default: 'ifcfg.erb') - Template file to use for interface config
 
-##### Debian Only Attributes
+#### Debian Only Attributes
 * bridge_stp (true/false) - Wether to enable/disable bridge STP.  Applies to debian only.
-
-##### RHEL Only Attributes
-* type - Protocol Type.  Applies to RHEL only.
-* bond_master - Device that is the bond master for defined device.  Applies to RHEL only.
-
-#### Example
-
-```ruby
-network_interface 'eth1' do
-  bootproto 'static'
-  address '10.12.10.11'
-  netmask '255.255.255.0'
-  gateway '10.12.10.1'
-end
-```
-
-rhel_network_interface
-----------------------
-Inherits all attributes from `network_interface` provider as well as:
-
-* nm_controlled (default: false)- If device should be controlled by network manager.
-* type (default: 'Ethernet') -
-* ipv6init - true/false
-* nozeroconf - true/false
-* userctl - true/false
-* peerdns - true/false
-* bridge_device - Bridge to add defined interface to
-
-#### Example
-
-Two interface DHCP bond0
-```ruby
-network_interface 'eth1' do
-  bootproto 'none'
-  bond_master 'bond0'
-end
-
-network_interface 'eth2' do
-  bootproto 'none'
-  bond_master 'bond0'
-end
-
-rhel_network_interface 'bond0' do
-  bond_mode 'mode=1 miimon=100'
-end
-```
-
-debian_network_interface
-------------------------
-Inherits all attributes from `network_interface` provider as well as:
-
 * bridge_ports - Array of interfaces to add to defined bridge
 * metric -
 * bond_slaves - Array of interfaces to add to defined bond
@@ -111,11 +58,67 @@ Inherits all attributes from `network_interface` provider as well as:
 * post_down - Post down command
 * custom - Hash of extra attributes to put in device config
 
-#### Example
+#### RHEL Only Attributes
+* type - Protocol Type.  Applies to RHEL only.
+* bond_master - Device that is the bond master for defined device.  Applies to RHEL only.
+* nm_controlled (default: false)- If device should be controlled by network manager.
+* type (default: 'Ethernet') -
+* ipv6init - true/false
+* nozeroconf - true/false
+* userctl - true/false
+* peerdns - true/false
+* bridge_device - Bridge to add defined interface to
 
-Two interface DHCP bond0
+#### Windows Only Attributes
+* hw_address - Can be used to define what device to manage
+* index - Can be used to define what device to manage
+* dns - Array of DNS servers
+* dns_domain - DNS domain
+* ddns - true/false dynamic dns registration
+* netbios - Enable/Disable netbios on the interface.  Valid values: true, false, 'dhcp'
+
+Providers
+---------
+
+Long name | Short name
+----------|-----------
+Chef::Provider::NetworkInterface::Rhel | rhel_network_interface
+Chef::Provider::NetworkInterface::Debian | debian_network_interface
+Chef::Provider::NetworkInterface::Win | win_network_interface
+
+Examples
+--------
+
+Basic example:
 ```ruby
-debian_network_interface 'bond0' do
+network_interface 'eth1' do
+  bootproto 'static'
+  address '10.12.10.11'
+  netmask '255.255.255.0'
+  gateway '10.12.10.1'
+end
+```
+
+Two interface DHCP bond0 on rhel family
+```ruby
+network_interface 'eth1' do
+  bootproto 'none'
+  bond_master 'bond0'
+end
+
+network_interface 'eth2' do
+  bootproto 'none'
+  bond_master 'bond0'
+end
+
+network_interface 'bond0' do
+  bond_mode 'mode=1 miimon=100'
+end
+```
+
+Two interface DHCP bond0 on debian family
+```ruby
+network_interface 'bond0' do
   bond_slaves ['eth1', 'eth2']
   bond_mode '0'
 end
@@ -131,22 +134,10 @@ network_interface 'eth2' do
 end
 ```
 
-win_network_interface
----------------------
-Inherits all attributes from `network_interface` provider as well as:
-
-* hw_address - Can be used to define what device to manage
-* index - Can be used to define what device to manage
-* dns - Array of DNS servers
-* dns_domain - DNS domain
-* ddns - true/false dynamic dns registration
-* netbios - Enable/Disable netbios on the interface.  Valid values: true, false, 'dhcp'
-
-#### Example
-
-Manage device with MAC '00-25-B5-5B-00-25', name it 'eth2' with DHCP tagged to VLAN 12
+On windows manage device with MAC '00-25-B5-5B-00-25', name it 'eth2',
+make it DHCP (default bootproto) and VLAN tagged to VLAN 12
 ```ruby
-win_network_interface 'eth2' do
+network_interface 'eth2' do
   hw_address '00-25-B5-5B-00-25'
   vlan 12
 end
