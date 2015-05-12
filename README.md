@@ -14,7 +14,7 @@ Usage
 =====
 
 Add `depends 'network_interfaces_v2'` to your cookbook metadata.rb file.  This
-will give you access to the providers documents below.
+will give you access to the providers documented below.
 
 Recipes
 =======
