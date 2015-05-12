@@ -1,3 +1,7 @@
+# 2.1.0
+
+* Remove dependency on ruby-wmi gem
+
 # 2.0.1
 
 * Fix handling DNS for windows VLAN devices
