@@ -20,6 +20,7 @@
 
 require 'chef/provider/lwrp_base'
 require_relative 'provider_network_interface'
+require_relative 'wmi_helper'
 
 class Chef
   class Provider
@@ -31,36 +32,23 @@ class Chef
         provides :win_network_interface, os: 'windows' if Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
 
         #
-        # Install/Load dependency libraries
-        #
-        def load_deps
-          run_context.include_recipe 'network_interfaces_v2::_win'
-
-          # Only load libraries on Windows
-          require 'ruby-wmi' if RUBY_PLATFORM =~ /mswin|mingw32|windows/
-          require_relative 'ruby_wmi_ext' if RUBY_PLATFORM =~ /mswin|mingw32|windows/
-        end
-
-        #
         # Load current state of defined resource
         #
         def load_current_resource # rubocop:disable MethodLength, AbcSize
-          load_deps
-
           @current_resource = Chef::Resource::NetworkInterface::Win.new(@new_resource.name)
           @current_resource.name(@new_resource.name)
           @current_resource.hw_address(@new_resource.hw_address)
 
-          @current_resource.device(adapter.net_connection_id)
-          @current_resource.gateway(nic.default_ip_gateway.first) unless nic.default_ip_gateway.nil?
-          @current_resource.dns(nic.dns_server_search_order)
-          @current_resource.dns_domain(nic.dns_domain)
-          @current_resource.ddns(nic.full_dns_registration_enabled)
+          @current_resource.device(adapter.NetConnectionID)
+          @current_resource.gateway(nic.DefaultIPGateway.first) unless nic.DefaultIPGateway.nil?
+          @current_resource.dns(nic.DNSServerSearchOrder)
+          @current_resource.dns_domain(nic.DNSDomain)
+          @current_resource.ddns(nic.FullDNSRegistrationEnabled)
 
-          @current_resource.addresses = nic.ip_address
-          @current_resource.netmasks = nic.ip_subnet
+          @current_resource.addresses = nic.IPAddress
+          @current_resource.netmasks = nic.IPSubnet
 
-          case nic.tcpip_netbios_options
+          case nic.TCPIPNetbiosOptions
           when 0
             @current_resource.netbios 'dhcp'
           when 1
@@ -69,7 +57,7 @@ class Chef
             @current_resource.netbios false
           end
 
-          case nic.dhcp_enabled
+          case nic.DHCPEnabled
           when true
             @current_resource.bootproto('dhcp')
           else
@@ -83,8 +71,6 @@ class Chef
         # Create action to create/update the resource
         #
         action :create do
-          load_deps
-
           manage_phys_name
           manage_vlan
           manage_address
@@ -99,7 +85,7 @@ class Chef
         # Rename physical interface if needed
         #
         def manage_phys_name
-          phys_rename unless phys_adapter.net_connection_id == phys_adapter_name
+          phys_rename unless phys_adapter.NetConnectionID == phys_adapter_name
         end
 
         #
@@ -155,9 +141,9 @@ class Chef
         #
         def phys_adapter
           @phys_adapter ||= begin
-            a = ::WMI::Win32_NetworkAdapter.find(:all, conditions: conditions)
-            fail Chef::Exceptions::UnsupportedAction, "Failed to find interface with conditions: #{conditions}" if a.empty?
-            a.first
+            a = execute_wmi_query("select * from Win32_NetworkAdapter where #{conditions}")
+            fail Chef::Exceptions::UnsupportedAction, "Failed to find interface with conditions: #{conditions}" if a.nil?
+            wmi_object_array(a).first
           end
         end
 
@@ -167,9 +153,10 @@ class Chef
         # @return [Hash]
         #
         def conditions
-          c = {}
-          c[:index] = new_resource.index unless new_resource.index.nil?
-          c[:mac_address] = new_resource.hw_address unless new_resource.hw_address.nil?
+          c = ''
+          c = "Index='#{new_resource.index}'" unless new_resource.index.nil?
+          c = "#{c} AND " unless c.empty?
+          c = "MacAddress='#{new_resource.hw_address}'" unless new_resource.hw_address.nil?
           fail Chef::Exceptions::UnsupportedAction, 'Failed to find interface, no conditions provided' if c.empty?
           c
         end
@@ -180,9 +167,9 @@ class Chef
         # @return [RubyWMI::Win32_NetworkAdapter]
         #
         def adapter
-          a = ::WMI::Win32_NetworkAdapter.find(:all, conditions: { net_connection_id: new_resource.device })
-          a = ::WMI::Win32_NetworkAdapter.find(:all, conditions: conditions) if a.empty?
-          a.first
+          a = execute_wmi_query("select * from Win32_NetworkAdapter where NetConnectionID='#{new_resource.device}'")
+          a = execute_wmi_query("select * from Win32_NetworkAdapter where #{conditions}") if a.nil?
+          wmi_object_array(a).first
         end
 
         #
@@ -191,7 +178,8 @@ class Chef
         # @return [RubyWMI::Win32_NetworkAdapterConfiguration]
         #
         def nic
-          ::WMI::Win32_NetworkAdapterConfiguration.find(:all, conditions: { interface_index: adapter.InterfaceIndex }).first
+          a = execute_wmi_query("select * from Win32_NetworkAdapterConfiguration where InterfaceIndex='#{adapter.InterfaceIndex}'")
+          wmi_object_array(a).first
         end
 
         #
@@ -336,7 +324,7 @@ class Chef
         #  Also removes IPv6 addresses
         #
         def wanted_ips
-          ips = [new_resource.address, nic.ip_address].flatten.compact
+          ips = [new_resource.address, nic.IPAddress].flatten.compact
 
           # Return only IPv4 IPs
           ips.select { |ip| ip =~ /\./ }
@@ -348,7 +336,7 @@ class Chef
         #  Also removes IPv6 addresses
         #
         def wanted_netmasks
-          netmasks = [new_resource.netmask, nic.ip_subnet].flatten.compact
+          netmasks = [new_resource.netmask, nic.IPSubnet].flatten.compact
 
           # Return only IPv4 netmasks
           netmasks.select { |ip| ip =~ /\./ }
