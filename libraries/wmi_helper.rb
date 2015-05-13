@@ -15,6 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# @see https://github.com/opscode-cookbooks/windows/blob/master/libraries/wmi_helper.rb
+#
 
 if RUBY_PLATFORM =~ /mswin|mingw32|windows/
   require 'win32ole'
