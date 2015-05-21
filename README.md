@@ -1,5 +1,6 @@
 Cookbook network_interfaces_v2
 ==============================
+[![Build Status](https://travis-ci.org/target/network_interfaces_v2-cookbook.svg?branch=travis_ci)](https://travis-ci.org/target/network_interfaces_v2-cookbook)
 
 A cookbook containing providers for defining network interfaces.
 
