@@ -1,5 +1,6 @@
 Cookbook network_interfaces_v2
 ==============================
+[![Build Status](https://travis-ci.org/target/network_interfaces_v2-cookbook.svg?branch=travis_ci)](https://travis-ci.org/target/network_interfaces_v2-cookbook)
 
 A cookbook containing providers for defining network interfaces.
 
@@ -145,6 +146,16 @@ network_interface 'eth2' do
   hw_address '00-25-B5-5B-00-25'
   vlan 12
 end
+```
+
+Testing
+=======
+
+```
+bundle exec rubocop
+bundle exec foodcritic -f any -X spec .
+bundle exec rspec --color --format progress
+bundle exec kitchen test
 ```
 
 License and Authors
