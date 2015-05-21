@@ -147,6 +147,16 @@ network_interface 'eth2' do
 end
 ```
 
+Testing
+=======
+
+```
+bundle exec rubocop
+bundle exec foodcritic -f any -X spec .
+bundle exec rspec --color --format progress
+bundle exec kitchen test
+```
+
 License and Authors
 ===================
 
