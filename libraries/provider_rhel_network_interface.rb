@@ -27,7 +27,7 @@ class Chef
       # Chef Provider for RHEL Network Interfaces
       #
       class Rhel < Chef::Provider::NetworkInterface
-        provides :rhel_network_interface, os: 'linux', platform_family: %w(rhel fedora) if Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
+        provides :rhel_network_interface, os: 'linux', platform_family: %w(rhel fedora) if respond_to?(:provides)
 
         action :create do # rubocop:disable MethodLength, AbcSize
           package 'vconfig' do # ~FC005 Not sure why this triggered ...
