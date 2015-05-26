@@ -29,7 +29,7 @@ class Chef
       # Chef Provider for Windows Network Interfaces
       #
       class Win < Chef::Provider::NetworkInterface # rubocop:disable ClassLength
-        provides :win_network_interface, os: 'windows' if Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
+        provides :win_network_interface, os: 'windows' if respond_to?(:provides)
 
         #
         # Load current state of defined resource

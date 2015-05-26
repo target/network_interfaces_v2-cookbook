@@ -28,7 +28,7 @@ class Chef
       # Chef Provider for Debian Network Interfaces
       #
       class Debian < Chef::Provider::NetworkInterface
-        provides :debian_network_interface, os: 'linux', platform_family: %w(debian) if Gem::Version.new(Chef::VERSION) >= Gem::Version.new('12.0.0')
+        provides :debian_network_interface, os: 'linux', platform_family: %w(debian) if respond_to?(:provides)
 
         action :create do # rubocop:disable MethodLength, AbcSize
           # Include coookbook for managing debian modules
