@@ -1,3 +1,7 @@
+# 2.1.1
+
+* Update how to determine when to specify `provides` in providers
+
 # 2.1.0
 
 * Remove dependency on ruby-wmi gem
