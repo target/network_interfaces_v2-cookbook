@@ -1,3 +1,8 @@
+# 2.1.2
+
+* Add supported platforms to metadata.rb
+* Update gem source for integration testing to https from http
+
 # 2.1.1
 
 * Update how to determine when to specify `provides` in providers
