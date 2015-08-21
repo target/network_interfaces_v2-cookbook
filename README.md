@@ -73,6 +73,7 @@ Attributes
 * userctl - true/false
 * peerdns - true/false
 * bridge_device - Bridge to add defined interface to
+* devicetype - Set the type of device (e.g. 'ovs')
 
 #### Windows Only Attributes
 * hw_address - Can be used to define what device to manage

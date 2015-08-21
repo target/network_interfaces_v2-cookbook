@@ -57,3 +57,6 @@ USERCTL="<%= @userctl ? 'on' : 'off' %>"
 <% unless @peerdns.nil? -%>
 PEERDNS="<%= @peerdns ? 'on' : 'off' %>"
 <% end %>
+<% unless @devicetype.nil? -%>
+DEVICETYPE="<%= @devicetype %>"
+<% end %>

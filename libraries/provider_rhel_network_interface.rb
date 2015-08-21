@@ -68,7 +68,8 @@ class Chef
                       nozeroconf: new_resource.nozeroconf,
                       userctl: new_resource.userctl,
                       peerdns: new_resource.peerdns,
-                      mtu: new_resource.mtu
+                      mtu: new_resource.mtu,
+                      devicetype: new_resource.devicetype
             notifies :run, "execute[reload interface #{new_resource.device}]", new_resource.reload_type if new_resource.reload
             notifies :run, "execute[post up command for #{new_resource.device}]", :immediately unless new_resource.post_up.nil?
           end

@@ -17,6 +17,21 @@ NM_CONTROLLED="off"
 '
     end
 
+    let(:default_eth1_config_contents) do
+      '# This file maintained by Chef.  DO NOT EDIT!
+
+DEVICE="eth1"
+TYPE="Ethernet"
+ONBOOT="yes"
+BOOTPROTO="static"
+IPADDR="10.12.10.11"
+NETMASK="255.255.255.0"
+GATEWAY="10.0.0.1"
+NM_CONTROLLED="off"
+DEVICETYPE="ovs"
+'
+    end
+
     let(:default_eth2_config_contents) do
       '# This file maintained by Chef.  DO NOT EDIT!
 
@@ -63,6 +78,8 @@ NM_CONTROLLED="off"
     context 'for interface eth1 definition' do
       it 'creates the interface' do
         expect(chef_run).to create_rhel_network_interface 'eth1'
+        expect(chef_run).to create_template '/etc/sysconfig/network-scripts/ifcfg-eth1'
+        expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth1').with_content(default_eth1_config_contents)
       end
 
       it 'does not reload interface by default' do

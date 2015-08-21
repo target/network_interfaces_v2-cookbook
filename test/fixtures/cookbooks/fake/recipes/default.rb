@@ -13,6 +13,7 @@ network_interface 'eth1' do
   gateway '10.12.10.1' if node['os'] == 'windows'
   netbios false if node['os'] == 'windows'
   post_up 'sleep 1'
+  devicetype 'ovs' if %w(rhel fedora).include? node['platform_family']
 end
 
 # Add an interface config using platform specific provider

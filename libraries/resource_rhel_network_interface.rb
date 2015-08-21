@@ -72,6 +72,10 @@ class Chef
           set_or_return(:type, arg, kind_of: String)
         end
 
+        def devicetype(arg = nil)
+          set_or_return(:devicetype, arg, kind_of: String)
+        end
+
         def vlan(arg = nil)
           set_or_return(:vlan, arg, kind_of: [TrueClass, FalseClass])
         end
