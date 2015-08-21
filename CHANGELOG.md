@@ -1,3 +1,8 @@
+# 2.2.0
+* Add `dns` attribute to network_interface for RHEL
+* Add `devicetype` attribute to network_interface for RHEL
+* Add `prefix` attribute to network_interface for RHEL
+
 # 2.1.2
 
 * Add supported platforms to metadata.rb
