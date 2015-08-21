@@ -83,6 +83,10 @@ class Chef
         def mac_address(arg = nil)
           set_or_return(:mac_address, arg, kind_of: String, regex: /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/)
         end
+
+        def dns(arg = nil)
+          set_or_return(:dns, arg, kind_of: [String, Array])
+        end
       end
     end
   end

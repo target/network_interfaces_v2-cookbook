@@ -23,6 +23,12 @@ BROADCAST="<%= @broadcast %>"
 <% if @gateway -%>
 GATEWAY="<%= @gateway %>"
 <% end %>
+<% unless @dns.nil? -%>
+<%   dns = @dns.is_a?(String) ? [@dns] : @dns -%>
+<%   dns.each_with_index do |d, i| -%>
+DNS<%= i + 1 %>="<%= d %>"
+<%   end -%>
+<% end -%>
 <% if @hw_address -%>
 HWADDR="<%= @hw_address %>"
 <% end %>

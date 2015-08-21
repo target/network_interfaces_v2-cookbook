@@ -64,6 +64,7 @@ Attributes
 * custom - Hash of extra attributes to put in device config
 
 #### RHEL Only Attributes
+* dns - Array of DNS servers
 * type - Protocol Type.  Applies to RHEL only.
 * bond_master - Device that is the bond master for defined device.  Applies to RHEL only.
 * nm_controlled (default: false)- If device should be controlled by network manager.
