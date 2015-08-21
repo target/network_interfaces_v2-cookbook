@@ -15,7 +15,7 @@ if defined?(RubyWMI)
         else
           @attributes = {}
           @win32ole_object.properties_.each do |prop|
-            name  = prop.name
+            name = prop.name
             name = 'IpAddress' if name == 'IPAddress'
             value = @win32ole_object.send(name)
             value = if prop.cimtype == 101 && value

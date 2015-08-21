@@ -22,7 +22,7 @@ require_relative 'resource_network_interface'
 
 class Chef
   class Resource
-    class  NetworkInterface
+    class NetworkInterface
       #
       # Chef Resource for a win_network_interface
       #
@@ -42,7 +42,7 @@ class Chef
         end
 
         def hw_address(arg = nil)
-          arg = arg.gsub('-', ':').upcase unless arg.nil?
+          arg = arg.tr('-', ':').upcase unless arg.nil?
           set_or_return(:hw_address, arg, kind_of: String, regex: /^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$/)
         end
 

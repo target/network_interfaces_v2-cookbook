@@ -29,7 +29,7 @@ class Chef
       class Rhel < Chef::Provider::NetworkInterface
         provides :rhel_network_interface, os: 'linux', platform_family: %w(rhel fedora) if respond_to?(:provides)
 
-        action :create do # rubocop:disable MethodLength, AbcSize
+        action :create do
           package 'vconfig' do # ~FC005 Not sure why this triggered ...
             not_if { new_resource.vlan.nil? }
             only_if { node['platform_version'].to_i < 7 }

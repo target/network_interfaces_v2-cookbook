@@ -9,7 +9,6 @@ require 'chef/event_dispatch/dispatcher'
 require "#{File.join(File.dirname(__FILE__), '..', '..', 'libraries')}/resource_win_network_interface.rb"
 require "#{File.join(File.dirname(__FILE__), '..', '..', 'libraries')}/provider_win_network_interface.rb"
 
-# rubocop:disable Documentation
 describe Chef::Provider::NetworkInterface::Win do
   # Create a provider instance
   let(:provider) { Chef::Provider::NetworkInterface::Win.new(new_resource, run_context) }

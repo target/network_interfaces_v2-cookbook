@@ -22,7 +22,7 @@ require_relative 'resource_network_interface'
 
 class Chef
   class Resource
-    class  NetworkInterface
+    class NetworkInterface
       #
       # Chef Resource for a debian_network_interface
       #

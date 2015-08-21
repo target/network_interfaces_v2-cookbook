@@ -30,7 +30,7 @@ class Chef
       class Debian < Chef::Provider::NetworkInterface
         provides :debian_network_interface, os: 'linux', platform_family: %w(debian) if respond_to?(:provides)
 
-        action :create do # rubocop:disable MethodLength, AbcSize
+        action :create do
           # Include coookbook for managing debian modules
           run_context.include_recipe 'modules::default'
 
