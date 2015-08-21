@@ -15,6 +15,7 @@ network_interface 'eth1' do
   post_up 'sleep 1'
   devicetype 'ovs' if %w(rhel fedora).include? node['platform_family']
   dns ['14.13.13.13', '14.13.13.12'] unless node['platform_family'] == 'debian'
+  prefix 24 if %w(rhel fedora).include? node['platform_family']
 end
 
 # Add an interface config using platform specific provider

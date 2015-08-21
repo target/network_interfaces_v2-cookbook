@@ -11,6 +11,9 @@ SLAVE="yes"
 <% if @address -%>
 IPADDR="<%= @address %>"
 <% end %>
+<% unless @prefix.nil? -%>
+PREFIX=<%= @prefix %>
+<% end -%>
 <% if @netmask -%>
 NETMASK="<%= @netmask %>"
 <% end %>

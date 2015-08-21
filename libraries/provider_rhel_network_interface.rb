@@ -70,7 +70,8 @@ class Chef
                       peerdns: new_resource.peerdns,
                       mtu: new_resource.mtu,
                       devicetype: new_resource.devicetype,
-                      dns: new_resource.dns
+                      dns: new_resource.dns,
+                      prefix: new_resource.prefix
             notifies :run, "execute[reload interface #{new_resource.device}]", new_resource.reload_type if new_resource.reload
             notifies :run, "execute[post up command for #{new_resource.device}]", :immediately unless new_resource.post_up.nil?
           end

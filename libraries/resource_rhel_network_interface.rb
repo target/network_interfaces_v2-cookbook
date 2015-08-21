@@ -87,6 +87,10 @@ class Chef
         def dns(arg = nil)
           set_or_return(:dns, arg, kind_of: [String, Array])
         end
+
+        def prefix(arg = nil)
+          set_or_return(:prefix, arg, kind_of: Integer)
+        end
       end
     end
   end
