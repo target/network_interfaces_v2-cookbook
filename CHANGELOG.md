@@ -1,3 +1,6 @@
+# 2.3.0
+* Add `ovs_bridge` attribtue to network_interface for RHEL
+
 # 2.2.0
 * Add `dns` attribute to network_interface for RHEL
 * Add `devicetype` attribute to network_interface for RHEL
