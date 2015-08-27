@@ -21,9 +21,9 @@ NM_CONTROLLED="off"
       '# This file maintained by Chef.  DO NOT EDIT!
 
 DEVICE="eth1"
-TYPE="Ethernet"
+TYPE="OVSBridge"
 ONBOOT="yes"
-BOOTPROTO="static"
+BOOTPROTO="none"
 IPADDR="10.12.10.11"
 PREFIX=24
 NETMASK="255.255.255.0"
