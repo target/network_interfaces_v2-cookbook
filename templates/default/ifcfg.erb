@@ -69,3 +69,6 @@ PEERDNS="<%= @peerdns ? 'on' : 'off' %>"
 <% unless @devicetype.nil? -%>
 DEVICETYPE="<%= @devicetype %>"
 <% end %>
+<% unless @ovs_bridge.nil? -%>
+OVS_BRIDGE="<%= @ovs_bridge %>"
+<% end %>

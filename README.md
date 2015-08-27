@@ -7,7 +7,7 @@ A cookbook containing providers for defining network interfaces.
 Supported Platforms
 ===================
 
-* RHEL 6.x
+* RHEL 6.x (I do use on RHEL 7.x but testing coverage here does not cover RHEL 7.x currently)
 * Ubuntu >= 12.x
 * Windows 2012R2
 
@@ -76,6 +76,7 @@ Attributes
 * peerdns - true/false
 * bridge_device - Bridge to add defined interface to
 * devicetype - Set the type of device (e.g. 'ovs')
+* ovs_bridge - OVS Bridge to bind ovs port to (primarily used when `type` is set as 'OVSPort')
 
 #### Windows Only Attributes
 * hw_address - Can be used to define what device to manage

@@ -70,6 +70,7 @@ class Chef
                       peerdns: new_resource.peerdns,
                       mtu: new_resource.mtu,
                       devicetype: new_resource.devicetype,
+                      ovs_bridge: new_resource.ovs_bridge,
                       dns: new_resource.dns,
                       prefix: new_resource.prefix
             notifies :run, "execute[reload interface #{new_resource.device}]", new_resource.reload_type if new_resource.reload
