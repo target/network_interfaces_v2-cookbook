@@ -16,6 +16,9 @@ iface <%= @device %> inet <%= @type %>
 <% if @gateway -%>
   gateway <%= @gateway %>
 <% end %>
+<% if @dns_nameservers -%>
+  dns_nameservers <%= @dns_nameservers %>
+<% end %>
 <% if @vlan_dev -%>
   vlan-raw-device <%= @vlan_dev %>
 <% end %>

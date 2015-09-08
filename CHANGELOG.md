@@ -1,3 +1,6 @@
+# 2.4.0
+* Add dns_nameservers for Debian
+
 # 2.3.0
 * Add `ovs_bridge` attribtue to network_interface for RHEL
 
