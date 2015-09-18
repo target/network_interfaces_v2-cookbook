@@ -84,6 +84,10 @@ describe 'fake::override' do
     it 'properly sets peerdns attribtue in config' do
       expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('PEERDNS="on"')
     end
+
+    it 'set dns domain attribtue in config' do
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('DOMAIN="example.domain.com"')
+    end
   end
 
   describe 'debian family' do
