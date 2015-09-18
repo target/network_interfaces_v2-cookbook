@@ -72,3 +72,6 @@ DEVICETYPE="<%= @devicetype %>"
 <% unless @ovs_bridge.nil? -%>
 OVS_BRIDGE="<%= @ovs_bridge %>"
 <% end %>
+<% unless @domain.nil? -%>
+DOMAIN="<%=@domain%>"
+<% end %>
