@@ -8,7 +8,7 @@ group :development do
 
   gem 'rake'
   gem 'chefspec', '~> 4.2.0'
-  gem 'foodcritic'
+  gem 'foodcritic', '~> 4.0.0'
   gem 'rubocop'
 
   gem 'guard'
