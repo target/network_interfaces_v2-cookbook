@@ -77,6 +77,7 @@ Attributes
 * bridge_device - Bridge to add defined interface to
 * devicetype - Set the type of device (e.g. 'ovs')
 * ovs_bridge - OVS Bridge to bind ovs port to (primarily used when `type` is set as 'OVSPort')
+* dns_domain - DNS domain
 
 #### Windows Only Attributes
 * hw_address - Can be used to define what device to manage

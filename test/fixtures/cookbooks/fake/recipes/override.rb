@@ -20,6 +20,7 @@ when 'rhel', 'fedora'
     nozeroconf true
     userctl false
     peerdns true
+    dns_domain 'example.domain.com'
   end
 when 'debian'
   debian_network_interface 'eth2' do

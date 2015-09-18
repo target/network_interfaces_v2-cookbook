@@ -72,7 +72,8 @@ class Chef
                       devicetype: new_resource.devicetype,
                       ovs_bridge: new_resource.ovs_bridge,
                       dns: new_resource.dns,
-                      prefix: new_resource.prefix
+                      prefix: new_resource.prefix,
+                      domain: new_resource.dns_domain
             notifies :run, "execute[reload interface #{new_resource.device}]", new_resource.reload_type if new_resource.reload
             notifies :run, "execute[post up command for #{new_resource.device}]", :immediately unless new_resource.post_up.nil?
           end
