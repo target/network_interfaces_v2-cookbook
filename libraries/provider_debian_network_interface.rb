@@ -77,6 +77,7 @@ class Chef
                       address: new_resource.address,
                       netmask: new_resource.netmask,
                       gateway: new_resource.gateway,
+                      dns_nameservers: new_resource.dns_nameservers,
                       broadcast: new_resource.broadcast,
                       bridge_ports: new_resource.bridge_ports,
                       bridge_stp: new_resource.bridge_stp,
