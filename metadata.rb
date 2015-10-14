@@ -12,3 +12,4 @@ supports 'redhat', '~> 6.0'
 supports 'centos', '~> 6.0'
 
 depends 'modules', '~> 0.2.0'
+depends 'powershell'
