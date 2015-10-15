@@ -1,13 +1,3 @@
-network_interface 'Ethernet' do
-  index 10
-  bootproto 'static'
-  address '10.0.2.15'
-  netmask '255.255.255.0'
-  gateway '10.0.2.2'
-  dns ['4.2.2.4']
-  reload false
-end
-
 network_interface 'eth1' do
   bootproto 'static'
   address '10.12.10.13'
@@ -26,4 +16,14 @@ win_network_interface 'eth2' do
   ddns false
   dns_domain 'test.it.com'
   netbios true
+end
+
+int_index = node['network']['interfaces'].select { |_i, d| d['instance']['net_connection_id'] == 'Ethernet 4' }.keys.first
+index = node['network']['interfaces'][int_index]['configuration']['index']
+
+network_interface 'Ethernet 4' do
+  index index
+  bootproto 'static'
+  address node['network']['interfaces'][int_index]['configuration']['ip_address'].first
+  netmask node['network']['interfaces'][int_index]['configuration']['ip_subnet'].first
 end

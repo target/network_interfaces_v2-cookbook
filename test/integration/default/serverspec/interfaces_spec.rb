@@ -94,4 +94,18 @@ if windows?
       expect(win_interface_config('eth2')['tcpipnetbiosoptions']).to eq 1
     end
   end
+
+  describe 'Interface "Ethernet 4"' do
+    it 'should have DHCP disabled' do
+      expect(win_interface_config('Ethernet 4')['dhcpenabled']).to eq false
+    end
+
+    it 'should have an address' do
+      expect(win_interface_config('Ethernet 4')['ipaddress'].first).to match(/172.28.128.[0-9]+/)
+    end
+
+    it 'should have netmask "255.255.255.0"' do
+      expect(win_interface_config('Ethernet 4')['ipsubnet'].first).to eq '255.255.255.0'
+    end
+  end
 end

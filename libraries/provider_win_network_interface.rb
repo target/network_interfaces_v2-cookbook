@@ -106,8 +106,8 @@ class Chef
           enable_dhcp if new_resource.bootproto == 'dhcp' && current_resource.bootproto != 'dhcp'
           return unless new_resource.bootproto == 'static'
 
-          config_static unless new_resource.address.nil? || ip_subnet_exist?
-          config_gateway unless new_resource.gateway.nil? || current_resource.gateway == new_resource.gateway
+          config_static unless new_resource.address.nil? || (current_resource.bootproto == 'static' && ip_subnet_exist?)
+          config_gateway unless new_resource.gateway.nil? || (current_resource.bootproto == 'static' && current_resource.gateway == new_resource.gateway)
         end
 
         #
