@@ -18,14 +18,14 @@
 # limitations under the License.
 #
 
-#Confirm whether Windows Update Service is enabled (necessary)
+# Confirm whether Windows Update Service is enabled (necessary)
 
 windows_service 'wuauserv' do
   startup_type :automatic
   action [:enable, :start]
 end
 
-#Looks for powershell version Start the Powershell/WMF 4.0 install
+# Looks for powershell version Start the Powershell/WMF 4.0 install
 
 include_recipe 'powershell::powershell4'
 
