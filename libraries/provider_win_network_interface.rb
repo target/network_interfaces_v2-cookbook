@@ -152,7 +152,7 @@ class Chef
         #
         # @return [Hash]
         #
-        def conditions
+        def conditions # rubocop:disable AbcSize
           c = []
           c << "Index='#{new_resource.index}'" unless new_resource.index.nil?
           c << "MacAddress='#{new_resource.hw_address}'" unless new_resource.hw_address.nil?
