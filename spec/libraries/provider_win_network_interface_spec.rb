@@ -159,6 +159,24 @@ describe Chef::Provider::NetworkInterface::Win do
       provider.action_create
     end
 
+    it 'configures static IP on the interface if IP/netmask is correct but currently using DHCP' do
+      allow(adapter_config).to receive(:ReleaseDHCPLease)
+      allow(adapter_config).to receive(:EnableStatic)
+
+      current_resource.address '10.10.10.12'
+      current_resource.addresses = ['10.10.10.12', '12.13.14.15', '10.10.10.10']
+      current_resource.netmasks = ['255.255.255.0', '255.255.254.0', '255.255.255.0']
+      current_resource.netmask '255.255.255.0'
+      current_resource.bootproto 'dhcp'
+
+      new_resource.bootproto 'static'
+      new_resource.address '10.10.10.12'
+      new_resource.netmask '255.255.255.0'
+      expect(adapter_config).to receive(:EnableStatic)
+        .with(['10.10.10.12', '12.13.14.15', '10.10.10.10'], ['255.255.255.0', '255.255.254.0', '255.255.255.0'])
+      provider.action_create
+    end
+
     it 'does not configure static IP if already configured' do
       new_resource.bootproto 'static'
       new_resource.address '10.10.10.12'

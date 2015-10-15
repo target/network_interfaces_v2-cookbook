@@ -188,7 +188,102 @@ iface eth2 inet dhcp
 
   describe 'windows family' do
     let(:chef_run) do
-      ChefSpec::SoloRunner.new(platform: 'windows', version: '2012R2').converge(described_recipe)
+      ChefSpec::SoloRunner.new(platform: 'windows', version: '2012R2') do |node|
+        node.automatic['network']['interfaces'] = {
+          '0xc' => {
+            'configuration' => {
+              'arp_always_source_route' => nil,
+              'arp_use_ether_snap' => nil,
+              'caption' => '[00000010] Intel(R) PRO/1000 MT Desktop Adapter',
+              'database_path' => '%SystemRoot%\System32\drivers\etc',
+              'dead_gw_detect_enabled' => nil,
+              'default_ip_gateway' => [
+                '10.0.2.2'
+              ],
+              'default_tos' => nil,
+              'default_ttl' => nil,
+              'description' => 'Intel(R) PRO/1000 MT Desktop Adapter',
+              'dhcp_enabled' => true,
+              'dhcp_lease_expires' => '20151015214803.000000-420',
+              'dhcp_lease_obtained' => '20151014214803.000000-420',
+              'dhcp_server' => '10.0.2.2',
+              'dns_domain' => 'target.com',
+              'dns_domain_suffix_search_order' => [
+                'test.it.com',
+                'target.com'
+              ],
+              'dns_enabled_for_wins_resolution' => false,
+              'dns_host_name' => 'vagrant-2012-r2',
+              'dns_server_search_order' => [
+                '10.97.40.216',
+                '10.64.40.216'
+              ],
+              'domain_dns_registration_enabled' => false,
+              'forward_buffer_memory' => nil,
+              'full_dns_registration_enabled' => true,
+              'gateway_cost_metric' => [
+                0
+              ],
+              'igmp_level' => nil,
+              'index' => 10,
+              'interface_index' => 12,
+              'ip_address' => [
+                '10.0.2.15',
+                'fe80:e488:b85c:5262:ff86'
+              ],
+              'ip_connection_metric' => 10,
+              'ip_enabled' => true,
+              'ip_filter_security_enabled' => false,
+              'ip_port_security_enabled' => nil,
+              'ip_sec_permit_ip_protocols' => [
+
+              ],
+              'ip_sec_permit_tcp_ports' => [
+
+              ],
+              'ip_sec_permit_udp_ports' => [
+
+              ],
+              'ip_subnet' => [
+                '255.255.255.0',
+                '64'
+              ],
+              'ip_use_zero_broadcast' => nil,
+              'ipx_address' => nil,
+              'ipx_enabled' => nil,
+              'ipx_frame_type' => nil,
+              'ipx_media_type' => nil,
+              'ipx_network_number' => nil,
+              'ipx_virtual_net_number' => nil,
+              'keep_alive_interval' => nil,
+              'keep_alive_time' => nil,
+              'mac_address' => '08:00:27:D5:9D:5A',
+              'mtu' => nil,
+              'num_forward_packets' => nil,
+              'pmtubh_detect_enabled' => nil,
+              'pmtu_discovery_enabled' => nil,
+              'service_name' => 'E1G60',
+              'setting_id' => '{DD72B02C-4E48-4924-8D0F-F80EA2755534}',
+              'tcpip_netbios_options' => 0,
+              'tcp_max_connect_retransmissions' => nil,
+              'tcp_max_data_retransmissions' => nil,
+              'tcp_num_connections' => nil,
+              'tcp_use_rfc1122_urgent_pointer' => nil,
+              'tcp_window_size' => 64240,
+              'wins_enable_lm_hosts_lookup' => true,
+              'wins_host_lookup_file' => nil,
+              'wins_primary_server' => nil,
+              'wins_scope_id' => '',
+              'wins_secondary_server' => nil
+            },
+            'instance' => {
+              'index' => 10,
+              'interface_index' => 12,
+              'net_connection_id' => 'Ethernet 4'
+            }
+          }
+        }
+      end.converge(described_recipe)
     end
 
     it 'creates interface eth1' do
