@@ -22,19 +22,16 @@
 
 windows_service 'wuauserv' do
   startup_type :automatic
-  action [ :enable, :start ]
+  action [:enable, :start]
 end
 
 #Looks for powershell version Start the Powershell/WMF 4.0 install
 
-
 include_recipe 'powershell::powershell4'
 
-
 reboot 'now' do
-   action :reboot_now
-   reason 'Cannot continue Chef run without a reboot.'
-   delay_mins 2
-   retry_delay 2
+  action :reboot_now
+  reason 'Cannot continue Chef run without a reboot.'
+  delay_mins 2
+  retry_delay 2
 end
-

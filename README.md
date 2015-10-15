@@ -25,6 +25,11 @@ default
 -------
 Does nothing and does not need to be included.
 
+powershell_installer
+-------
+
+Installs WMF 4.0 for Windows 2008 R2. This cookbook can work with this Windows version, since you use this cookbook before.
+
 network_interface
 =================
 Provider for managing network interfaces.
