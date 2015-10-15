@@ -9,8 +9,13 @@ Supported Platforms
 
 * RHEL 6.x (I do use on RHEL 7.x but testing coverage here does not cover RHEL 7.x currently)
 * Ubuntu >= 12.x
-* Windows 2008R2 (Works if PowerShell/WMF 4.0 is present (can be installed via powershell_installer recipe - WARNING: NOT FULLY TESTED! - WITHOUT SUPPORT ON THIS MOMENT))
 * Windows 2012R2
+
+### Semi-supported
+These operating systems are not currently being tested on but have been confirmed by other users to be working.
+
+* Windows 2008R2
+  * Works if PowerShell/WMF 4.0 is present, which can be installed via `network_interfaces_v2::powershell_installer` recipe
 
 Usage
 =====
@@ -26,8 +31,8 @@ default
 Does nothing and does not need to be included.
 
 powershell_installer
--------
-Installs WMF 4.0 for Windows 2008 R2. This cookbook can work with this Windows version, since you use this cookbook before.
+--------------------
+Installs WMF 4.0 for Windows 2008 R2 which is a prereq for this cookbook's providers to work on Windows 2008 R2.
 
 network_interface
 =================
