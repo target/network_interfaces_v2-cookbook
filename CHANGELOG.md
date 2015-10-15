@@ -1,3 +1,6 @@
+# 2.5.0
+* Add powershell installer for Windows 2008 R2 to allow cookbook to work
+
 # 2.4.1
 * bug: Fix `win_interface` to be able to manage interfae via `index`
 * bug: Enable static on `win_interface` when DHCP with matching ip/subnet (#13)
