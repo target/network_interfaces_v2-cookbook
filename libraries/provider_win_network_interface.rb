@@ -153,12 +153,11 @@ class Chef
         # @return [Hash]
         #
         def conditions
-          c = ''
-          c = "Index='#{new_resource.index}'" unless new_resource.index.nil?
-          c = "#{c} AND " unless c.empty?
-          c = "MacAddress='#{new_resource.hw_address}'" unless new_resource.hw_address.nil?
+          c = []
+          c << "Index='#{new_resource.index}'" unless new_resource.index.nil?
+          c << "MacAddress='#{new_resource.hw_address}'" unless new_resource.hw_address.nil?
           fail Chef::Exceptions::UnsupportedAction, 'Failed to find interface, no conditions provided' if c.empty?
-          c
+          c.join(' AND ')
         end
 
         #

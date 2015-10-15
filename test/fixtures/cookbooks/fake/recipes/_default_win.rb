@@ -1,3 +1,13 @@
+network_interface 'Ethernet' do
+  index 10
+  bootproto 'static'
+  address '10.0.2.15'
+  netmask '255.255.255.0'
+  gateway '10.0.2.2'
+  dns ['4.2.2.4']
+  reload false
+end
+
 network_interface 'eth1' do
   bootproto 'static'
   address '10.12.10.13'
