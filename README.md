@@ -7,13 +7,14 @@ A cookbook containing providers for defining network interfaces.
 Supported Platforms
 ===================
 
-* RHEL 6.x (I do use on RHEL 7.x but testing coverage here does not cover RHEL 7.x currently)
+* RHEL 6.x
 * Ubuntu >= 12.x
 * Windows 2012R2
 
 ### Semi-supported
 These operating systems are not currently being tested on but have been confirmed by other users to be working.
 
+* RHEL 7.x
 * Windows 2008R2
   * Works if PowerShell/WMF 4.0 is present, which can be installed via `network_interfaces_v2::powershell_installer` recipe
 
