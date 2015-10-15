@@ -1,3 +1,7 @@
+# 2.4.1
+* bug: Fix `win_interface` to be able to manage interfae via `index`
+* bug: Enable static on `win_interface` when DHCP with matching ip/subnet (#13)
+
 # 2.4.0
 * Add `dns_domain` attribute to network_interface for RHEL
 
