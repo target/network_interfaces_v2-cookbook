@@ -58,7 +58,7 @@ describe 'fake::override' do
     end
 
     it 'properly sets bridge_stp attribtue in config' do
-      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('STP="off"')
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('STP="no"')
     end
 
     it 'properly sets mtu attribtue in config' do
@@ -66,23 +66,23 @@ describe 'fake::override' do
     end
 
     it 'properly sets nm_controlled attribtue in config' do
-      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('NM_CONTROLLED="on"')
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('NM_CONTROLLED="yes"')
     end
 
     it 'properly sets ipv6init attribtue in config' do
-      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('IPV6INIT="off"')
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('IPV6INIT="no"')
     end
 
     it 'properly sets nozeroconf attribtue in config' do
-      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('NOZEROCONF="on"')
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('NOZEROCONF="yes"')
     end
 
     it 'properly sets userctl attribtue in config' do
-      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('USERCTL="off"')
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('USERCTL="no"')
     end
 
     it 'properly sets peerdns attribtue in config' do
-      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('PEERDNS="on"')
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('PEERDNS="yes"')
     end
 
     it 'set dns domain attribtue in config' do

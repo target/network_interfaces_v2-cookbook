@@ -13,7 +13,7 @@ DEVICE="eth0"
 TYPE="Ethernet"
 ONBOOT="yes"
 BOOTPROTO="dhcp"
-NM_CONTROLLED="off"
+NM_CONTROLLED="no"
 '
     end
 
@@ -30,7 +30,7 @@ NETMASK="255.255.255.0"
 GATEWAY="10.0.0.1"
 DNS1="14.13.13.13"
 DNS2="14.13.13.12"
-NM_CONTROLLED="off"
+NM_CONTROLLED="no"
 DEVICETYPE="ovs"
 '
     end
@@ -42,7 +42,7 @@ DEVICE="eth2"
 TYPE="Ethernet"
 ONBOOT="yes"
 BOOTPROTO="dhcp"
-NM_CONTROLLED="off"
+NM_CONTROLLED="no"
 '
     end
 
