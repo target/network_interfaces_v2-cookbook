@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 group :development do
-  gem 'berkshelf'
+  gem 'berkshelf', '~> 4.0.1'
   gem 'test-kitchen'
   gem 'kitchen-vagrant'
   gem 'winrm-transport'
