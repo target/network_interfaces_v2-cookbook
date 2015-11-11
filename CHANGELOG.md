@@ -1,3 +1,6 @@
+# 2.5.1
+* Fix RHEL configs from on/off to yes/no
+
 # 2.5.0
 * Add powershell installer for Windows 2008 R2 to allow cookbook to work
 
