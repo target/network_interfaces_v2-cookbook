@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'fake::bonding' do
   describe 'rhel family' do
     let(:chef_run) do
-      ChefSpec::SoloRunner.new(platform: 'redhat', version: '6.5', step_into: ['rhel_network_interface']).converge(described_recipe)
+      ChefSpec::SoloRunner.new(platform: 'redhat', version: '6.5', step_into: ['network_interface']).converge(described_recipe)
     end
 
     it 'installs packages required for bonding config on interface' do
@@ -24,14 +24,14 @@ describe 'fake::bonding' do
 
   describe 'debian family' do
     let(:chef_run) do
-      ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.10', step_into: ['debian_network_interface']).converge(described_recipe)
+      ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.10', step_into: ['debian_network_interface', 'network_interface']).converge(described_recipe)
     end
 
-    it 'installs packages required for vlan config on interface' do
+    it 'installs packages required for bonding config on interface' do
       expect(chef_run).to install_package 'ifenslave-2.6'
     end
 
-    it 'loads modules required for vlan config on interface' do
+    it 'loads modules required for bonding config on interface' do
       expect(chef_run).to save_modules 'bonding'
     end
 

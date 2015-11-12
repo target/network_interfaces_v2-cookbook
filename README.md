@@ -166,12 +166,13 @@ end
 
 Testing
 =======
+Requires [ChefDK](https://downloads.chef.io/chef-dk/) 0.10.0.
 
 ```
-bundle exec rubocop
-bundle exec foodcritic -f any -X spec .
-bundle exec rspec --color --format progress
-bundle exec kitchen test
+rubocop
+foodcritic -f any -X spec .
+rspec --color --format progress
+kitchen test
 ```
 
 License and Authors

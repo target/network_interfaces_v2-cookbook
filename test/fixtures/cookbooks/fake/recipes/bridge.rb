@@ -8,7 +8,7 @@ when 'rhel', 'fedora'
     bridge_device 'br0'
   end
 
-  rhel_network_interface 'br0' do
+  network_interface 'br0' do
     bootproto 'static'
     address '13.13.13.10'
     netmask '255.255.255.0'

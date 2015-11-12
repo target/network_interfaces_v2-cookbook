@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'fake::default' do
   context 'when platform_family rhel' do
     cached(:chef_run) do
-      ChefSpec::SoloRunner.new(platform: 'redhat', version: '6.5', step_into: ['rhel_network_interface']).converge(described_recipe)
+      ChefSpec::SoloRunner.new(platform: 'redhat', version: '6.5', step_into: ['rhel_network_interface', 'network_interface']).converge(described_recipe)
     end
 
     let(:default_eth0_config_contents) do
@@ -54,7 +54,7 @@ NM_CONTROLLED="no"
 
     context 'for interface eth0 definition' do
       it 'creates the interface' do
-        expect(chef_run).to create_rhel_network_interface 'eth0'
+        expect(chef_run).to create_network_interface 'eth0'
         expect(chef_run).to create_template '/etc/sysconfig/network-scripts/ifcfg-eth0'
         expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth0').with_content(default_eth0_config_contents)
       end
@@ -80,7 +80,7 @@ NM_CONTROLLED="no"
 
     context 'for interface eth1 definition' do
       it 'creates the interface' do
-        expect(chef_run).to create_rhel_network_interface 'eth1'
+        expect(chef_run).to create_network_interface 'eth1'
         expect(chef_run).to create_template '/etc/sysconfig/network-scripts/ifcfg-eth1'
         expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth1').with_content(default_eth1_config_contents)
       end
@@ -167,7 +167,7 @@ iface eth2 inet dhcp
     end
 
     it 'creates interface eth1' do
-      expect(chef_run).to create_debian_network_interface 'eth1'
+      expect(chef_run).to create_network_interface 'eth1'
     end
 
     it 'creates interface eth2' do
@@ -287,7 +287,7 @@ iface eth2 inet dhcp
     end
 
     it 'creates interface eth1' do
-      expect(chef_run).to create_win_network_interface 'eth1'
+      expect(chef_run).to create_network_interface 'eth1'
     end
 
     it 'creates interface eth2' do

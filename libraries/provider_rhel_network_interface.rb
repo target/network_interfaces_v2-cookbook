@@ -36,7 +36,7 @@ class Chef
           end
 
           package 'iputils' do
-            not_if { new_resource.bond_master.nil? }
+            not_if { new_resource.bond_master.nil? && new_resource.bond_mode.nil? }
           end
 
           package 'bridge-utils' do
