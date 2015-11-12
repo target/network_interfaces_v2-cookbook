@@ -1,4 +1,4 @@
-sudo: true
+sudo: required
 addons:
   apt:
     sources:
