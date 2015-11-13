@@ -7,3 +7,5 @@ if %w(rhel fedora).include? node['platform_family']
 end
 include_recipe 'fake::_default_debian' if node['platform_family'] == 'debian'
 include_recipe 'fake::_default_win' if node['os'] == 'windows'
+
+include_recipe 'fake::bonding'
