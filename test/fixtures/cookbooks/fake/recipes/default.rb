@@ -9,3 +9,4 @@ include_recipe 'fake::_default_debian' if node['platform_family'] == 'debian'
 include_recipe 'fake::_default_win' if node['os'] == 'windows'
 
 include_recipe 'fake::bonding'
+include_recipe 'fake::bridge'

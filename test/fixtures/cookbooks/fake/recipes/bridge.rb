@@ -1,18 +1,11 @@
 case node['platform_family']
 when 'rhel', 'fedora'
-
-  int0 = 'eth0'
-  int1 = 'eth1'
+  int7 = 'eth7'
 
   # RHEL/CentOS 7+
-  if node['platform_version'].to_i > 6
-    int0 = 'enp0s3'
-    int1 = 'enp0s8'
-  end
+  int7 = 'enp0s7' if node['platform_version'].to_i > 6
 
-  network_interface int0
-
-  rhel_network_interface int1 do
+  rhel_network_interface int7 do
     bootproto 'none'
     bridge_device 'br0'
   end
@@ -23,17 +16,15 @@ when 'rhel', 'fedora'
     netmask '255.255.255.0'
   end
 when 'debian'
-  network_interface 'eth0'
-
   debian_network_interface 'br0' do
     bootproto 'static'
-    address '13.13.13.11'
+    address '13.13.13.10'
     netmask '255.255.255.0'
-    bridge_ports ['eth1']
+    bridge_ports ['eth7']
     bridge_stp false
   end
 
-  network_interface 'eth1' do
+  network_interface 'eth7' do
     bootproto 'manual'
   end
 end
