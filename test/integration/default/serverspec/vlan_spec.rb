@@ -31,29 +31,29 @@ unless windows?
 end
 
 if windows?
-  describe 'Interface "eth2"' do
+  describe 'Interface "vlan12"' do
     it 'should exist' do
-      expect(win_interface 'eth2').not_to be_nil
+      expect(win_interface 'vlan12').not_to be_nil
     end
 
     it 'should have DHCP disabled' do
-      expect(win_interface_config('eth2')['dhcpenabled']).to eq false
+      expect(win_interface_config('vlan12')['dhcpenabled']).to eq false
     end
 
     it 'should have VLAN set' do
-      expect(command("(Get-NetLbfoTeamNic -name 'eth2').VlanID").stdout.chomp).to eq '12'
+      expect(command("(Get-NetLbfoTeamNic -name 'vlan12').VlanID").stdout.chomp).to eq '12'
     end
 
     it 'should have address "12.12.12.14"' do
-      expect(win_interface_config('eth2')['ipaddress'].first).to eq '12.12.12.14'
+      expect(win_interface_config('vlan12')['ipaddress'].first).to eq '12.12.12.14'
     end
 
     it 'should have netmask "255.255.255.0"' do
-      expect(win_interface_config('eth2')['ipsubnet'].first).to eq '255.255.255.0'
+      expect(win_interface_config('vlan12')['ipsubnet'].first).to eq '255.255.255.0'
     end
 
     it 'should have DNS servers assigned' do
-      expect(win_interface_config('eth2')['dnsserversearchorder']).to eq ['4.2.2.4', '4.2.2.8']
+      expect(win_interface_config('vlan12')['dnsserversearchorder']).to eq ['4.2.2.4', '4.2.2.8']
     end
   end
 end

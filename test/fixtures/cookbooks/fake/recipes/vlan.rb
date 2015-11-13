@@ -27,8 +27,8 @@ when 'debian'
     vlan 'eth8'
   end
 when 'windows'
-  win_network_interface 'eth2' do
-    hw_address '00-25-B5-5B-00-29'
+  win_network_interface 'vlan12' do
+    hw_address '00-25-B5-5B-00-35'
     bootproto 'static'
     address '12.12.12.14'
     netmask '255.255.255.0'
