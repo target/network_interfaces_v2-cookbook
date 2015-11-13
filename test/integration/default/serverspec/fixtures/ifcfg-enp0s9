@@ -1,7 +1,0 @@
-# This file maintained by Chef.  DO NOT EDIT!
-
-DEVICE="enp0s9"
-TYPE="Ethernet"
-ONBOOT="yes"
-BOOTPROTO="dhcp"
-NM_CONTROLLED="no"

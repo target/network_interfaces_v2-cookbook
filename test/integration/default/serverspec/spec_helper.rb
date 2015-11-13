@@ -36,6 +36,23 @@ def win_interface_config(name)
   adapter_configs.find { |n| n['interfaceindex'] == win_interface(name)['interfaceindex'] }
 end
 
+def prefix
+  return 'enp0s' if rhel? && rhel_version.split('.').first.to_i > 6
+  'eth'
+end
+
+def int
+  @int ||= begin
+    int = {}
+    int['0'] = 'eth0'
+    int['0'] = 'enp0s3' if rhel? && rhel_version.split('.').first.to_i > 6
+    (4..8).each do |n|
+      int["#{n}"] = "#{prefix}#{n}"
+    end
+    int
+  end
+end
+
 # NIX?
 set :backend, :exec unless windows?
 

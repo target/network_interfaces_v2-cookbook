@@ -1,0 +1,7 @@
+name             'net_setup'
+maintainer       'Jacob McCann'
+maintainer_email 'jacob.mccann2@target.com'
+license          'All rights reserved'
+description      'Setup additional dummy interfaces'
+long_description 'Setup additional dummy interfaces'
+version          '0.1.0'

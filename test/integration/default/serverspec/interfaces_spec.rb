@@ -1,53 +1,32 @@
 require 'spec_helper'
 
-int0 = 'eth0'
-int1 = 'eth1'
-int2 = 'eth2'
-
-# RHEL/CentOS 7+
-if rhel? && rhel_version.split('.').first.to_i > 6
-  int0 = 'enp0s3'
-  int1 = 'enp0s8'
-  int2 = 'enp0s9'
-end
-
 unless windows?
-  describe "Interface '#{int0}'" do
+  describe "Interface '#{int['0']}'" do
     it 'should exist' do
-      expect(interface int0).to exist
+      expect(interface int['0']).to exist
     end
 
     it 'should have DHCP enabled' do
-      expect(command('ps -ef | grep dhclient | grep -v grep').stdout).to contain(/[-\.]#{int0}./)
+      expect(command('ps -ef | grep dhclient | grep -v grep').stdout).to contain(/[-\.]#{int['0']}./)
     end
   end
 
-  describe "Interface '#{int1}'" do
+  describe "Interface '#{int['4']}'" do
     it 'should exist' do
-      expect(interface int1).to exist
+      expect(interface int['4']).to exist
     end
 
     it 'should have DHCP disabled' do
-      expect(command('ps -ef | grep dhclient | grep -v grep').stdout).not_to contain(/[-\.]#{int1}./)
+      expect(command('ps -ef | grep dhclient | grep -v grep').stdout).not_to contain(/[-\.]#{int['4']}./)
     end
 
     it 'should have an address' do
-      expect(interface(int1).has_ipv4_address?('10.12.10.11')).to eq true if rhel?
-      expect(interface(int1).has_ipv4_address?('10.12.10.12')).to eq true if debian?
+      expect(interface(int['4']).has_ipv4_address?('10.12.10.11')).to eq true if rhel?
+      expect(interface(int['4']).has_ipv4_address?('10.12.10.12')).to eq true if debian?
     end
 
     it 'should have netmask "255.255.255.0"' do
-      expect(command("ip addr show dev #{int1}").stdout).to contain '/24 brd '
-    end
-  end
-
-  describe "Interface '#{int2}'" do
-    it 'should exist' do
-      expect(interface int2).to exist
-    end
-
-    it 'should have DHCP enabled' do
-      expect(command('ps -ef | grep dhclient | grep -v grep').stdout).to contain(/[-\.]#{int2}./)
+      expect(command("ip addr show dev #{int['4']}").stdout).to contain '/24 brd '
     end
   end
 end
