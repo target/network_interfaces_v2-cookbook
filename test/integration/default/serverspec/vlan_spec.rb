@@ -1,37 +1,31 @@
 require 'spec_helper'
 
 unless windows?
-  int2 = 'eth2'
-
-  # RHEL/CentOS 7+
-  int2 = 'enp0s9' if rhel? && rhel_version.split('.').first.to_i > 6
-
-  describe "Interface '#{int2}'" do
+  describe "Interface '#{int['8']}'" do
     it 'should exist' do
-      expect(interface int2).to exist
+      expect(interface int['8']).to exist
     end
 
     it 'should have DHCP disabled' do
-      expect(command('ps -ef | grep dhclient | grep -v grep').stdout).not_to contain(/[-\.]#{int2}\./)
+      expect(command('ps -ef | grep dhclient | grep -v grep').stdout).not_to contain(/[-\.]#{int['8']}\./)
     end
   end
 
-  describe "Interface '#{int2}.12'" do
+  describe "Interface '#{int['8']}.12'" do
     it 'should exist' do
-      expect(interface "#{int2}.12").to exist
+      expect(interface "#{int['8']}.12").to exist
     end
 
     it 'should have DHCP disabled' do
-      expect(command('ps -ef | grep dhclient | grep -v grep').stdout).not_to contain(/[-\.]#{int2}\.12\./)
+      expect(command('ps -ef | grep dhclient | grep -v grep').stdout).not_to contain(/[-\.]#{int['8']}\.12\./)
     end
 
     it 'should have an address' do
-      expect(interface("#{int2}.12").has_ipv4_address?('12.12.12.12')).to eq true if rhel?
-      expect(interface("#{int2}.12").has_ipv4_address?('12.12.12.13')).to eq true if debian?
+      expect(interface("#{int['8']}.12").has_ipv4_address?('12.12.12.12')).to eq true
     end
 
     it 'should have netmask "255.255.255.0"' do
-      expect(command("ip addr show dev #{int2}.12").stdout).to contain '/24 brd '
+      expect(command("ip addr show dev #{int['8']}.12").stdout).to contain '/24 brd '
     end
   end
 end

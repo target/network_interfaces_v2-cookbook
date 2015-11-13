@@ -1,38 +1,30 @@
 case node['platform_family']
 when 'rhel', 'fedora'
-  int0 = 'eth0'
-  int2 = 'eth2'
+  int8 = 'eth8'
 
   # RHEL/CentOS 7+
-  if node['platform_version'].to_i > 6
-    int0 = 'enp0s3'
-    int2 = 'enp0s9'
-  end
+  int8 = 'enp0s8' if node['platform_version'].to_i > 6
 
-  network_interface int0
-
-  rhel_network_interface int2 do
+  rhel_network_interface int8 do
     bootproto 'none'
   end
 
-  rhel_network_interface "#{int2}.12" do
+  rhel_network_interface "#{int8}.12" do
     bootproto 'static'
     address '12.12.12.12'
     netmask '255.255.255.0'
     vlan true
   end
 when 'debian'
-  network_interface 'eth0'
-
-  debian_network_interface 'eth2' do
+  debian_network_interface 'eth8' do
     bootproto 'manual'
   end
 
-  debian_network_interface 'eth2.12' do
+  debian_network_interface 'eth8.12' do
     bootproto 'static'
-    address '12.12.12.13'
+    address '12.12.12.12'
     netmask '255.255.255.0'
-    vlan 'eth2'
+    vlan 'eth8'
   end
 when 'windows'
   win_network_interface 'eth2' do

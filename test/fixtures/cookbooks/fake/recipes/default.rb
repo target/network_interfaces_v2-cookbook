@@ -10,3 +10,4 @@ include_recipe 'fake::_default_win' if node['os'] == 'windows'
 
 include_recipe 'fake::bonding'
 include_recipe 'fake::bridge'
+include_recipe 'fake::vlan'

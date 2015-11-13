@@ -28,19 +28,3 @@ suites:
   - name: default
     run_list:
       - recipe[fake::default]
-
-  # - name: bonding
-  #   run_list:
-  #     - recipe[fake::bonding]
-  #   excludes:
-  #     - win-2012r2
-  #
-  # - name: vlan
-  #   run_list:
-  #     - recipe[fake::vlan]
-  #
-  # - name: bridge
-  #   run_list:
-  #     - recipe[fake::bridge]
-  #   excludes:
-  #     -win-2012r2
