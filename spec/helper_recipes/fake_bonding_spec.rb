@@ -11,10 +11,10 @@ describe 'fake::bonding' do
     end
 
     it 'configures slave devices for bonding' do
-      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth1').with_content('MASTER="bond0"')
-      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth1').with_content('SLAVE="yes"')
-      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('MASTER="bond0"')
-      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth2').with_content('SLAVE="yes"')
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth5').with_content('MASTER="bond0"')
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth5').with_content('SLAVE="yes"')
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth6').with_content('MASTER="bond0"')
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth6').with_content('SLAVE="yes"')
     end
 
     it 'configures bond device' do
@@ -36,12 +36,12 @@ describe 'fake::bonding' do
     end
 
     it 'configures slave devices for bonding' do
-      expect(chef_run).to render_file('/etc/network/interfaces.d/eth1').with_content('  bond-master bond0')
-      expect(chef_run).to render_file('/etc/network/interfaces.d/eth2').with_content('  bond-master bond0')
+      expect(chef_run).to render_file('/etc/network/interfaces.d/eth5').with_content('  bond-master bond0')
+      expect(chef_run).to render_file('/etc/network/interfaces.d/eth6').with_content('  bond-master bond0')
     end
 
     it 'configures device for bonding' do
-      expect(chef_run).to render_file('/etc/network/interfaces.d/bond0').with_content('  bond-slaves eth1 eth2')
+      expect(chef_run).to render_file('/etc/network/interfaces.d/bond0').with_content('  bond-slaves eth5 eth6')
       expect(chef_run).to render_file('/etc/network/interfaces.d/bond0').with_content('  bond-mode 0')
     end
   end

@@ -11,7 +11,7 @@ describe 'fake::bridge' do
     end
 
     it 'configures interfaces as bridge members' do
-      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth1').with_content('BRIDGE="br0"')
+      expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth7').with_content('BRIDGE="br0"')
     end
   end
 
@@ -25,7 +25,7 @@ describe 'fake::bridge' do
     end
 
     it 'configures device for bridging' do
-      expect(chef_run).to render_file('/etc/network/interfaces.d/br0').with_content('  bridge_ports eth1')
+      expect(chef_run).to render_file('/etc/network/interfaces.d/br0').with_content('  bridge_ports eth7')
     end
 
     it 'disables bridge stp' do
