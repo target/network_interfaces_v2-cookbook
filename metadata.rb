@@ -8,8 +8,8 @@ version          '2.5.1'
 
 supports 'ubuntu', '>= 12.04'
 supports 'windows'
-supports 'redhat', '~> 6.0'
-supports 'centos', '~> 6.0'
+supports 'redhat', '>= 6.0'
+supports 'centos', '>= 6.0'
 
 depends 'modules', '~> 0.2.0'
 depends 'powershell'

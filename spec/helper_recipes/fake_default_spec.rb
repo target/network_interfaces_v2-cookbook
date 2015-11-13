@@ -191,6 +191,22 @@ iface eth2 inet dhcp
       ChefSpec::SoloRunner.new(platform: 'windows', version: '2012R2') do |node|
         node.automatic['network']['interfaces'] = {
           '0xc' => {
+            'addresses' => {
+              '10.0.2.15' => {
+                'prefixlen' => '24',
+                'netmask' => '255.255.255.0',
+                'broadcast' => '10.0.2.255',
+                'family' => 'inet'
+              },
+              'fe80::e488:b85c:5262:ff86' => {
+                'prefixlen' => '64',
+                'family' => 'inet6',
+                'scope' => 'Link'
+              },
+              '00:25:B5:5B:00:33' => {
+                'family' => 'lladdr'
+              }
+            },
             'configuration' => {
               'arp_always_source_route' => nil,
               'arp_use_ether_snap' => nil,

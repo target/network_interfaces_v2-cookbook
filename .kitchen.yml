@@ -9,21 +9,26 @@ platforms:
   - name: ubuntu-12.04
     driver:
       network:
-        - ["private_network", {type: "dhcp", mac: "0025B55B0019", auto_config: false}]
         - ["private_network", {type: "dhcp", mac: "0025B55B0017", auto_config: false}]
+        - ["private_network", {type: "dhcp", mac: "0025B55B0019", auto_config: false}]
+  - name: centos-7.0
+    driver:
+      network:
+        - ["private_network", {type: "dhcp", mac: "0025B55B0021", auto_config: false}]
+        - ["private_network", {type: "dhcp", mac: "0025B55B0023", auto_config: false}]
   - name: centos-6.6
     driver:
       network:
-        - ["private_network", {type: "dhcp", mac: "0025B55B0023", auto_config: false}]
-        - ["private_network", {type: "dhcp", mac: "0025B55B0021", auto_config: false}]
+        - ["private_network", {type: "dhcp", mac: "0025B55B0025", auto_config: false}]
+        - ["private_network", {type: "dhcp", mac: "0025B55B0027", auto_config: false}]
   - name: win-2012r2
     driver:
       box: opentable/win-2012r2-standard-amd64-nocm
       network:
         - ["forwarded_port", {guest: 3389, host: 3389}]
-        - ["private_network", {type: "dhcp", mac: "0025B55B0025", auto_config: false}]
-        - ["private_network", {type: "dhcp", mac: "0025B55B0027", auto_config: false}]
-        - ["private_network", {type: "dhcp", mac: "0025B55B0029"}]
+        - ["private_network", {type: "dhcp", mac: "0025B55B0029", auto_config: false}]
+        - ["private_network", {type: "dhcp", mac: "0025B55B0031", auto_config: false}]
+        - ["private_network", {type: "dhcp", mac: "0025B55B0033"}]
 
 suites:
   - name: default

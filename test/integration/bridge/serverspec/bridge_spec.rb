@@ -1,12 +1,17 @@
 require 'spec_helper'
 
+int1 = 'eth1'
+
+# RHEL/CentOS 7+
+int1 = 'enp0s8' if rhel? && rhel_version.split('.').first.to_i > 6
+
 describe 'Interface "br0"' do
   it 'should exist' do
     expect(interface 'br0').to exist
   end
 
-  it 'should include eth1 as an interface' do
-    expect(command('brctl show br0 | egrep eth1$').exit_status).to eq 0
+  it "should include #{int1} as an interface" do
+    expect(command("brctl show br0 | egrep #{int1}$").exit_status).to eq 0
   end
 
   it 'should have an address set' do

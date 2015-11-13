@@ -1,9 +1,18 @@
-# Make sure we don't wipe out eth0
-network_interface 'eth0' unless node['os'] == 'windows'
-
 case node['platform_family']
 when 'rhel', 'fedora'
-  rhel_network_interface 'eth1' do
+
+  int0 = 'eth0'
+  int1 = 'eth1'
+
+  # RHEL/CentOS 7+
+  if node['platform_version'].to_i > 6
+    int0 = 'enp0s3'
+    int1 = 'enp0s8'
+  end
+
+  network_interface int0
+
+  rhel_network_interface int1 do
     bootproto 'none'
     bridge_device 'br0'
   end
@@ -14,6 +23,8 @@ when 'rhel', 'fedora'
     netmask '255.255.255.0'
   end
 when 'debian'
+  network_interface 'eth0'
+
   debian_network_interface 'br0' do
     bootproto 'static'
     address '13.13.13.11'

@@ -1,42 +1,53 @@
 require 'spec_helper'
 
+int0 = 'eth0'
+int1 = 'eth1'
+int2 = 'eth2'
+
+# RHEL/CentOS 7+
+if rhel? && rhel_version.split('.').first.to_i > 6
+  int0 = 'enp0s3'
+  int1 = 'enp0s8'
+  int2 = 'enp0s9'
+end
+
 unless windows?
-  describe 'Interface "eth0"' do
+  describe "Interface '#{int0}'" do
     it 'should exist' do
-      expect(interface 'eth0').to exist
+      expect(interface int0).to exist
     end
 
     it 'should have DHCP enabled' do
-      expect(command('ps -ef | grep dhclient | grep -v grep').stdout).to contain(/[-\.]eth0./)
+      expect(command('ps -ef | grep dhclient | grep -v grep').stdout).to contain(/[-\.]#{int0}./)
     end
   end
 
-  describe 'Interface "eth1"' do
+  describe "Interface '#{int1}'" do
     it 'should exist' do
-      expect(interface 'eth1').to exist
+      expect(interface int1).to exist
     end
 
     it 'should have DHCP disabled' do
-      expect(command('ps -ef | grep dhclient | grep -v grep').stdout).not_to contain(/[-\.]eth1./)
+      expect(command('ps -ef | grep dhclient | grep -v grep').stdout).not_to contain(/[-\.]#{int1}./)
     end
 
     it 'should have an address' do
-      expect(interface('eth1').has_ipv4_address?('10.12.10.11')).to eq true if rhel?
-      expect(interface('eth1').has_ipv4_address?('10.12.10.12')).to eq true if debian?
+      expect(interface(int1).has_ipv4_address?('10.12.10.11')).to eq true if rhel?
+      expect(interface(int1).has_ipv4_address?('10.12.10.12')).to eq true if debian?
     end
 
     it 'should have netmask "255.255.255.0"' do
-      expect(command('ip addr show dev eth1').stdout).to contain '/24 brd '
+      expect(command("ip addr show dev #{int1}").stdout).to contain '/24 brd '
     end
   end
 
-  describe 'Interface "eth2"' do
+  describe "Interface '#{int2}'" do
     it 'should exist' do
-      expect(interface 'eth2').to exist
+      expect(interface int2).to exist
     end
 
     it 'should have DHCP enabled' do
-      expect(command('ps -ef | grep dhclient | grep -v grep').stdout).to contain(/[-\.]eth2./)
+      expect(command('ps -ef | grep dhclient | grep -v grep').stdout).to contain(/[-\.]#{int2}./)
     end
   end
 end

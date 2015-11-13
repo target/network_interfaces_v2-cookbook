@@ -8,6 +8,7 @@ Supported Platforms
 ===================
 
 * RHEL 6.x
+* RHEL 7.x
 * Ubuntu >= 12.x
 * Windows 2012R2
 

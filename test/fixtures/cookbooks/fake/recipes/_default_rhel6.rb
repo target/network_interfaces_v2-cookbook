@@ -1,8 +1,8 @@
-# Make sure we don't wipe out enp0s3
-network_interface 'enp0s3'
+# Make sure we don't wipe out eth0
+network_interface 'eth0'
 
 # Add additional interface configs
-network_interface 'enp0s8' do
+network_interface 'eth1' do
   address '10.12.10.11'
   netmask '255.255.255.0'
   prefix 24
@@ -16,4 +16,4 @@ network_interface 'enp0s8' do
 end
 
 # Add an interface config using platform specific provider
-rhel_network_interface 'enp0s9'
+rhel_network_interface 'eth2'
