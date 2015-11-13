@@ -61,6 +61,10 @@ class Chef
           set_or_return(:type, arg, kind_of: String)
         end
 
+        def dns(arg = nil)
+          set_or_return(:dns, arg, kind_of: [String, Array])
+        end
+
         def pre_up(arg = 'NOVAL')
           # Handle 'unsetting' default value with nil or ''
           @pre_up = nil if arg.nil? || arg == ''

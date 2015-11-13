@@ -87,10 +87,6 @@ class Chef
       def gateway(arg = nil)
         set_or_return(:gateway, arg, kind_of: String)
       end
-      
-      def dns_nameservers(arg = nil)
-        set_or_return(:dns_nameservers, arg, kind_of: String)
-      end
 
       def mtu(arg = nil)
         set_or_return(:mtu, arg, kind_of: Integer)
