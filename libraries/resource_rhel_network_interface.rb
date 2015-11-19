@@ -99,6 +99,10 @@ class Chef
         def dns_domain(arg = nil)
           set_or_return(:dns_domain, arg, kind_of: String)
         end
+
+        def zone(arg = nil)
+          set_or_return(:zone, arg, kind_of: String)
+        end
       end
     end
   end

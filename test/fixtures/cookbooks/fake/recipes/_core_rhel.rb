@@ -13,4 +13,5 @@ network_interface 'enp0s4' do
   type 'OVSBridge'
   devicetype 'ovs'
   post_up 'sleep 1'
+  zone 'trusted'
 end
