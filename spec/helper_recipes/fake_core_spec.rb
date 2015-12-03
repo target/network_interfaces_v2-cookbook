@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'fake::core' do
-  context 'when platform_family rhel' do
+  context 'when platform_family rhel 6.x' do
     cached(:chef_run) do
       ChefSpec::SoloRunner.new(platform: 'redhat', version: '6.5', step_into: ['rhel_network_interface', 'network_interface']).converge(described_recipe)
     end
@@ -94,7 +94,38 @@ DEVICETYPE="ovs"
     end
   end
 
-  describe 'debian family' do
+  context 'when platform_family rhel 7.x' do
+    cached(:chef_run) do
+      ChefSpec::SoloRunner.new(platform: 'redhat', version: '7.0', step_into: ['rhel_network_interface', 'network_interface']).converge(described_recipe)
+    end
+
+    let(:default_enp0s4_config_contents) do
+      '# This file maintained by Chef.  DO NOT EDIT!
+
+DEVICE="enp0s4"
+TYPE="OVSBridge"
+ONBOOT="yes"
+BOOTPROTO="none"
+IPADDR="10.12.10.11"
+PREFIX=24
+NETMASK="255.255.255.0"
+GATEWAY="10.0.0.1"
+NM_CONTROLLED="no"
+DEVICETYPE="ovs"
+ZONE="trusted"
+'
+    end
+
+    context 'for interface enp0s4 definition' do
+      it 'configures firewalld zone' do
+        expect(chef_run).to create_network_interface 'enp0s4'
+        expect(chef_run).to create_template '/etc/sysconfig/network-scripts/ifcfg-enp0s4'
+        expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-enp0s4').with_content(default_enp0s4_config_contents)
+      end
+    end
+  end
+
+  context 'debian family' do
     let(:chef_run) do
       ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.10', step_into: ['debian_network_interface', 'network_interface']).converge(described_recipe)
     end
