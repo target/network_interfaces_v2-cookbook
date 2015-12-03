@@ -1,3 +1,7 @@
+# 2.6.0
+* Add management of debian DNS
+* Add management of RHEL firewalld zones
+
 # 2.5.1
 * Fix RHEL configs from on/off to yes/no
 
