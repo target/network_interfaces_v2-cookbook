@@ -43,7 +43,7 @@ class Chef
         def bridge_ports(arg = nil)
           set_or_return(:bridge_ports, arg, kind_of: Array)
         end
-        
+
         def ipv6(arg = nil)
           set_or_return(:ipv6, arg, kind_of: [TrueClass, FalseClass])
         end
