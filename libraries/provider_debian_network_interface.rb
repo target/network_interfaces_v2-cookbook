@@ -65,6 +65,12 @@ class Chef
           package 'bridge-utils' do
             not_if { new_resource.bridge_ports.nil? }
           end
+          
+          if new_resource.ipv6
+            network_type = 'inet6'
+          else
+            network_type = 'inet'
+          end
 
           # Dump config for the interface
           template "/etc/network/interfaces.d/#{new_resource.device}" do
@@ -73,7 +79,7 @@ class Chef
             mode 0644
             variables device: new_resource.device,
                       type: new_resource.type,
-                      ipv6: new_resource.ipv6,
+                      network_type: network_type,
                       auto: new_resource.onboot,
                       address: new_resource.address,
                       netmask: new_resource.netmask,
