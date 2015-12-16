@@ -65,7 +65,7 @@ class Chef
           package 'bridge-utils' do
             not_if { new_resource.bridge_ports.nil? }
           end
-          
+
           if new_resource.ipv6
             network_type = 'inet6'
           else
