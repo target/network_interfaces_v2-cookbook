@@ -45,7 +45,7 @@ class Chef
         end
         
         def ipv6(arg = nil)
-          set_or_return(:ipv6, arg, kind_of: Boolean)
+          set_or_return(:ipv6, arg, kind_of: [TrueClass, FalseClass])
         end
 
         def metric(arg = nil)
