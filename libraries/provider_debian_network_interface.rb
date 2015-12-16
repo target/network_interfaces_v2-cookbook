@@ -73,6 +73,7 @@ class Chef
             mode 0644
             variables device: new_resource.device,
                       type: new_resource.type,
+                      ipv6: new_resource.ipv6,
                       auto: new_resource.onboot,
                       address: new_resource.address,
                       netmask: new_resource.netmask,
