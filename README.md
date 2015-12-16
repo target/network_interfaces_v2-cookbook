@@ -63,6 +63,7 @@ Attributes
 * source (default: 'ifcfg.erb') - Template file to use for interface config
 
 #### Debian Only Attributes
+* ipv6 (true/false) - Wether this is an inet or inet6 network interface.
 * bridge_stp (true/false) - Wether to enable/disable bridge STP.  Applies to debian only.
 * bridge_ports - Array of interfaces to add to defined bridge
 * metric -
