@@ -111,6 +111,10 @@ describe 'fake::override' do
       expect(chef_run).to render_file('/etc/network/interfaces.d/eth2').with_content('  gateway 12.12.12.1')
     end
 
+    it 'properly sets ipv6 attribtue in config' do
+      expect(chef_run).to render_file('/etc/network/interfaces.d/eth2').with_content('iface eth2 inet6 static')
+    end
+
     it 'properly sets bridge_ports attribtue in config' do
       expect(chef_run).to render_file('/etc/network/interfaces.d/eth2').with_content('  bridge_ports eth3 eth4')
     end

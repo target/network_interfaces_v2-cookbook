@@ -275,4 +275,31 @@ ZONE="trusted"
       expect(chef_run).to create_win_network_interface 'eth2'
     end
   end
+
+  context 'when platform_family debian 6.x' do
+    cached(:chef_run) do
+      ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.10', step_into: ['debian_network_interface', 'network_interface']).converge(described_recipe)
+    end
+
+    let(:default_eth4_config_contents) do
+      '# This file maintained by Chef.  DO NOT EDIT!
+
+auto eth4
+iface eth4 inet static
+  address 10.12.10.12
+  netmask 255.255.255.0
+  gateway 10.0.0.1
+  pre-up sleep 2
+  post-up sleep 1
+'
+    end
+
+    context 'for interface eth4 definition' do
+      it 'creates the interface' do
+        expect(chef_run).to create_network_interface 'eth4'
+        expect(chef_run).to create_template '/etc/network/interfaces.d/eth4'
+        expect(chef_run).to render_file('/etc/network/interfaces.d/eth4').with_content(default_eth4_config_contents)
+      end
+    end
+  end
 end

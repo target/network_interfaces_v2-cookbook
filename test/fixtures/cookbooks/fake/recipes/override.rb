@@ -29,6 +29,7 @@ when 'debian'
     broadcast '12.12.12.255'
     gateway '12.12.12.1'
     bootproto 'static'
+    ipv6 true
     bond_slaves ['eth0', 'eth1']
     bond_mode 'test mode'
     bridge_ports ['eth3', 'eth4']
