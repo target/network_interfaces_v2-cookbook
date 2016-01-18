@@ -1,3 +1,6 @@
+# 2.7.0
+* Add ipv6 support for debian
+
 # 2.6.0
 * Add management of debian DNS
 * Add management of RHEL firewalld zones
