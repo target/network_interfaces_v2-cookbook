@@ -92,6 +92,8 @@ Attributes
 * ovs_bridge - OVS Bridge to bind ovs port to (primarily used when `type` is set as 'OVSPort')
 * dns_domain - DNS domain
 * zone - FirewallD zone
+* arpcheck - Whether to arping before bringing up an ethernet device to check for an IP conflict (default: true)
+* hotplug - Activate devices on hotplug (default: true)
 
 #### Windows Only Attributes
 * hw_address - Can be used to define what device to manage
