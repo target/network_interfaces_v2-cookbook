@@ -103,6 +103,14 @@ class Chef
         def zone(arg = nil)
           set_or_return(:zone, arg, kind_of: String)
         end
+
+        def arpcheck(arg = nil)
+          set_or_return(:arpcheck, arg, kind_of: [TrueClass, FalseClass])
+        end
+
+        def hotplug(arg = nil)
+          set_or_return(:zone, arg, kind_of: [TrueClass, FalseClass])
+        end
       end
     end
   end

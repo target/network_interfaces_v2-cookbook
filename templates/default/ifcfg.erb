@@ -78,3 +78,9 @@ DOMAIN="<%=@domain%>"
 <% unless @zone.nil? -%>
 ZONE="<%= @zone %>"
 <% end %>
+<% unless @arpcheck.nil? -%>
+ARPCHECK="<%= @arpcheck ? 'yes' : 'no' %>"
+<% end %>
+<% unless @hotplug.nil? -%>
+HOTPLUG="<%= @hotplug ? 'yes' : 'no' %>"
+<% end %>
