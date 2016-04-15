@@ -109,7 +109,7 @@ class Chef
         end
 
         def hotplug(arg = nil)
-          set_or_return(:zone, arg, kind_of: [TrueClass, FalseClass])
+          set_or_return(:hotplug, arg, kind_of: [TrueClass, FalseClass])
         end
       end
     end

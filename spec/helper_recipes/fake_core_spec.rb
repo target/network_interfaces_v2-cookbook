@@ -113,6 +113,8 @@ GATEWAY="10.0.0.1"
 NM_CONTROLLED="no"
 DEVICETYPE="ovs"
 ZONE="trusted"
+ARPCHECK="yes"
+HOTPLUG="no"
 '
     end
 
