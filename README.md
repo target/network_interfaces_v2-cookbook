@@ -171,7 +171,7 @@ end
 
 Testing
 =======
-Requires [ChefDK](https://downloads.chef.io/chef-dk/) 0.10.0.
+Requires [ChefDK](https://downloads.chef.io/chef-dk/) 0.12.0.
 
 ```
 rubocop
