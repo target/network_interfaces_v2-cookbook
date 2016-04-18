@@ -142,7 +142,7 @@ class Chef
         def phys_adapter
           @phys_adapter ||= begin
             a = execute_wmi_query("select * from Win32_NetworkAdapter where #{conditions}")
-            fail Chef::Exceptions::UnsupportedAction, "Failed to find interface with conditions: #{conditions}" if a.nil?
+            raise Chef::Exceptions::UnsupportedAction, "Failed to find interface with conditions: #{conditions}" if a.nil?
             wmi_object_array(a).first
           end
         end
@@ -156,7 +156,7 @@ class Chef
           c = []
           c << "Index='#{new_resource.index}'" unless new_resource.index.nil?
           c << "MacAddress='#{new_resource.hw_address}'" unless new_resource.hw_address.nil?
-          fail Chef::Exceptions::UnsupportedAction, 'Failed to find interface, no conditions provided' if c.empty?
+          raise Chef::Exceptions::UnsupportedAction, 'Failed to find interface, no conditions provided' if c.empty?
           c.join(' AND ')
         end
 

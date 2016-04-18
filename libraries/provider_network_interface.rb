@@ -29,7 +29,7 @@ class Chef
       use_inline_resources if defined?(use_inline_resources)
 
       action :create do
-        fail Chef::Exceptions::UnsupportedAction, "#{self} does not support :create"
+        raise Chef::Exceptions::UnsupportedAction, "#{self} does not support :create"
       end
     end
   end

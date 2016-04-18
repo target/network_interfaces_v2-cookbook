@@ -10,23 +10,21 @@ if defined?(RubyWMI)
 
       # Monkeypatch to rename IPAddress to IpAddress to properly call method
       def attributes # rubocop:disable MethodLength
-        if @attributes
-          return @attributes
-        else
-          @attributes = {}
-          @win32ole_object.properties_.each do |prop|
-            name = prop.name
-            name = 'IpAddress' if name == 'IPAddress'
-            value = @win32ole_object.send(name)
-            value = if prop.cimtype == 101 && value
-                      Time.parse_swbem_date_time(value)
-                    else
-                      value
-                    end
-            @attributes[underscore(name)] = value
-          end
-          return @attributes
+        return @attributes if @attributes
+
+        @attributes = {}
+        @win32ole_object.properties_.each do |prop|
+          name = prop.name
+          name = 'IpAddress' if name == 'IPAddress'
+          value = @win32ole_object.send(name)
+          value = if prop.cimtype == 101 && value
+                    Time.parse_swbem_date_time(value)
+                  else
+                    value
+                  end
+          @attributes[underscore(name)] = value
         end
+        @attributes
       end
     end
   end

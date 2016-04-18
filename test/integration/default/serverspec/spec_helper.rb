@@ -47,7 +47,7 @@ def int
     int['0'] = 'eth0'
     int['0'] = 'enp0s3' if rhel? && rhel_version.split('.').first.to_i > 6
     (4..8).each do |n|
-      int["#{n}"] = "#{prefix}#{n}"
+      int[n.to_s] = "#{prefix}#{n}"
     end
     int
   end

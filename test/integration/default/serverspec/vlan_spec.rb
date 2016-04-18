@@ -3,7 +3,7 @@ require 'spec_helper'
 unless windows?
   describe "Interface '#{int['8']}'" do
     it 'should exist' do
-      expect(interface int['8']).to exist
+      expect(interface(int['8'])).to exist
     end
 
     it 'should have DHCP disabled' do
@@ -13,7 +13,7 @@ unless windows?
 
   describe "Interface '#{int['8']}.12'" do
     it 'should exist' do
-      expect(interface "#{int['8']}.12").to exist
+      expect(interface("#{int['8']}.12")).to exist
     end
 
     it 'should have DHCP disabled' do
@@ -33,7 +33,7 @@ end
 if windows?
   describe 'Interface "vlan12"' do
     it 'should exist' do
-      expect(win_interface 'vlan12').not_to be_nil
+      expect(win_interface('vlan12')).not_to be_nil
     end
 
     it 'should have DHCP disabled' do

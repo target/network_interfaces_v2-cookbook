@@ -66,11 +66,7 @@ class Chef
             not_if { new_resource.bridge_ports.nil? }
           end
 
-          if new_resource.ipv6
-            network_type = 'inet6'
-          else
-            network_type = 'inet'
-          end
+          network_type = new_resource.ipv6 ? 'inet6' : 'inet'
 
           # Dump config for the interface
           template "/etc/network/interfaces.d/#{new_resource.device}" do

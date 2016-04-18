@@ -2,7 +2,7 @@ require 'spec_helper'
 unless windows?
   describe 'Interface "br0"' do
     it 'should exist' do
-      expect(interface 'br0').to exist
+      expect(interface('br0')).to exist
     end
 
     it "should include #{int['7']} as an interface" do
