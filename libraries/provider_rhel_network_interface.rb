@@ -74,7 +74,9 @@ class Chef
                       dns: new_resource.dns,
                       prefix: new_resource.prefix,
                       domain: new_resource.dns_domain,
-                      zone: new_resource.zone
+                      zone: new_resource.zone,
+                      arpcheck: new_resource.arpcheck,
+                      hotplug: new_resource.hotplug
             notifies :run, "execute[reload interface #{new_resource.device}]", new_resource.reload_type if new_resource.reload
             notifies :run, "execute[post up command for #{new_resource.device}]", :immediately unless new_resource.post_up.nil?
           end

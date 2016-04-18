@@ -14,4 +14,6 @@ network_interface 'enp0s4' do
   devicetype 'ovs'
   post_up 'sleep 1'
   zone 'trusted'
+  arpcheck true
+  hotplug false
 end
