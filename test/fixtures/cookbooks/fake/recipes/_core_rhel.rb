@@ -1,6 +1,3 @@
-# Make sure we don't wipe out enp0s3
-network_interface 'enp0s3'
-
 # Add additional interface configs
 network_interface 'enp0s4' do
   address '10.12.10.11'
