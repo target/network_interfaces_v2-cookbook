@@ -77,6 +77,7 @@ class Chef
                       type: new_resource.type,
                       network_type: network_type,
                       auto: new_resource.onboot,
+                      hw_address: new_resource.hw_address,
                       address: new_resource.address,
                       netmask: new_resource.netmask,
                       gateway: new_resource.gateway,
