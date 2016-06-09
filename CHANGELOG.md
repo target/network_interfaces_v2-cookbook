@@ -1,3 +1,6 @@
+# 2.8.0
+* Add hw_address support for debian
+
 # 2.7.0
 * Add ipv6 support for debian
 

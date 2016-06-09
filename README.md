@@ -51,7 +51,7 @@ Attributes
 * gateway - Gateway IP address
 * broadcast - Broadcast address
 * mtu - MTU
-* hw_address - MAC address of device to configure
+* hw_address - For linux it sets MAC address of device, for windows it selects device matching MAC to configure
 * vlan
  * debian - VLAN device interface
  * RHEL - true/false if device defined is a VLAN interface
