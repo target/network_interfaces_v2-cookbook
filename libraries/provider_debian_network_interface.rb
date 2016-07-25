@@ -47,10 +47,10 @@ class Chef
 
           # Get bonding module setup if needed
           package 'ifenslave-2.6' do
-            not_if { bond_int? }
+            only_if { bond_int? }
           end
           kernel_module 'bonding' do
-            not_if { bond_int? }
+            only_if { bond_int? }
           end
 
           # Install package for metric if needed

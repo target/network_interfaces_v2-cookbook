@@ -27,7 +27,7 @@ describe 'fake::vlan' do
     end
 
     it 'loads modules required for vlan config on interface' do
-      expect(chef_run).to save_modules '8021q'
+      expect(chef_run).to install_kernel_module '8021q'
     end
 
     it 'configures device for vlan' do

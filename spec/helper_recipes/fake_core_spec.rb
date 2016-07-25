@@ -288,7 +288,7 @@ HOTPLUG="no"
 
 auto eth4
 iface eth4 inet static
-  address 10.12.10.12
+  address 10.12.10.11
   netmask 255.255.255.0
   gateway 10.0.0.1
   pre-up sleep 2

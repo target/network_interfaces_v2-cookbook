@@ -32,7 +32,7 @@ describe 'fake::bonding' do
     end
 
     it 'loads modules required for bonding config on interface' do
-      expect(chef_run).to save_modules 'bonding'
+      expect(chef_run).to install_kernel_module 'bonding'
     end
 
     it 'configures slave devices for bonding' do
