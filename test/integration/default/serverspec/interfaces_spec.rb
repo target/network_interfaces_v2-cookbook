@@ -28,6 +28,26 @@ unless windows?
       expect(command("ip addr show dev #{int['4']}").stdout).to contain '/24 brd '
     end
   end
+
+  if debian?
+    describe "Interface '#{int['9']}'" do
+      it 'should have an ipv4 address' do
+        expect(interface(int['9']).has_ipv4_address?('10.12.10.19')).to eq true
+      end
+
+      it 'should have ipv4 netmask' do
+        expect(command("ip addr show dev #{int['9']}").stdout).to contain '/24 brd '
+      end
+
+      it 'should have an ipv6 address' do
+        expect(interface(int['9']).has_ipv6_address?('fe80::202:b3ff:fe1e:8329')).to eq true
+      end
+
+      it 'should have ipv6 netmask' do
+        expect(command("ip addr show dev #{int['9']}").stdout).to contain 'fe80::202:b3ff:fe1e:8329/64 scope'
+      end
+    end
+  end
 end
 
 if windows?

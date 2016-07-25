@@ -52,7 +52,7 @@ def int
     int['0'] = 'eth0'
     int['0'] = 'enp0s3' if rhel? && rhel_version.split('.').first.to_i > 6
     int['0'] = 'enp0s3' if !rhel? && ubuntu_version.to_s >= '16.04'
-    (4..8).each do |n|
+    (4..9).each do |n|
       int[n.to_s] = "#{prefix}#{n}"
     end
     int
