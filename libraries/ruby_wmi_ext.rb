@@ -1,7 +1,7 @@
 # Do not monkeypatch until RubyWMI has been loaded
 if defined?(RubyWMI)
   module RubyWMI
-    class Base # rubocop:disable all
+    class Base
       # Monkeypatch to add ability to pass args
       def method_missing(name, *args)
         name = camelize(name.to_s)
@@ -9,7 +9,7 @@ if defined?(RubyWMI)
       end
 
       # Monkeypatch to rename IPAddress to IpAddress to properly call method
-      def attributes # rubocop:disable MethodLength
+      def attributes
         return @attributes if @attributes
 
         @attributes = {}

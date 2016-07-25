@@ -28,13 +28,13 @@ class Chef
       #
       # Chef Provider for Windows Network Interfaces
       #
-      class Win < Chef::Provider::NetworkInterface # rubocop:disable ClassLength
+      class Win < Chef::Provider::NetworkInterface
         provides :win_network_interface, os: 'windows' if respond_to?(:provides)
 
         #
         # Load current state of defined resource
         #
-        def load_current_resource # rubocop:disable MethodLength, AbcSize
+        def load_current_resource
           @current_resource = Chef::Resource::NetworkInterface::Win.new(@new_resource.name)
           @current_resource.name(@new_resource.name)
           @current_resource.hw_address(@new_resource.hw_address)
@@ -91,7 +91,7 @@ class Chef
         #
         # Manage VLAN as needed
         #
-        def manage_vlan # rubocop:disable CyclomaticComplexity
+        def manage_vlan
           return if new_resource.vlan.nil?
           create_vlan_dev unless vlan_dev_exist? || msft_vlan_dev_exist?
           set_vlan unless vlanid_set? || msft_vlan_dev_exist?
@@ -102,7 +102,7 @@ class Chef
         #
         # Manage IP addresses as needed
         #
-        def manage_address # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
+        def manage_address
           enable_dhcp if new_resource.bootproto == 'dhcp' && current_resource.bootproto != 'dhcp'
           return unless new_resource.bootproto == 'static'
 
@@ -113,7 +113,7 @@ class Chef
         #
         # Manage DNS as needed
         #
-        def manage_dns # rubocop:disable AbcSize, CyclomaticComplexity
+        def manage_dns
           config_dns unless new_resource.dns.nil? || current_resource.dns == new_resource.dns
           config_dns_domain unless new_resource.dns_domain.nil? || current_resource.dns_domain == new_resource.dns_domain
           config_ddns unless new_resource.ddns.nil? || current_resource.ddns == new_resource.ddns
@@ -152,7 +152,7 @@ class Chef
         #
         # @return [Hash]
         #
-        def conditions # rubocop:disable AbcSize
+        def conditions
           c = []
           c << "Index='#{new_resource.index}'" unless new_resource.index.nil?
           c << "MacAddress='#{new_resource.hw_address}'" unless new_resource.hw_address.nil?
@@ -240,7 +240,7 @@ class Chef
         #
         # Chef if subnet address is already configured
         #
-        def subnet_exist? # rubocop:disable AbcSize
+        def subnet_exist?
           return false if current_resource.netmasks.nil? || current_resource.addresses.nil?
           current_resource.netmasks[current_resource.addresses.index(new_resource.address)] == new_resource.netmask
         end
@@ -270,7 +270,7 @@ class Chef
         #
         # Rename VLAN device to name we want from MSFT naming convention
         #
-        def rename_vlan_dev # rubocop:disable AbcSize
+        def rename_vlan_dev
           converge_it("Renaming VLAN dev '#{new_resource.device} - Vlan #{new_resource.vlan}' back to '#{new_resource.device}'") do
             shell_out = Mixlib::ShellOut
                         .new("powershell.exe -Command \"Get-NetAdapter -Name '#{new_resource.device} - Vlan #{new_resource.vlan}' | Rename-NetAdapter -NewName '#{new_resource.device}'\"")
@@ -291,7 +291,7 @@ class Chef
         #
         # Configure NetBIOS
         #
-        def config_netbios # rubocop:disable MethodLength
+        def config_netbios
           case new_resource.netbios
           when true
             converge_it('Enabling NetBIOS') do

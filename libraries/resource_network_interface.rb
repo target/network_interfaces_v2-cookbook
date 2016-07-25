@@ -26,7 +26,7 @@ class Chef
     # Chef Resource for a network_interface
     #
     class NetworkInterface < Chef::Resource
-      def initialize(name, run_context = nil) # rubocop:disable MethodLength
+      def initialize(name, run_context = nil)
         super
         @resource_name = :network_interface
         @provider = Chef::Provider::NetworkInterface

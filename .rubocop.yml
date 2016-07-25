@@ -1,19 +1,8 @@
 AllCops:
   Exclude:
-    - '.kitchen/**/*'
-    - 'metadata.rb'
     - 'test/fixtures/cookbooks/**/*'
 
-LineLength:
-  Max: 200
-
 WordArray:
-  Enabled: false
-
-FileName:
-  Enabled: false
-
-RegexpLiteral:
   Enabled: false
 
 NumericLiterals:
