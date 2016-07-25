@@ -6,9 +6,9 @@ description      'Providers for configuring network on Ubuntu, RHEL, and Windows
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 source_url       'https://github.com/target/network_interfaces_v2-cookbook'
 issues_url       'https://github.com/target/network_interfaces_v2-cookbook/issues'
-version          '2.8.0'
+version          '2.9.0'
 
-supports 'ubuntu', '>= 12.04'
+supports 'ubuntu', '>= 14.04'
 supports 'windows'
 supports 'redhat', '>= 6.0'
 supports 'centos', '>= 6.0'
