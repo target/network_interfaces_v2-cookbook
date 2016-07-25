@@ -31,9 +31,6 @@ class Chef
         provides :debian_network_interface, os: 'linux', platform_family: %w(debian) if respond_to?(:provides)
 
         action :create do
-          # Include coookbook for managing debian modules
-          run_context.include_recipe 'modules::default'
-
           # Manage common network files
           directory '/etc/network/interfaces.d'
           cookbook_file '/etc/network/interfaces' do
@@ -44,16 +41,16 @@ class Chef
           package 'vlan' do
             not_if { new_resource.vlan.nil? }
           end
-          modules '8021q' do
+          kernel_module '8021q' do
             not_if { new_resource.vlan.nil? }
           end
 
           # Get bonding module setup if needed
           package 'ifenslave-2.6' do
-            not_if { new_resource.bond_master.nil? }
+            not_if { bond_int? }
           end
-          modules 'bonding' do
-            not_if { new_resource.bond_master.nil? }
+          kernel_module 'bonding' do
+            not_if { bond_int? }
           end
 
           # Install package for metric if needed
@@ -108,6 +105,10 @@ class Chef
             EOF
             action :nothing
           end
+        end
+
+        def bond_int?
+          !new_resource.bond_master.nil? || !new_resource.bond_slaves.nil? || !new_resource.bond_mode.nil?
         end
       end
     end

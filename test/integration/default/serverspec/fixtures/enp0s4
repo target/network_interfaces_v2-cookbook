@@ -1,9 +1,10 @@
 # This file maintained by Chef.  DO NOT EDIT!
 
-auto eth4
-iface eth4 inet static
+auto enp0s4
+iface enp0s4 inet static
   address 10.12.10.11
   netmask 255.255.255.0
   gateway 10.0.2.2
+  metric 100
   pre-up sleep 2
   post-up sleep 1

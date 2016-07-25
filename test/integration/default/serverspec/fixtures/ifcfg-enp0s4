@@ -13,3 +13,4 @@ DEVICETYPE="ovs"
 ZONE="trusted"
 ARPCHECK="yes"
 HOTPLUG="no"
+METRIC=100

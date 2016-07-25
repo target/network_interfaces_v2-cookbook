@@ -111,6 +111,10 @@ class Chef
         def hotplug(arg = nil)
           set_or_return(:hotplug, arg, kind_of: [TrueClass, FalseClass])
         end
+
+        def metric(arg = nil)
+          set_or_return(:metric, arg, kind_of: Integer)
+        end
       end
     end
   end

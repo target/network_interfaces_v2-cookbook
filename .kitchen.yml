@@ -9,6 +9,9 @@ platforms:
   - name: ubuntu-12.04
     run_list:
       - recipe[net_setup::default]
+  - name: ubuntu-16.04
+    run_list:
+      - recipe[net_setup::default]
   - name: centos-7.2
     run_list:
       - recipe[net_setup::default]

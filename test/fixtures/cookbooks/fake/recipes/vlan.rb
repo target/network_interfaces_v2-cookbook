@@ -1,10 +1,13 @@
+int8 = 'eth8'
+
+# RHEL/CentOS 7+
+if (%w(rhel fedora).include?(node['platform_family']) && node['platform_version'].to_i > 6) ||
+   (%w(debian ubuntu).include?(node['platform_family']) && node['platform_version'] >= '16.04')
+  int8 = 'enp0s8'
+end
+
 case node['platform_family']
 when 'rhel', 'fedora'
-  int8 = 'eth8'
-
-  # RHEL/CentOS 7+
-  int8 = 'enp0s8' if node['platform_version'].to_i > 6
-
   rhel_network_interface int8 do
     bootproto 'none'
   end
@@ -16,15 +19,15 @@ when 'rhel', 'fedora'
     vlan true
   end
 when 'debian'
-  debian_network_interface 'eth8' do
+  debian_network_interface int8 do
     bootproto 'manual'
   end
 
-  debian_network_interface 'eth8.12' do
+  debian_network_interface "#{int8}.12" do
     bootproto 'static'
     address '12.12.12.12'
     netmask '255.255.255.0'
-    vlan 'eth8'
+    vlan int8
   end
 when 'windows'
   win_network_interface 'vlan12' do

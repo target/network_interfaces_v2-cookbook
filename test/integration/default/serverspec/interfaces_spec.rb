@@ -21,8 +21,7 @@ unless windows?
     end
 
     it 'should have an address' do
-      expect(interface(int['4']).has_ipv4_address?('10.12.10.11')).to eq true if rhel?
-      expect(interface(int['4']).has_ipv4_address?('10.12.10.12')).to eq true if debian?
+      expect(interface(int['4']).has_ipv4_address?('10.12.10.11')).to eq true
     end
 
     it 'should have netmask "255.255.255.0"' do

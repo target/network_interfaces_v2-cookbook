@@ -84,3 +84,6 @@ ARPCHECK="<%= @arpcheck ? 'yes' : 'no' %>"
 <% unless @hotplug.nil? -%>
 HOTPLUG="<%= @hotplug ? 'yes' : 'no' %>"
 <% end %>
+<% if @metric -%>
+METRIC=<%= @metric %>
+<% end %>

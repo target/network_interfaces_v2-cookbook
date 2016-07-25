@@ -28,6 +28,10 @@ def rhel_version
   File.read('/etc/redhat-release').gsub(/.* ([\.0-9]+).*/, '\1').chomp
 end
 
+def ubuntu_version
+  `lsb_release -r -s`
+end
+
 def win_interface(name)
   net_adapters.find { |n| n['netconnectionid'] == name }
 end
@@ -38,6 +42,7 @@ end
 
 def prefix
   return 'enp0s' if rhel? && rhel_version.split('.').first.to_i > 6
+  return 'enp0s' if !rhel? && ubuntu_version.to_s >= '16.04'
   'eth'
 end
 
@@ -46,6 +51,7 @@ def int
     int = {}
     int['0'] = 'eth0'
     int['0'] = 'enp0s3' if rhel? && rhel_version.split('.').first.to_i > 6
+    int['0'] = 'enp0s3' if !rhel? && ubuntu_version.to_s >= '16.04'
     (4..8).each do |n|
       int[n.to_s] = "#{prefix}#{n}"
     end
