@@ -38,6 +38,7 @@ class Chef
 
           @source = 'debian_interface.erb'
           @pre_up = 'sleep 2'
+          @ipv6 = false
         end
 
         def bridge_ports(arg = nil)

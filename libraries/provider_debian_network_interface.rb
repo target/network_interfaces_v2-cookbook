@@ -98,7 +98,7 @@ class Chef
             notifies :run, "execute[reload interface #{new_resource.name}]", new_resource.reload_type if new_resource.reload
           end
 
-          execute "reload interface #{new_resource.device}" do
+          execute "reload interface #{new_resource.name}" do
             command <<-EOF
               ifdown #{new_resource.device} -i /etc/network/interfaces.d/#{new_resource.name}
               ifup #{new_resource.device} -i /etc/network/interfaces.d/#{new_resource.name}
