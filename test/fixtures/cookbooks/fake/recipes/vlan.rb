@@ -1,6 +1,6 @@
 int8 = 'eth8'
 
-# RHEL/CentOS 7+
+# RHEL/CentOS 7+ or Ubuntu 16.04+
 if (%w(rhel fedora).include?(node['platform_family']) && node['platform_version'].to_i > 6) ||
    (%w(debian ubuntu).include?(node['platform_family']) && node['platform_version'] >= '16.04')
   int8 = 'enp0s8'
