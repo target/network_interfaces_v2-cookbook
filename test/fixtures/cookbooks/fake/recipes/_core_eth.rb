@@ -14,5 +14,6 @@ network_interface 'eth4' do
     onboot true
     prefix 24
     type 'OVSBridge'
+    defroute false
   end
 end
