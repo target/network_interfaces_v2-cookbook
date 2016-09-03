@@ -95,6 +95,8 @@ Attributes
 * arpcheck - Whether to arping before bringing up an ethernet device to check for an IP conflict (default: true)
 * hotplug - Activate devices on hotplug (default: true)
 * defroute - Enable/Disable default route modification by ifup script
+* ovsbootproto - Set to 'dhcp' if you want to use DHCP on an OVSBridge
+* ovsdhcpinterfaces - List of physical devices to use for DHCP on an OVSBridge
 
 #### Windows Only Attributes
 * hw_address - Can be used to define what device to manage

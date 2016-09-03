@@ -119,6 +119,14 @@ class Chef
         def defroute(arg = nil)
           set_or_return(:defroute, arg, kind_of: [TrueClass, FalseClass])
         end
+
+        def ovsbootproto(arg = nil)
+          set_or_return(:ovsbootproto, arg, kind_of: String)
+        end
+
+        def ovsdhcpinterfaces(arg = nil)
+          set_or_return(:ovsdhcpinterfaces, arg, kind_of: [String, Array])
+        end
       end
     end
   end
