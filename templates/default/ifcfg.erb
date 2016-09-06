@@ -87,3 +87,13 @@ HOTPLUG="<%= @hotplug ? 'yes' : 'no' %>"
 <% if @metric -%>
 METRIC=<%= @metric %>
 <% end %>
+<% if @ovsbootproto -%>
+OVSBOOTPROTO="<%= @ovsbootproto %>"
+<% end -%>
+<% if @ovsdhcpinterfaces -%>
+  <% if @ovsdhcpinterfaces.is_a?(Array) -%>
+OVSDHCPINTERFACES="<%= @ovsdhcpinterfaces.join(' ') %>"
+  <% else -%>
+OVSDHCPINTERFACES="<%= @ovsdhcpinterfaces %>"
+  <% end -%>
+<% end -%>

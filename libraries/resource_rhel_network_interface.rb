@@ -115,6 +115,14 @@ class Chef
         def metric(arg = nil)
           set_or_return(:metric, arg, kind_of: Integer)
         end
+
+        def ovsbootproto(arg = nil)
+          set_or_return(:ovsbootproto, arg, kind_of: String)
+        end
+
+        def ovsdhcpinterfaces(arg = nil)
+          set_or_return(:ovsdhcpinterfaces, arg, kind_of: [String, Array])
+        end
       end
     end
   end
