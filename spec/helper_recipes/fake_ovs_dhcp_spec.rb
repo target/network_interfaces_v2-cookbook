@@ -3,7 +3,10 @@ require 'spec_helper'
 describe 'fake::ovs_dhcp' do
   context 'when platform_family rhel 6.x' do
     cached(:chef_run) do
-      ChefSpec::SoloRunner.new(platform: 'redhat', version: '6.5', step_into: ['rhel_network_interface', 'network_interface']).converge(described_recipe)
+      ChefSpec::SoloRunner.new(platform: 'redhat', version: '6.5',
+                               step_into: ['rhel_network_interface',
+                                           'network_interface'])
+                          .converge(described_recipe)
     end
 
     let(:default_ovsbr0_config_contents) do
@@ -79,8 +82,11 @@ OVS_BRIDGE="ovsbr1"
     context 'for interface ovsbr0 definition' do
       it 'creates the bridge' do
         expect(chef_run).to create_network_interface 'ovsbr0'
-        expect(chef_run).to create_template '/etc/sysconfig/network-scripts/ifcfg-ovsbr0'
-        expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-ovsbr0').with_content(default_ovsbr0_config_contents)
+        expect(chef_run).to create_template(
+          '/etc/sysconfig/network-scripts/ifcfg-ovsbr0')
+        expect(chef_run).to render_file(
+          '/etc/sysconfig/network-scripts/ifcfg-ovsbr0')
+          .with_content(default_ovsbr0_config_contents)
       end
 
       it 'does not reload interface by default' do
@@ -88,8 +94,10 @@ OVS_BRIDGE="ovsbr1"
       end
 
       it 'it reloads the interface after updating the config' do
-        resource = chef_run.template('/etc/sysconfig/network-scripts/ifcfg-ovsbr0')
-        expect(resource).to notify('execute[reload interface ovsbr0]').to(:run).immediately
+        resource = chef_run.template(
+          '/etc/sysconfig/network-scripts/ifcfg-ovsbr0')
+        expect(resource).to notify('execute[reload interface ovsbr0]')
+          .to(:run).immediately
       end
 
       it 'does not run post up by default' do
@@ -97,16 +105,21 @@ OVS_BRIDGE="ovsbr1"
       end
 
       it 'does not run post up command after updating config' do
-        resource = chef_run.template('/etc/sysconfig/network-scripts/ifcfg-ovsbr0')
-        expect(resource).not_to notify('execute[post up command for ovsbr0]').to(:run).immediately
+        resource = chef_run.template(
+          '/etc/sysconfig/network-scripts/ifcfg-ovsbr0')
+        expect(resource).not_to notify('execute[post up command for ovsbr0]')
+          .to(:run).immediately
       end
     end
 
     context 'for interface eth5 definition' do
       it 'adds the device to the bridge' do
         expect(chef_run).to create_network_interface 'eth5'
-        expect(chef_run).to create_template '/etc/sysconfig/network-scripts/ifcfg-eth5'
-        expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth5').with_content(default_eth5_config_contents)
+        expect(chef_run).to create_template(
+          '/etc/sysconfig/network-scripts/ifcfg-eth5')
+        expect(chef_run).to render_file(
+          '/etc/sysconfig/network-scripts/ifcfg-eth5')
+          .with_content(default_eth5_config_contents)
       end
 
       it 'does not reload interface by default' do
@@ -114,8 +127,10 @@ OVS_BRIDGE="ovsbr1"
       end
 
       it 'it reloads the interface after updating the config' do
-        resource = chef_run.template('/etc/sysconfig/network-scripts/ifcfg-eth5')
-        expect(resource).to notify('execute[reload interface eth5]').to(:run).immediately
+        resource = chef_run.template(
+          '/etc/sysconfig/network-scripts/ifcfg-eth5')
+        expect(resource).to notify('execute[reload interface eth5]')
+          .to(:run).immediately
       end
 
       it 'does not run post up by default' do
@@ -123,16 +138,21 @@ OVS_BRIDGE="ovsbr1"
       end
 
       it 'does not run post up command after updating config' do
-        resource = chef_run.template('/etc/sysconfig/network-scripts/ifcfg-eth5')
-        expect(resource).not_to notify('execute[post up command for eth5]').to(:run).immediately
+        resource = chef_run.template(
+          '/etc/sysconfig/network-scripts/ifcfg-eth5')
+        expect(resource).not_to notify('execute[post up command for eth5]')
+          .to(:run).immediately
       end
     end
 
     context 'for interface ovsbr1 definition' do
       it 'creates the bridge' do
         expect(chef_run).to create_network_interface 'ovsbr1'
-        expect(chef_run).to create_template '/etc/sysconfig/network-scripts/ifcfg-ovsbr1'
-        expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-ovsbr1').with_content(default_ovsbr1_config_contents)
+        expect(chef_run).to create_template(
+          '/etc/sysconfig/network-scripts/ifcfg-ovsbr1')
+        expect(chef_run).to render_file(
+          '/etc/sysconfig/network-scripts/ifcfg-ovsbr1')
+          .with_content(default_ovsbr1_config_contents)
       end
 
       it 'does not reload interface by default' do
@@ -140,8 +160,10 @@ OVS_BRIDGE="ovsbr1"
       end
 
       it 'it reloads the interface after updating the config' do
-        resource = chef_run.template('/etc/sysconfig/network-scripts/ifcfg-ovsbr1')
-        expect(resource).to notify('execute[reload interface ovsbr1]').to(:run).immediately
+        resource = chef_run.template(
+          '/etc/sysconfig/network-scripts/ifcfg-ovsbr1')
+        expect(resource).to notify('execute[reload interface ovsbr1]')
+          .to(:run).immediately
       end
 
       it 'does not run post up by default' do
@@ -149,16 +171,21 @@ OVS_BRIDGE="ovsbr1"
       end
 
       it 'does not run post up command after updating config' do
-        resource = chef_run.template('/etc/sysconfig/network-scripts/ifcfg-ovsbr1')
-        expect(resource).not_to notify('execute[post up command for ovsbr1]').to(:run).immediately
+        resource = chef_run.template(
+          '/etc/sysconfig/network-scripts/ifcfg-ovsbr1')
+        expect(resource).not_to notify('execute[post up command for ovsbr1]')
+          .to(:run).immediately
       end
     end
 
     context 'for interface eth6 definition' do
       it 'adds the device to the bridge' do
         expect(chef_run).to create_network_interface 'eth6'
-        expect(chef_run).to create_template '/etc/sysconfig/network-scripts/ifcfg-eth6'
-        expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-eth6').with_content(default_eth6_config_contents)
+        expect(chef_run).to create_template(
+          '/etc/sysconfig/network-scripts/ifcfg-eth6')
+        expect(chef_run).to render_file(
+          '/etc/sysconfig/network-scripts/ifcfg-eth6')
+          .with_content(default_eth6_config_contents)
       end
 
       it 'does not reload interface by default' do
@@ -166,8 +193,10 @@ OVS_BRIDGE="ovsbr1"
       end
 
       it 'it reloads the interface after updating the config' do
-        resource = chef_run.template('/etc/sysconfig/network-scripts/ifcfg-eth6')
-        expect(resource).to notify('execute[reload interface eth6]').to(:run).immediately
+        resource = chef_run.template(
+          '/etc/sysconfig/network-scripts/ifcfg-eth6')
+        expect(resource).to notify('execute[reload interface eth6]')
+          .to(:run).immediately
       end
 
       it 'does not run post up by default' do
@@ -175,15 +204,20 @@ OVS_BRIDGE="ovsbr1"
       end
 
       it 'does not run post up command after updating config' do
-        resource = chef_run.template('/etc/sysconfig/network-scripts/ifcfg-eth6')
-        expect(resource).not_to notify('execute[post up command for eth6]').to(:run).immediately
+        resource = chef_run.template(
+          '/etc/sysconfig/network-scripts/ifcfg-eth6')
+        expect(resource).not_to notify('execute[post up command for eth6]')
+          .to(:run).immediately
       end
     end
   end
 
   context 'when platform_family rhel 7.x' do
     cached(:chef_run) do
-      ChefSpec::SoloRunner.new(platform: 'redhat', version: '7.0', step_into: ['rhel_network_interface', 'network_interface']).converge(described_recipe)
+      ChefSpec::SoloRunner.new(platform: 'redhat', version: '7.0',
+                               step_into: ['rhel_network_interface',
+                                           'network_interface'])
+                          .converge(described_recipe)
     end
 
     let(:default_ovsbr0_config_contents) do
@@ -252,8 +286,11 @@ OVS_BRIDGE="ovsbr1"
     context 'for interface ovsbr0 definition' do
       it 'creates the bridge' do
         expect(chef_run).to create_network_interface 'ovsbr0'
-        expect(chef_run).to create_template '/etc/sysconfig/network-scripts/ifcfg-ovsbr0'
-        expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-ovsbr0').with_content(default_ovsbr0_config_contents)
+        expect(chef_run).to create_template(
+          '/etc/sysconfig/network-scripts/ifcfg-ovsbr0')
+        expect(chef_run).to render_file(
+          '/etc/sysconfig/network-scripts/ifcfg-ovsbr0')
+          .with_content(default_ovsbr0_config_contents)
       end
 
       it 'does not reload interface by default' do
@@ -261,8 +298,10 @@ OVS_BRIDGE="ovsbr1"
       end
 
       it 'it reloads the interface after updating the config' do
-        resource = chef_run.template('/etc/sysconfig/network-scripts/ifcfg-ovsbr0')
-        expect(resource).to notify('execute[reload interface ovsbr0]').to(:run).immediately
+        resource = chef_run.template(
+          '/etc/sysconfig/network-scripts/ifcfg-ovsbr0')
+        expect(resource).to notify('execute[reload interface ovsbr0]')
+          .to(:run).immediately
       end
 
       it 'does not run post up by default' do
@@ -270,16 +309,21 @@ OVS_BRIDGE="ovsbr1"
       end
 
       it 'does not run post up command after updating config' do
-        resource = chef_run.template('/etc/sysconfig/network-scripts/ifcfg-ovsbr0')
-        expect(resource).not_to notify('execute[post up command for ovsbr0]').to(:run).immediately
+        resource = chef_run.template(
+          '/etc/sysconfig/network-scripts/ifcfg-ovsbr0')
+        expect(resource).not_to notify('execute[post up command for ovsbr0]')
+          .to(:run).immediately
       end
     end
 
     context 'for interface enp0s5 definition' do
       it 'adds the device to the bridge' do
         expect(chef_run).to create_network_interface 'enp0s5'
-        expect(chef_run).to create_template '/etc/sysconfig/network-scripts/ifcfg-enp0s5'
-        expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-enp0s5').with_content(default_enp0s5_config_contents)
+        expect(chef_run).to create_template(
+          '/etc/sysconfig/network-scripts/ifcfg-enp0s5')
+        expect(chef_run).to render_file(
+          '/etc/sysconfig/network-scripts/ifcfg-enp0s5')
+          .with_content(default_enp0s5_config_contents)
       end
 
       it 'does not reload interface by default' do
@@ -287,8 +331,10 @@ OVS_BRIDGE="ovsbr1"
       end
 
       it 'it reloads the interface after updating the config' do
-        resource = chef_run.template('/etc/sysconfig/network-scripts/ifcfg-enp0s5')
-        expect(resource).to notify('execute[reload interface enp0s5]').to(:run).immediately
+        resource = chef_run.template(
+          '/etc/sysconfig/network-scripts/ifcfg-enp0s5')
+        expect(resource).to notify('execute[reload interface enp0s5]')
+          .to(:run).immediately
       end
 
       it 'does not run post up by default' do
@@ -296,16 +342,21 @@ OVS_BRIDGE="ovsbr1"
       end
 
       it 'does not run post up command after updating config' do
-        resource = chef_run.template('/etc/sysconfig/network-scripts/ifcfg-enp0s5')
-        expect(resource).not_to notify('execute[post up command for enp0s5]').to(:run).immediately
+        resource = chef_run.template(
+          '/etc/sysconfig/network-scripts/ifcfg-enp0s5')
+        expect(resource).not_to notify('execute[post up command for enp0s5]')
+          .to(:run).immediately
       end
     end
 
     context 'for interface ovsbr1 definition' do
       it 'creates the bridge' do
         expect(chef_run).to create_network_interface 'ovsbr1'
-        expect(chef_run).to create_template '/etc/sysconfig/network-scripts/ifcfg-ovsbr1'
-        expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-ovsbr1').with_content(default_ovsbr1_config_contents)
+        expect(chef_run).to create_template(
+          '/etc/sysconfig/network-scripts/ifcfg-ovsbr1')
+        expect(chef_run).to render_file(
+          '/etc/sysconfig/network-scripts/ifcfg-ovsbr1')
+          .with_content(default_ovsbr1_config_contents)
       end
 
       it 'does not reload interface by default' do
@@ -313,8 +364,10 @@ OVS_BRIDGE="ovsbr1"
       end
 
       it 'it reloads the interface after updating the config' do
-        resource = chef_run.template('/etc/sysconfig/network-scripts/ifcfg-ovsbr1')
-        expect(resource).to notify('execute[reload interface ovsbr1]').to(:run).immediately
+        resource = chef_run.template(
+          '/etc/sysconfig/network-scripts/ifcfg-ovsbr1')
+        expect(resource).to notify('execute[reload interface ovsbr1]')
+          .to(:run).immediately
       end
 
       it 'does not run post up by default' do
@@ -322,16 +375,21 @@ OVS_BRIDGE="ovsbr1"
       end
 
       it 'does not run post up command after updating config' do
-        resource = chef_run.template('/etc/sysconfig/network-scripts/ifcfg-ovsbr1')
-        expect(resource).not_to notify('execute[post up command for ovsbr1]').to(:run).immediately
+        resource = chef_run.template(
+          '/etc/sysconfig/network-scripts/ifcfg-ovsbr1')
+        expect(resource).not_to notify('execute[post up command for ovsbr1]')
+          .to(:run).immediately
       end
     end
 
     context 'for interface enp0s6 definition' do
       it 'adds the device to the bridge' do
         expect(chef_run).to create_network_interface 'enp0s6'
-        expect(chef_run).to create_template '/etc/sysconfig/network-scripts/ifcfg-enp0s6'
-        expect(chef_run).to render_file('/etc/sysconfig/network-scripts/ifcfg-enp0s6').with_content(default_enp0s6_config_contents)
+        expect(chef_run).to create_template(
+          '/etc/sysconfig/network-scripts/ifcfg-enp0s6')
+        expect(chef_run).to render_file(
+          '/etc/sysconfig/network-scripts/ifcfg-enp0s6')
+          .with_content(default_enp0s6_config_contents)
       end
 
       it 'does not reload interface by default' do
@@ -339,8 +397,10 @@ OVS_BRIDGE="ovsbr1"
       end
 
       it 'it reloads the interface after updating the config' do
-        resource = chef_run.template('/etc/sysconfig/network-scripts/ifcfg-enp0s6')
-        expect(resource).to notify('execute[reload interface enp0s6]').to(:run).immediately
+        resource = chef_run.template(
+          '/etc/sysconfig/network-scripts/ifcfg-enp0s6')
+        expect(resource).to notify('execute[reload interface enp0s6]')
+          .to(:run).immediately
       end
 
       it 'does not run post up by default' do
@@ -348,10 +408,11 @@ OVS_BRIDGE="ovsbr1"
       end
 
       it 'does not run post up command after updating config' do
-        resource = chef_run.template('/etc/sysconfig/network-scripts/ifcfg-enp0s6')
-        expect(resource).not_to notify('execute[post up command for enp0s6]').to(:run).immediately
+        resource = chef_run.template(
+          '/etc/sysconfig/network-scripts/ifcfg-enp0s6')
+        expect(resource).not_to notify('execute[post up command for enp0s6]')
+          .to(:run).immediately
       end
     end
   end
-
 end
