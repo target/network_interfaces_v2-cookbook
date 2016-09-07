@@ -1,3 +1,8 @@
+# 2.10.0
+* Add defroute attribute for rhel family interface
+* Add ovsbootproto attribute for rhel family interface
+* Add ovsdhcpinterfaces attribute for rhel family interface
+
 # 2.9.0
 * Support for Ubuntu 16.04
 * Support for multiple device definitions on ubuntu (#20 and #26)
