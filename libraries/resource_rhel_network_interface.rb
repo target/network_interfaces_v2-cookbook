@@ -115,6 +115,10 @@ class Chef
         def metric(arg = nil)
           set_or_return(:metric, arg, kind_of: Integer)
         end
+
+        def defroute(arg = nil)
+          set_or_return(:defroute, arg, kind_of: [TrueClass, FalseClass])
+        end
       end
     end
   end

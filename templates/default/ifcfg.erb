@@ -87,3 +87,6 @@ HOTPLUG="<%= @hotplug ? 'yes' : 'no' %>"
 <% if @metric -%>
 METRIC=<%= @metric %>
 <% end %>
+<% unless @defroute.nil? -%>
+DEFROUTE="<%= @defroute ? 'yes' : 'no' %>"
+<% end %>
