@@ -56,7 +56,7 @@ Attributes
  * debian - VLAN device interface
  * RHEL - true/false if device defined is a VLAN interface
  * Win - Integer VlanID to tag to defined device
-* post_up - Post up command to run after modifying the interface
+* post_up - Post up command(s) to run after modifying the interface
 * reload (default: true) - Wether or not to reload the device on config changes
 * reload_type (default: :immediately) - When to reload device on config changes
 * cookbook (default: 'network_interfaces_v2') - Cookbook to look for template files in
@@ -68,12 +68,12 @@ Attributes
 * bridge_ports - Array of interfaces to add to defined bridge
 * metric -
 * bond_slaves - Array of interfaces to add to defined bond
-* pre_up (default: 'sleep 2')- Pre up command
-* up - Up command
-* post_up - Post up command
-* pre_down - Pre down command
-* down - Down command
-* post_down - Post down command
+* pre_up (default: 'sleep 2')- Pre up command(s)
+* up - Up command(s)
+* post_up - Post up command(s)
+* pre_down - Pre down command(s)
+* down - Down command(s)
+* post_down - Post down command(s)
 * custom - Hash of extra attributes to put in device config
 
 #### RHEL Only Attributes

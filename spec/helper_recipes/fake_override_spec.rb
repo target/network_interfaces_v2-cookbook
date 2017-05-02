@@ -136,7 +136,9 @@ describe 'fake::override' do
     end
 
     it 'properly sets pre_up attribtue in config' do
-      expect(chef_run).to render_file('/etc/network/interfaces.d/eth2').with_content('  pre-up pre up code')
+      expect(chef_run).to render_file('/etc/network/interfaces.d/eth2')
+        .with_content('  pre-up 1st pre up code')
+        .with_content('  pre-up 2nd pre up code')
     end
 
     it 'properly sets up attribtue in config' do

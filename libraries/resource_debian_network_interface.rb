@@ -75,27 +75,27 @@ class Chef
           @pre_up = nil if arg.nil? || arg == ''
           arg = nil if arg == 'NOVAL'
 
-          set_or_return(:pre_up, arg, kind_of: String)
+          set_or_return(:pre_up, arg, kind_of: [String, Array])
         end
 
         def up(arg = nil)
-          set_or_return(:up, arg, kind_of: String)
+          set_or_return(:up, arg, kind_of: [String, Array])
         end
 
         def pre_down(arg = nil)
-          set_or_return(:pre_down, arg, kind_of: String)
+          set_or_return(:pre_down, arg, kind_of: [String, Array])
         end
 
         def down(arg = nil)
-          set_or_return(:down, arg, kind_of: String)
+          set_or_return(:down, arg, kind_of: [String, Array])
         end
 
         def post_down(arg = nil)
-          set_or_return(:post_down, arg, kind_of: String)
+          set_or_return(:post_down, arg, kind_of: [String, Array])
         end
 
         def custom(arg = nil)
-          set_or_return(:custom, arg, kind_of: Hash)
+          set_or_return(:custom, arg, kind_of: [Hash, Array])
         end
       end
     end

@@ -117,7 +117,7 @@ class Chef
       end
 
       def post_up(arg = nil)
-        set_or_return(:post_up, arg, kind_of: String)
+        set_or_return(:post_up, arg, kind_of: [String, Array])
       end
     end
   end

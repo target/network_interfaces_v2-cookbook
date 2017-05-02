@@ -35,7 +35,7 @@ when 'debian'
     bridge_ports ['eth3', 'eth4']
     bridge_stp false
     mtu 1501
-    pre_up 'pre up code'
+    pre_up ['1st pre up code', '2nd pre up code']
     up 'code for up'
     post_up 'post up it'
     pre_down 'pre down plz'
