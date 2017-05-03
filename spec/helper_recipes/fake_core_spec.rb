@@ -168,16 +168,16 @@ HOTPLUG="no"
                 'prefixlen' => '24',
                 'netmask' => '255.255.255.0',
                 'broadcast' => '10.0.2.255',
-                'family' => 'inet'
+                'family' => 'inet',
               },
               'fe80::e488:b85c:5262:ff86' => {
                 'prefixlen' => '64',
                 'family' => 'inet6',
-                'scope' => 'Link'
+                'scope' => 'Link',
               },
               '00:25:B5:5B:00:33' => {
-                'family' => 'lladdr'
-              }
+                'family' => 'lladdr',
+              },
             },
             'configuration' => {
               'arp_always_source_route' => nil,
@@ -186,7 +186,7 @@ HOTPLUG="no"
               'database_path' => '%SystemRoot%\System32\drivers\etc',
               'dead_gw_detect_enabled' => nil,
               'default_ip_gateway' => [
-                '10.0.2.2'
+                '10.0.2.2',
               ],
               'default_tos' => nil,
               'default_ttl' => nil,
@@ -198,26 +198,26 @@ HOTPLUG="no"
               'dns_domain' => 'target.com',
               'dns_domain_suffix_search_order' => [
                 'test.it.com',
-                'target.com'
+                'target.com',
               ],
               'dns_enabled_for_wins_resolution' => false,
               'dns_host_name' => 'vagrant-2012-r2',
               'dns_server_search_order' => [
                 '10.97.40.216',
-                '10.64.40.216'
+                '10.64.40.216',
               ],
               'domain_dns_registration_enabled' => false,
               'forward_buffer_memory' => nil,
               'full_dns_registration_enabled' => true,
               'gateway_cost_metric' => [
-                0
+                0,
               ],
               'igmp_level' => nil,
               'index' => 10,
               'interface_index' => 12,
               'ip_address' => [
                 '10.0.2.15',
-                'fe80:e488:b85c:5262:ff86'
+                'fe80:e488:b85c:5262:ff86',
               ],
               'ip_connection_metric' => 10,
               'ip_enabled' => true,
@@ -234,7 +234,7 @@ HOTPLUG="no"
               ],
               'ip_subnet' => [
                 '255.255.255.0',
-                '64'
+                '64',
               ],
               'ip_use_zero_broadcast' => nil,
               'ipx_address' => nil,
@@ -262,14 +262,14 @@ HOTPLUG="no"
               'wins_host_lookup_file' => nil,
               'wins_primary_server' => nil,
               'wins_scope_id' => '',
-              'wins_secondary_server' => nil
+              'wins_secondary_server' => nil,
             },
             'instance' => {
               'index' => 10,
               'interface_index' => 12,
-              'net_connection_id' => 'Ethernet 4'
-            }
-          }
+              'net_connection_id' => 'Ethernet 4',
+            },
+          },
         }
       end.converge(described_recipe)
     end
