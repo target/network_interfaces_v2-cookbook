@@ -130,7 +130,7 @@ HOTPLUG="no"
 
   context 'debian family' do
     let(:chef_run) do
-      ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.10', step_into: ['debian_network_interface', 'network_interface']).converge(described_recipe)
+      ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.04', step_into: ['debian_network_interface', 'network_interface']).converge(described_recipe)
     end
 
     it 'creates directory for interface config files' do
@@ -281,7 +281,7 @@ HOTPLUG="no"
 
   context 'when platform_family debian 6.x' do
     cached(:chef_run) do
-      ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.10', step_into: ['debian_network_interface', 'network_interface']).converge(described_recipe)
+      ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.04', step_into: ['debian_network_interface', 'network_interface']).converge(described_recipe)
     end
 
     let(:default_eth4_config_contents) do

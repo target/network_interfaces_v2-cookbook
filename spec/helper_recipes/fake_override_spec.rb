@@ -92,7 +92,7 @@ describe 'fake::override' do
 
   describe 'debian family' do
     let(:chef_run) do
-      ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.10', step_into: ['debian_network_interface']).converge(described_recipe)
+      ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.04', step_into: ['debian_network_interface']).converge(described_recipe)
     end
 
     it 'properly sets address attribtue in config' do
