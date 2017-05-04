@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
 gem 'wmi-lite', platforms: [:mswin, :mingw]
-gem 'wmi-lite' if RUBY_PLATFORM =~ /mingw32/
+gem 'wmi-lite' if RUBY_PLATFORM =~ /mingw32/ # rubocop:disable Bundler/DuplicatedGem

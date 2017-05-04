@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'fake::vlan' do
   describe 'rhel family' do
     let(:chef_run) do
-      ChefSpec::SoloRunner.new(step_into: ['rhel_network_interface']) do |node|
+      ChefSpec::SoloRunner.new(platform: 'redhat', version: '6.5', step_into: ['rhel_network_interface']) do |node|
         node.automatic['platform_family'] = 'rhel'
       end.converge(described_recipe)
     end
@@ -19,7 +19,7 @@ describe 'fake::vlan' do
 
   describe 'debian family' do
     let(:chef_run) do
-      ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.10', step_into: ['debian_network_interface']).converge(described_recipe)
+      ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.04', step_into: ['debian_network_interface']).converge(described_recipe)
     end
 
     it 'installs packages required for vlan config on interface' do
