@@ -1,3 +1,6 @@
+# 2.11.0
+* Add ability to define array of pre/up/post and pre/down/post commands.
+
 # 2.10.0
 * Add defroute attribute for rhel family interface
 * Add ovsbootproto attribute for rhel family interface
