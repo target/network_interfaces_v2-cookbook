@@ -9,6 +9,7 @@ network_interface 'eth4' do
   gateway node['network']['default_gateway']
   netmask '255.255.255.0'
   post_up 'sleep 1'
+  hotplug true
   unless node['platform_family'] == 'debian'
     devicetype 'ovs'
     onboot true

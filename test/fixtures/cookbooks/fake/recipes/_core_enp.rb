@@ -7,10 +7,10 @@ network_interface 'enp0s4' do
   metric 100
   netmask '255.255.255.0'
   post_up 'sleep 1'
+  hotplug true
   unless node['platform_family'] == 'debian'
     arpcheck true
     devicetype 'ovs'
-    hotplug false
     onboot true
     prefix 24
     type 'OVSBridge'

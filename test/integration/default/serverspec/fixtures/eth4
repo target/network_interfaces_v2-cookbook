@@ -1,6 +1,7 @@
 # This file maintained by Chef.  DO NOT EDIT!
 
 auto eth4
+allow-hotplug eth4
 iface eth4 inet static
   address 10.12.10.11
   netmask 255.255.255.0

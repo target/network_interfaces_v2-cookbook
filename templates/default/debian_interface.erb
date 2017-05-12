@@ -3,6 +3,9 @@
 <% if @auto -%>
 auto <%= @device %>
 <% end %>
+<% if @hotplug -%>
+allow-hotplug <%= @device %>
+<% end %>
 iface <%= @device %> <%= @network_type %> <%= @type %>
 <% if @hw_address -%>
   hwaddress <%= @hw_address %>

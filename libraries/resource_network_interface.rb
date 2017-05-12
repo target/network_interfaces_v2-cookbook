@@ -119,6 +119,10 @@ class Chef
       def post_up(arg = nil)
         set_or_return(:post_up, arg, kind_of: [String, Array])
       end
+
+      def hotplug(arg = nil)
+        set_or_return(:hotplug, arg, kind_of: [TrueClass, FalseClass])
+      end
     end
   end
 end

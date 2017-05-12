@@ -1,6 +1,7 @@
 # This file maintained by Chef.  DO NOT EDIT!
 
 auto enp0s4
+allow-hotplug enp0s4
 iface enp0s4 inet static
   address 10.12.10.11
   netmask 255.255.255.0

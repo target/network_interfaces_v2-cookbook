@@ -12,5 +12,5 @@ NM_CONTROLLED="no"
 DEVICETYPE="ovs"
 ZONE="trusted"
 ARPCHECK="yes"
-HOTPLUG="no"
+HOTPLUG="yes"
 METRIC=100

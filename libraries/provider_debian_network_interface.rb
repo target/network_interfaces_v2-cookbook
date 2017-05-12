@@ -94,6 +94,7 @@ class Chef
                       pre_down: new_resource.pre_down,
                       down: new_resource.down,
                       post_down: new_resource.post_down,
+                      hotplug: new_resource.hotplug,
                       custom: new_resource.custom
             notifies :run, "execute[reload interface #{new_resource.name}]", new_resource.reload_type if new_resource.reload
           end

@@ -30,6 +30,7 @@ NETMASK="255.255.255.0"
 GATEWAY="10.0.0.1"
 NM_CONTROLLED="no"
 DEVICETYPE="ovs"
+HOTPLUG="yes"
 DEFROUTE="no"
 '
     end
@@ -115,7 +116,8 @@ NM_CONTROLLED="no"
 DEVICETYPE="ovs"
 ZONE="trusted"
 ARPCHECK="yes"
-HOTPLUG="no"
+HOTPLUG="yes"
+METRIC=100
 '
     end
 
@@ -288,6 +290,7 @@ HOTPLUG="no"
       '# This file maintained by Chef.  DO NOT EDIT!
 
 auto eth4
+allow-hotplug eth4
 iface eth4 inet static
   address 10.12.10.11
   netmask 255.255.255.0
