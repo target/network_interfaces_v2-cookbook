@@ -61,6 +61,7 @@ Attributes
 * reload_type (default: :immediately) - When to reload device on config changes
 * cookbook (default: 'network_interfaces_v2') - Cookbook to look for template files in
 * source (default: 'ifcfg.erb') - Template file to use for interface config
+* hotplug - Activate devices on hotplug (default: true)
 
 #### Debian Only Attributes
 * ipv6 (true/false) - Wether this is an inet or inet6 network interface.
@@ -93,7 +94,6 @@ Attributes
 * dns_domain - DNS domain
 * zone - FirewallD zone
 * arpcheck - Whether to arping before bringing up an ethernet device to check for an IP conflict (default: true)
-* hotplug - Activate devices on hotplug (default: true)
 * defroute - Enable/Disable default route modification by ifup script
 * ovsbootproto - Set to 'dhcp' if you want to use DHCP on an OVSBridge
 * ovsdhcpinterfaces - List of physical devices to use for DHCP on an OVSBridge
