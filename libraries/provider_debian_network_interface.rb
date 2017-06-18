@@ -66,7 +66,7 @@ class Chef
           network_type = new_resource.ipv6 ? 'inet6' : 'inet'
 
           # Dump config for the interface
-          template "/etc/network/interfaces.d/#{new_resource.name}" do
+          template new_resource.config_file do
             cookbook new_resource.cookbook
             source new_resource.source
             mode 0644
@@ -95,13 +95,22 @@ class Chef
                       down: new_resource.down,
                       post_down: new_resource.post_down,
                       custom: new_resource.custom
+            notifies :run, "execute[start interface #{new_resource.name}]", new_resource.start_type if new_resource.start && !new_resource.reload
             notifies :run, "execute[reload interface #{new_resource.name}]", new_resource.reload_type if new_resource.reload
+          end
+
+          execute "start interface #{new_resource.name}" do
+            command <<-EOF
+              ifup #{new_resource.device} -i #{new_resource.config_file}
+            EOF
+            not_if "ifquery --state #{new_resource.device} -i #{new_resource.config_file}"
+            action :nothing
           end
 
           execute "reload interface #{new_resource.name}" do
             command <<-EOF
-              ifdown #{new_resource.device} -i /etc/network/interfaces.d/#{new_resource.name}
-              ifup #{new_resource.device} -i /etc/network/interfaces.d/#{new_resource.name}
+              ifdown #{new_resource.device} -i #{new_resource.config_file}
+              ifup #{new_resource.device} -i #{new_resource.config_file}
             EOF
             action :nothing
           end

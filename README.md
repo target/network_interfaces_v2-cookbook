@@ -57,8 +57,10 @@ Attributes
  * RHEL - true/false if device defined is a VLAN interface
  * Win - Integer VlanID to tag to defined device
 * post_up - Post up command(s) to run after modifying the interface
-* reload (default: true) - Wether or not to reload the device on config changes
+* reload (default: true) - Whether or not to reload the device on config changes
 * reload_type (default: :immediately) - When to reload device on config changes
+* start (default: true) - Whether or not to start the device on config changes (existing devices will not be affected)
+* start_type (default: :immediately) - When to reload device on config changes
 * cookbook (default: 'network_interfaces_v2') - Cookbook to look for template files in
 * source (default: 'ifcfg.erb') - Template file to use for interface config
 
@@ -75,6 +77,7 @@ Attributes
 * down - Down command(s)
 * post_down - Post down command(s)
 * custom - Hash of extra attributes to put in device config
+* config_file - Path to interface definition file
 
 #### RHEL Only Attributes
 * prefix - Netmask length (e.g. 24 for 255.255.255.0)

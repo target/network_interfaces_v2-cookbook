@@ -1,3 +1,7 @@
+# 2.11.1
+* Add ability to start but not reload interfaces via start & start_type attributes.
+* Add config_file attribute for debian family interface.
+
 # 2.11.0
 * Add ability to define array of pre/up/post and pre/down/post commands.
 

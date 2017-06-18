@@ -295,12 +295,23 @@ describe Chef::Provider::NetworkInterface::Win do
       provider.action_create
     end
 
-    it 'does not reloads interface if defined by user' do
+    it 'does not start or reload interface if defined by user' do
       allow(adapter_config).to receive(:SetDNSDomain)
       new_resource.dns_domain 'my_dns_domain.com'
-      new_resource.reload false # Defined by user not to reload
+      new_resource.reload false # Defined by user
+      new_resource.start false # Defined by user
       expect(adapter).not_to receive(:disable)
       expect(adapter).not_to receive(:enable)
+      provider.action_create
+    end
+
+    it 'start but do not reload interface if defined by user' do
+      allow(adapter_config).to receive(:SetDNSDomain)
+      new_resource.dns_domain 'my_dns_domain.com'
+      new_resource.reload false # Defined by user
+      new_resource.start true # Defined by user
+      expect(adapter).not_to receive(:disable)
+      expect(adapter).to receive(:enable)
       provider.action_create
     end
 

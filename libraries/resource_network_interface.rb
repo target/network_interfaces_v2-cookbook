@@ -42,6 +42,8 @@ class Chef
         @source = 'ifcfg.erb'
         @reload = true
         @reload_type = :immediately
+        @start = true
+        @start_type = :immediately
       end
 
       def cookbook(arg = nil)
@@ -106,6 +108,14 @@ class Chef
 
       def reload_type(arg = nil)
         set_or_return(:reload_type, arg, kind_of: Symbol)
+      end
+
+      def start(arg = nil)
+        set_or_return(:start, arg, kind_of: [TrueClass, FalseClass])
+      end
+
+      def start_type(arg = nil)
+        set_or_return(:start_type, arg, kind_of: Symbol)
       end
 
       def hw_address(arg = nil)

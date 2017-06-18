@@ -39,6 +39,11 @@ class Chef
           @source = 'debian_interface.erb'
           @pre_up = 'sleep 2'
           @ipv6 = false
+          @config_file = "/etc/network/interfaces.d/#{name}"
+        end
+
+        def config_file(arg = nil)
+          set_or_return(:config_file, arg, kind_of: String)
         end
 
         def bridge_ports(arg = nil)

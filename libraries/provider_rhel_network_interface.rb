@@ -81,8 +81,16 @@ class Chef
                       defroute: new_resource.defroute,
                       ovsbootproto: new_resource.ovsbootproto,
                       ovsdhcpinterfaces: new_resource.ovsdhcpinterfaces
+            notifies :run, "execute[start interface #{new_resource.device}]", new_resource.start_type if new_resource.start && !new_resource.reload
             notifies :run, "execute[reload interface #{new_resource.device}]", new_resource.reload_type if new_resource.reload
             notifies :run, "execute[post up command for #{new_resource.device}]", :immediately unless new_resource.post_up.nil?
+          end
+
+          execute "start interface #{new_resource.device}" do
+            command <<-EOF
+              ifup #{new_resource.device}
+            EOF
+            action :nothing
           end
 
           execute "reload interface #{new_resource.device}" do

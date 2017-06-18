@@ -130,6 +130,7 @@ class Chef
         # Manage additional updates after interface has been reconfigured
         #
         def post_updates
+          start if new_resource.updated_by_last_action? && new_resource.start && !new_resource.reload
           reload if new_resource.updated_by_last_action? && new_resource.reload
           post_up(new_resource.post_up) unless new_resource.post_up.nil? || !new_resource.updated_by_last_action?
         end
@@ -413,6 +414,12 @@ class Chef
           converge_it("Reloading #{new_resource.device}") do
             adapter.disable
             sleep 5
+            adapter.enable
+          end
+        end
+
+        def start
+          converge_it("Starting #{new_resource.device}") do
             adapter.enable
           end
         end
